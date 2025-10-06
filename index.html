@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Legal Evidence Gathering Game</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Press Start 2P', monospace;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      touch-action: none;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+    }
+
+    canvas {
+      display: block;
+      background-color: #000;
+      image-rendering: pixelated;
+    }
+
+    .ui-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .ui-overlay>* {
+      pointer-events: auto;
+    }
+
+    .score-display {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #fff;
+      font-size: 10px;
+      text-shadow: 2px 2px #000;
+      z-index: 500;
+    }
+
+    .controls-hint {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #fff;
+      font-size: 7px;
+      line-height: 1.8;
+      text-shadow: 2px 2px #000;
+      z-index: 500;
+    }
+
+    .audio-control {
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      background-color: #000;
+      color: #fff;
+      border: 2px solid #fff;
+      padding: 8px 12px;
+      font-size: 7px;
+      cursor: pointer;
+      transition: all 0.1s;
+      z-index: 500;
+    }
+
+    .audio-control:hover,
+    .audio-control:active {
+      background-color: #ff8c00;
+      color: #000;
+      border-color: #ff8c00;
+    }
+
+    .mobile-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      gap: 15px;
+      z-index: 500;
+    }
+
+    .mobile-dpad {
+      display: grid;
+      grid-template-areas: ". up ." "left . right" ". down .";
+      gap: 5px;
+      width: 150px;
+      height: 150px;
+    }
+
+    .mobile-btn {
+      background-color: rgba(0, 0, 0, 0.7);
+      border: 3px solid #fff;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .mobile-btn:active {
+      background-color: #ff8c00;
+      border-color: #ff8c00;
+    }
+
+    .mobile-btn.up {
+      grid-area: up;
+    }
+
+    .mobile-btn.down {
+      grid-area: down;
+    }
+
+    .mobile-btn.left {
+      grid-area: left;
+    }
+
+    .mobile-btn.right {
+      grid-area: right;
+    }
+
+    .mobile-action {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.7);
+      border: 3px solid #fff;
+      color: #fff;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .mobile-action:active {
+      background-color: #ff8c00;
+      border-color: #ff8c00;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-controls {
+        display: flex;
+      }
+
+      .controls-hint {
+        display: none;
+      }
+
+      .score-display {
+        font-size: 8px;
+      }
+    }
+
+    .name-input-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .name-input-screen.hidden {
+      display: none;
+    }
+
+    .name-input-box {
+      background-color: #000;
+      border: 6px solid #fff;
+      padding: 20px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .name-input-box h2 {
+      color: #fff;
+      font-size: 12px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .name-display {
+      background-color: #000;
+      border: 4px solid #fff;
+      padding: 15px;
+      font-size: 18px;
+      color: #fff;
+      text-align: center;
+      min-height: 50px;
+      margin: 15px 0;
+      letter-spacing: 8px;
+    }
+
+    .keyboard-container {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 5px;
+      margin: 15px 0;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 768px) {
+      .keyboard-container {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 3px;
+      }
+
+      .name-display {
+        font-size: 14px;
+      }
+    }
+
+    .key-button {
+      background-color: #000;
+      color: #fff;
+      border: 2px solid #fff;
+      padding: 10px;
+      font-size: 9px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .key-button:hover:not(:disabled),
+    .key-button:active:not(:disabled) {
+      background-color: #ff8c00;
+      color: #000;
+      border-color: #ff8c00;
+    }
+
+    .key-button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .name-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .name-control-btn {
+      background-color: #000;
+      color: #fff;
+      border: 3px solid #fff;
+      padding: 12px 20px;
+      font-size: 9px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .name-control-btn:hover:not(:disabled),
+    .name-control-btn:active:not(:disabled) {
+      background-color: #ff8c00;
+      color: #000;
+      border-color: #ff8c00;
+    }
+
+    .name-control-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .tips-selection-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: none;
+      z-index: 900;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .tips-selection-screen.active {
+      display: block;
+    }
+
+    .tips-selection-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .tips-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .tips-header h2 {
+      color: #ff8c00;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    .tips-header p {
+      color: #fff;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .tips-grid {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .tip-card {
+      background-color: #000;
+      border: 4px solid #666;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .tip-card:hover {
+      border-color: #ff8c00;
+      transform: translateY(-5px);
+    }
+
+    .tip-card.collected {
+      border-color: #0f0;
+      background-color: #001100;
+    }
+
+    .tip-card.collected::after {
+      content: '✓ COLLECTED';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #0f0;
+      font-size: 8px;
+    }
+
+    .tip-title {
+      color: #ff8c00;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    .tip-subtitle {
+      color: #ffff00;
+      font-size: 8px;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    .tip-content {
+      color: #fff;
+      font-size: 9px;
+      line-height: 1.6;
+    }
+
+    .tip-category {
+      color: #ff8c00;
+      font-size: 12px;
+      margin: 30px 0 15px 0;
+      border-bottom: 2px solid #ff8c00;
+      padding-bottom: 10px;
+    }
+
+    .tips-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .tips-action-btn {
+      background-color: #000;
+      color: #fff;
+      border: 4px solid #fff;
+      padding: 15px 30px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tips-action-btn:hover {
+      background-color: #ff8c00;
+      color: #000;
+      border-color: #ff8c00;
+      transform: scale(1.05);
+    }
+
+    .tips-action-btn.primary {
+      border-color: #0f0;
+      color: #0f0;
+    }
+
+    .tips-action-btn.primary:hover {
+      background-color: #0f0;
+      color: #000;
+    }
+
+    @media (max-width: 768px) {
+      .tips-header h2 {
+        font-size: 12px;
+      }
+
+      .tips-header p {
+        font-size: 8px;
+      }
+
+      .tip-card {
+        padding: 15px;
+      }
+
+      .tip-title {
+        font-size: 9px;
+      }
+
+      .tip-content {
+        font-size: 8px;
+      }
+
+      .tips-action-btn {
+        padding: 12px 20px;
+        font-size: 8px;
+      }
+    }
+
+    #battle-box {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 800px;
+      min-height: 350px;
+      background-color: #000;
+      border: 6px solid #fff;
+      padding: 25px;
+      display: none;
+      z-index: 100;
+    }
+
+    #battle-box.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      #battle-box {
+        width: 95%;
+        min-height: 300px;
+        padding: 15px;
+        bottom: 180px;
+      }
+    }
+
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hp-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hp-bar-outer {
+      background-color: #8b0000;
+      width: 120px;
+      height: 20px;
+      border: 2px solid #fff;
+      position: relative;
+    }
+
+    .hp-bar-inner {
+      background-color: #ff0;
+      height: 100%;
+      width: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .question-text {
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.8;
+      margin-bottom: 25px;
+      min-height: 100px;
+    }
+
+    @media (max-width: 768px) {
+      .question-text {
+        font-size: 11px;
+      }
+    }
+
+    .answer-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .answer-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .answer-btn {
+      background-color: #000;
+      color: #ff8c00;
+      border: 3px solid #ff8c00;
+      padding: 18px;
+      font-size: 11px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.1s;
+      font-weight: bold;
+    }
+
+    .answer-btn:hover:not(:disabled) {
+      background-color: #ffa500;
+      color: #000;
+      border-color: #ffa500;
+    }
+
+    .answer-btn.correct {
+      background-color: #0f0;
+      color: #000;
+      border-color: #0f0;
+    }
+
+    .answer-btn.wrong {
+      background-color: #f00;
+      color: #fff;
+      border-color: #f00;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      background-color: #000;
+      color: #fff;
+      border: 3px solid #fff;
+      padding: 12px 25px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .action-btn:hover:not(:disabled) {
+      background-color: #ff8c00;
+      color: #000;
+      border-color: #ff8c00;
+    }
+
+    #enemy-sprite {
+      position: absolute;
+      top: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 100px;
+      text-align: center;
+      z-index: 50;
+      display: none;
+    }
+
+    #enemy-sprite.active {
+      display: block;
+    }
+
+    .dialogue-box {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #000;
+      border: 6px solid #fff;
+      padding: 25px;
+      width: 90%;
+      max-width: 800px;
+      min-height: 280px;
+      display: none;
+      z-index: 150;
+    }
+
+    /* Speaker label shown above the dialogue text to indicate who is speaking */
+    .speaker-label {
+      font-size: 11px;
+      color: #000;
+      background: #ff8c00;
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    /* Speaker-specific styles applied to the dialogue-box for visual separation */
+    .dialogue-box.judge { border-color: #4169e1; }
+    .dialogue-box.prosecutor { border-color: #0f0; }
+    .dialogue-box.defense { border-color: #f00; }
+
+    .dialogue-box.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .dialogue-box {
+        width: 95%;
+        padding: 15px;
+        bottom: 180px;
+      }
+    }
+
+    .dialogue-text {
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.8;
+      min-height: 150px;
+    }
+
+    @media (max-width: 768px) {
+      .dialogue-text {
+        font-size: 11px;
+      }
+    }
+
+    .dialogue-prompt {
+      color: #ff8c00;
+      font-size: 9px;
+      margin-top: 15px;
+      text-align: right;
+    }
+
+    .end-screen {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      background-color: #000;
+      border: 6px solid #fff;
+      padding: 40px;
+      display: none;
+      z-index: 200;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .end-screen.active {
+      display: block;
+    }
+
+    .end-screen h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .end-screen p {
+      font-size: 11px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .restart-btn {
+      background-color: #000;
+      color: #ff8c00;
+      border: 4px solid #ff8c00;
+      padding: 15px 30px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.1s;
+      font-weight: bold;
+    }
+
+    .restart-btn:hover {
+      background-color: #ffa500;
+      border-color: #ffa500;
+      color: #000;
+    }
+
+    #inventory-content {
+      text-align: left;
+      margin: 20px 0;
+    }
+
+    .inventory-item {
+      background-color: #111;
+      border: 2px solid #ff8c00;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .inventory-item-title {
+      color: #ff8c00;
+      font-size: 10px;
+      margin-bottom: 8px;
+    }
+
+    .inventory-item-subtitle {
+      color: #ffff00;
+      font-size: 8px;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    .inventory-item-content {
+      color: #fff;
+      font-size: 9px;
+      line-height: 1.6;
+    }
+
+    .empty-inventory {
+      color: #666;
+      font-size: 10px;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .scene-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+    }
+
+    .scene-library {
+      background: linear-gradient(to bottom, #1a0a00 0%, #4a2600 50%, #1a0a00 100%);
+    }
+
+    .scene-courtroom {
+      background: linear-gradient(to bottom, #0a0a1a 0%, #1a1a4a 50%, #0a0a1a 100%);
+    }
+
+    .scene-background::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: 100px 100px;
+      opacity: 0.1;
+    }
+
+    .scene-library::before {
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 35px, #8b4513 35px, #8b4513 36px), repeating-linear-gradient(90deg, transparent, transparent 35px, #8b4513 35px, #8b4513 36px);
+    }
+
+    .scene-courtroom::before {
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 50px, #4169e1 50px, #4169e1 51px);
+    }
+
+    .scene-decoration {
+      position: absolute;
+      font-size: 60px;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .transition-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="game-container">
+    <div class="scene-background scene-library hidden" id="library-scene">
+      <div class="scene-decoration" style="top: 10%; left: 10%;">📚</div>
+      <div class="scene-decoration" style="top: 15%; right: 15%;">📖</div>
+      <div class="scene-decoration" style="bottom: 20%; left: 20%;">📜</div>
+      <div class="scene-decoration" style="bottom: 15%; right: 10%;">🏛️</div>
+    </div>
+    <div class="scene-background scene-courtroom hidden" id="courtroom-scene">
+      <div class="scene-decoration" style="top: 10%; left: 50%; transform: translateX(-50%);">⚖️</div>
+      <div class="scene-decoration" style="top: 20%; left: 15%;">🏛️</div>
+      <div class="scene-decoration" style="top: 20%; right: 15%;">🏛️</div>
+      <div class="scene-decoration" style="bottom: 20%; left: 20%;">📋</div>
+      <div class="scene-decoration" style="bottom: 20%; right: 20%;">⚖️</div>
+    </div>
+    <div class="transition-overlay" id="transition-overlay"></div>
+    <canvas id="game-canvas"></canvas>
+    <div class="ui-overlay">
+      <div class="name-input-screen" id="name-screen">
+        <div class="name-input-box">
+          <h2>Name the Attorney.</h2>
+          <div class="name-display" id="name-display"></div>
+          <div class="keyboard-container" id="keyboard"></div>
+          <div class="name-controls">
+            <button class="name-control-btn" id="backspace-btn">Backspace</button>
+            <button class="name-control-btn" id="quit-btn">Quit</button>
+            <button class="name-control-btn" id="done-btn">Done</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tips-selection-screen" id="tips-screen">
+        <div class="tips-selection-container">
+          <div class="tips-header">
+            <h2>LEGAL RESOURCES LIBRARY</h2>
+            <p>* Click on any resource to collect it for your investigation.<br>* These will be stored in your inventory
+              for reference during the trial.</p>
+          </div>
+
+          <div class="tip-category">VOCABULARY BOOK</div>
+          <div class="tips-grid" id="vocabulary-grid"></div>
+
+          <div class="tip-category">LEGAL SCROLL</div>
+          <div class="tips-grid" id="legal-grid"></div>
+
+          <div class="tips-actions">
+            <button class="tips-action-btn" id="skip-tips-btn">Skip All</button>
+            <button class="tips-action-btn primary" id="proceed-btn">Proceed to Trial (<span
+                id="collected-count">0</span> collected)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="score-display">SCORE: <span id="score">0</span></div>
+      <button class="audio-control" id="audio-toggle">SOUND: ON</button>
+      <div class="controls-hint">ARROW KEYS: Move<br>Z/ENTER: Interact</div>
+
+      <div class="mobile-controls" id="mobile-controls">
+        <div class="mobile-dpad">
+          <button class="mobile-btn up" id="mobile-up">▲</button>
+          <button class="mobile-btn down" id="mobile-down">▼</button>
+          <button class="mobile-btn left" id="mobile-left">◀</button>
+          <button class="mobile-btn right" id="mobile-right">▶</button>
+        </div>
+        <button class="mobile-action" id="mobile-action">Z</button>
+      </div>
+
+      <div id="enemy-sprite">⚖️</div>
+
+      <div class="dialogue-box" id="dialogue-box">
+        <div class="speaker-label" id="speaker-label" style="display:none"></div>
+        <div class="dialogue-text" id="dialogue-text"></div>
+        <div class="dialogue-prompt">Press Z or ENTER to continue...</div>
+      </div>
+
+      <div class="dialogue-box" id="tips-choice-box">
+        <div class="dialogue-text" id="tips-choice-text">* What would you like to learn about?</div>
+        <div class="answer-buttons" style="margin-top: 20px;" id="tips-menu">
+          <button class="answer-btn" id="vocab-btn">★ Gender-based Harassment</button>
+          <button class="answer-btn" id="legal1-btn">★ Anti-Photo/Voyeurism Act</button>
+          <button class="answer-btn" id="legal2-btn">★ Safe Spaces Act</button>
+          <button class="answer-btn" id="ready-btn" style="grid-column: 1 / -1; border-color: #0f0; color: #0f0;">★ I'm
+            Ready for the Trial</button>
+        </div>
+      </div>
+
+      <div id="battle-box">
+        <div class="stats-bar">
+          <span id="player-name">ATTORNEY</span>
+          <span>LV <span id="level">1</span></span>
+          <div class="hp-bar-container">
+            <span>HP</span>
+            <div class="hp-bar-outer">
+              <div class="hp-bar-inner" id="hp-bar"></div>
+            </div>
+            <span><span id="current-hp">20</span> / <span id="max-hp">20</span></span>
+          </div>
+        </div>
+        <div class="question-text" id="question-text"></div>
+        <div class="answer-buttons" id="answer-buttons"></div>
+        <div class="action-buttons">
+          <button class="action-btn" id="act-btn">★ ACT</button>
+          <button class="action-btn" id="item-btn">★ INVENTORY</button>
+          <button class="action-btn" id="mercy-btn">★ MERCY</button>
+        </div>
+      </div>
+
+      <div class="end-screen" id="inventory-modal">
+        <h2>📚 YOUR COLLECTED RESOURCES</h2>
+        <div id="inventory-content"></div>
+        <button class="restart-btn" id="close-inventory-btn">Close</button>
+      </div>
+
+      <div class="end-screen" id="victory-screen">
+        <h2>★ CASE WON! ★</h2>
+        <p>You've successfully gathered all evidence and won the case!</p>
+        <p>Final Score: <span id="final-score-victory">0</span></p>
+        <button class="restart-btn" id="restart-victory">Play Again</button>
+      </div>
+
+      <div class="end-screen" id="gameover-screen">
+        <h2>CASE DISMISSED</h2>
+        <p>The case was dismissed due to insufficient evidence...</p>
+        <p>Final Score: <span id="final-score-gameover">0</span></p>
+        <button class="restart-btn" id="restart-gameover">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+    let soundEnabled = true;
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    const bgMusic = new Audio();
+    bgMusic.loop = true;
+    bgMusic.volume = 0.3;
+    bgMusic.src = 'YOUR_MUSIC_URL_HERE.mp3';
+
+    function playBackgroundMusic() {
+      if (soundEnabled && bgMusic.src) {
+        bgMusic.play().catch(e => console.log('Music play failed:', e));
+      }
+    }
+
+    function stopBackgroundMusic() {
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+    }
+
+    function playBeep(freq = 440, dur = 0.1, type = 'square') {
+      if (!soundEnabled) return;
+      const osc = audioContext.createOscillator(), gain = audioContext.createGain();
+      osc.connect(gain); gain.connect(audioContext.destination);
+      osc.frequency.value = freq; osc.type = type;
+      gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + dur);
+      osc.start(audioContext.currentTime); osc.stop(audioContext.currentTime + dur);
+    }
+
+    const sounds = {
+      menuMove: () => playBeep(300, 0.05),
+      menuSelect: () => playBeep(600, 0.1),
+      textBlip: () => playBeep(200, 0.03),
+      collect: () => { playBeep(523, 0.1); setTimeout(() => playBeep(659, 0.15), 100); },
+      correct: () => { playBeep(523, 0.1); setTimeout(() => playBeep(659, 0.1), 100); setTimeout(() => playBeep(784, 0.2), 200); },
+      wrong: () => playBeep(200, 0.3, 'sawtooth'),
+      victory: () => { playBeep(523, 0.15); setTimeout(() => playBeep(659, 0.15), 150); setTimeout(() => playBeep(784, 0.15), 300); setTimeout(() => playBeep(1047, 0.3), 450); }
+    };
+
+    document.getElementById('audio-toggle').onclick = () => {
+      soundEnabled = !soundEnabled;
+      document.getElementById('audio-toggle').textContent = soundEnabled ? 'SOUND: ON' : 'SOUND: OFF';
+      if (soundEnabled) {
+        sounds.menuSelect();
+        playBackgroundMusic();
+      } else {
+        stopBackgroundMusic();
+      }
+    };
+
+    const mobileKeys = { up: false, down: false, left: false, right: false };
+    if (isMobile) {
+      document.getElementById('mobile-controls').style.display = 'flex';
+      ['up', 'down', 'left', 'right'].forEach(dir => {
+        const btn = document.getElementById(`mobile-${dir}`);
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); mobileKeys[dir] = true; });
+        btn.addEventListener('touchend', (e) => { e.preventDefault(); mobileKeys[dir] = false; });
+      });
+      document.getElementById('mobile-action').addEventListener('touchstart', (e) => {
+        e.preventDefault(); sounds.menuSelect();
+        if (gameMode === 'walking' && canInteract) startDialogue();
+        else if (gameMode === 'dialogue' && !isTyping) showNextDialogue();
+        else if (gameMode === 'dialogue' && isTyping) { isTyping = false; document.getElementById('dialogue-text').textContent = targetText; }
+      });
+    }
+
+    let gameMode = 'nameEntry', playerName = '', currentName = '';
+    const MAX_NAME_LENGTH = 7;
+    let score = 0, maxHP = 20, currentHP = 20, currentQuestionIndex = 0, dialogueIndex = 0, canInteract = false, answeringQuestion = false;
+    const player = { x: canvas.width / 2, y: canvas.height / 2, size: 20, speed: 4, color: '#ff0000' };
+    const npc = { x: canvas.width / 2, y: 180, size: 40, color: '#ffff00' };
+    const keys = {};
+
+    const availableTips = {};
+    let collectedTips = [];
+
+    const narratorDialogues = [
+      () => `* Welcome Attorney ${playerName}! As you may know, you have been called here to solve a particular case in which a public figure "X" and some authorities have been caught engaging in online-based violence.`,
+      "* A female lawyer was the one who filed the case. According to her, she was preparing to travel when someone captured a photo under her skirt without her consent.",
+      "* To gather all of the evidence that you need in your investigation, you must answer all of the questions correctly.",
+      "* This evidence is important for building a strong case in court to win. Choose your answer wisely.",
+      "* The courtroom awaits. It's not just a case; it's a fight for dignity, respect, and justice in the face of online gender-based violence."
+    ];
+
+    const npcTipsDialogues = [
+      "* Since it's your first time attending a court hearing, here are some tips that you could use.",
+      "* Don't worry, though; it could also be viewed later whenever you need a short refresher about it.",
+      "* What would you like to learn about?"
+    ];
+
+    const tipsInfo = {
+      vocab1: {
+        title: "Gender-based Harassment",
+        dialogue: "* Gender-based Harassment is a kind of harassment wherein someone is treated badly because of their gender. This is an important concept to understand for this case."
+      },
+      legal1: {
+        title: "Section 4(a) of Republic Act 9995",
+        subtitle: "Anti-Photo or Voyeurism Act of 2009",
+        dialogue: "* Section 4(a) of Republic Act 9995, also known as the Anti-Photo or Voyeurism Act of 2009, is about taking photos or videos of a person performing sexual acts or their private areas without consent. This is very relevant to our case."
+      },
+      legal2: {
+        title: "Section 4 of RA 11311",
+        subtitle: "Safe Spaces Act",
+        dialogue: "* Section 4 of RA 11311, the Safe Spaces Act, is about gender-based sexual harassment in public spaces. This aims to protect the citizens from sexual harassment in public spaces."
+      }
+    };
+
+    let dialogues = [];
+    let currentDialoguePhase = 'narrator';
+
+    const questions = [
+      {
+        text: "JUDGE: Prosecution, before we hear your witness testimony, please establish the primary legal framework for this case.\n\nUnder which Republic Act and specific section are you prosecuting the gender-based online sexual harassment charges against Ms. Patricia Santos?",
+        answers: [
+          "Republic Act No. 10175 Section 4(c)(4) - Cyber Libel",
+          "Republic Act No. 11313 Section 4 - Gender-based Online Sexual Harassment",
+          "Republic Act No. 9995 Section 4(a) - Photo and Video Voyeurism",
+          "Republic Act No. 7877 - Anti-Sexual Harassment Act"
+        ],
+        correct: 1,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor! The prosecution is proceeding under Republic Act No. 11313, Section 4—Gender-based Online Sexual Harassment! This provision explicitly addresses unwanted sexual remarks, threats, and sexually explicit content transmitted through digital platforms!\n\n★ JUDGE: Correctly identified, Counselor. Section 4 of RA 11313 is indeed the primary statute.\n\n★ DEFENSE ATTORNEY: *grimaces* The prosecution knows their law...\n\n★ Credibility Score: +5",
+        wrongMsgs: [
+          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 10175, Section 4(c)(4)—Cyber Libel...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution misidentifies the primary charge! While RA 10175's cyber libel may apply to defamatory posts, the MAIN charges concern persistent sexual harassment through WhatsApp and Instagram! Those fall under RA 11313 Section 4!\n\n✗ JUDGE: Sustained. Prosecution, RA 11313 Section 4 governs the primary harassment charges. Clarify your primary legal basis.",
+          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 9995 Section 4(a)—Photo and Video Voyeurism...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution conflates separate incidents! Yes, RA 9995 applies to upskirt photography. But the PRIMARY charges involve six months of online sexual harassment through messaging platforms! That's RA 11313 Section 4!\n\n✗ JUDGE: Sustained. Prosecution, distinguish between the voyeurism incident and the online harassment charges. RA 11313 Section 4 governs digital harassment.",
+          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 7877—the Anti-Sexual Harassment Act...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution cites outdated law! RA 7877 from 1995 addresses workplace harassment, primarily physical conduct. The modern law for ONLINE gender-based harassment is RA 11313 Section 4, the Safe Spaces Act of 2019!\n\n✗ JUDGE: Sustained. RA 7877 establishes requirements, but RA 11313 Section 4 specifically governs online harassment. Update your legal framework, Counselor."
+        ]
+      },
+
+      {
+        text: "Gender-based harassment specifically refers to...",
+        answers: [
+          "Any type of harassment",
+          "Harassment based on someone's gender",
+          "Only physical harassment",
+          "Cyber harassment only"
+        ],
+        correct: 1,
+        correctMsg: "★ Excellent understanding!",
+        wrongMsgs: [
+          "✗ Incorrect! Gender-based harassment is more specific than just 'any' harassment.",
+          "✗ Wrong! Gender-based harassment isn't limited to physical forms only.",
+          "✗ Wrong! Gender-based harassment can occur in many contexts, not just cyber."
+        ]
+      },
+
+      {
+        text: "Which act protects citizens from harassment in public spaces?",
+        answers: [
+          "RA 9995",
+          "RA 10175",
+          "RA 11311 (Safe Spaces Act)",
+          "RA 11313"
+        ],
+        correct: 2,
+        correctMsg: "★ Perfect! The Safe Spaces Act!",
+        wrongMsgs: [
+          "✗ Wrong! RA 9995 is the Anti-Photo/Voyeurism Act, not about public spaces.",
+          "✗ Wrong! RA 10175 is the Cybercrime Prevention Act, different from the Safe Spaces Act.",
+          "✗ Wrong! RA 11313 is not the correct act for public space harassment."
+        ]
+      },
+
+      {
+        text: "Taking photos under someone's skirt without consent is...",
+        answers: [
+          "Just a prank",
+          "Covered by Anti-Photo/Voyeurism Act",
+          "Not a crime",
+          "Only harassment"
+        ],
+        correct: 1,
+        correctMsg: "★ Correct! This is voyeurism!",
+        wrongMsgs: [
+          "✗ Wrong! This is NOT a prank - it's a serious crime under RA 9995!",
+          "✗ Wrong! This IS a crime - voyeurism is punishable under RA 9995.",
+          "✗ Wrong! It's more than harassment - it's a criminal offense of voyeurism."
+        ]
+      },
+
+      {
+        text: "The Safe Spaces Act covers which type of harassment?",
+        answers: [
+          "Only online harassment",
+          "Only workplace harassment",
+          "Gender-based sexual harassment in public",
+          "Private harassment only"
+        ],
+        correct: 2,
+        correctMsg: "★ Excellent! Case evidence secured!",
+        wrongMsgs: [
+          "✗ Incorrect! The Safe Spaces Act covers public spaces, not just online.",
+          "✗ Incorrect! The Safe Spaces Act is broader than just workplace harassment.",
+          "✗ Incorrect! The Safe Spaces Act specifically addresses PUBLIC harassment."
+        ]
+      }
+    ];
+
+    function createKeyboard() {
+      const keyboard = document.getElementById('keyboard');
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      keyboard.innerHTML = '';
+      letters.forEach(letter => {
+        const btn = document.createElement('button');
+        btn.className = 'key-button'; btn.textContent = letter;
+        btn.onclick = () => { sounds.menuMove(); addLetter(letter); };
+        keyboard.appendChild(btn);
+      });
+    }
+
+    function addLetter(letter) { if (currentName.length < MAX_NAME_LENGTH) { currentName += letter; updateNameDisplay(); } }
+
+    function updateNameDisplay() {
+      document.getElementById('name-display').textContent = currentName || '';
+      document.getElementById('backspace-btn').disabled = currentName.length === 0;
+      document.getElementById('done-btn').disabled = currentName.length === 0;
+      document.querySelectorAll('.key-button').forEach(btn => { btn.disabled = currentName.length >= MAX_NAME_LENGTH; });
+    }
+
+    document.getElementById('backspace-btn').onclick = () => { if (currentName.length > 0) { sounds.menuMove(); currentName = currentName.slice(0, -1); updateNameDisplay(); } };
+    document.getElementById('quit-btn').onclick = () => { sounds.menuMove(); currentName = ''; updateNameDisplay(); };
+    document.getElementById('done-btn').onclick = () => {
+      if (currentName.length > 0) {
+        sounds.menuSelect();
+        playerName = currentName;
+        document.getElementById('player-name').textContent = playerName;
+        playBackgroundMusic();
+        gsap.to('#name-screen', {
+          opacity: 0, duration: 0.5, onComplete: () => {
+            document.getElementById('name-screen').classList.add('hidden');
+            gsap.set('#name-screen', { opacity: 1 });
+            gameMode = 'walking';
+          }
+        });
+      }
+    };
+
+    function initializeTipsScreen() {
+    }
+
+    function createTipCard(tip, category) {
+    }
+
+    function toggleTipCollection(tip, card) {
+    }
+
+    function updateCollectedCount() {
+    }
+
+    function showTipsScreen() {
+    }
+
+    function closeTipsScreen() {
+    }
+
+    document.getElementById('skip-tips-btn').onclick = () => {
+    };
+
+    document.getElementById('proceed-btn').onclick = () => {
+    };
+
+    function showInventory() {
+      const inventoryContent = document.getElementById('inventory-content');
+      inventoryContent.innerHTML = '';
+
+      if (collectedTips.length === 0) {
+        inventoryContent.innerHTML = '<div class="empty-inventory">* No resources collected.<br>* You skipped the library phase.</div>';
+      } else {
+        collectedTips.forEach(tip => {
+          const item = document.createElement('div');
+          item.className = 'inventory-item';
+          let html = `<div class="inventory-item-title">${tip.title}</div>`;
+          if (tip.subtitle) html += `<div class="inventory-item-subtitle">${tip.subtitle}</div>`;
+          html += `<div class="inventory-item-content">${tip.content}</div>`;
+          item.innerHTML = html;
+          inventoryContent.appendChild(item);
+        });
+      }
+
+      gsap.fromTo('#inventory-modal',
+        { scale: 0.8, opacity: 0 },
+        {
+          scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)",
+          onStart: () => { document.getElementById('inventory-modal').classList.add('active'); }
+        }
+      );
+    }
+
+    document.getElementById('close-inventory-btn').onclick = () => {
+      sounds.menuSelect();
+      gsap.to('#inventory-modal', {
+        scale: 0.8, opacity: 0, duration: 0.3,
+        onComplete: () => {
+          document.getElementById('inventory-modal').classList.remove('active');
+          gsap.set('#inventory-modal', { scale: 1, opacity: 1 });
+        }
+      });
+    };
+
+  let isTyping = false, currentText = '', targetText = '', charIndex = 0;
+
+  // Per-question dialogue sequencing (e.g., JUDGE:, PROSECUTOR:, OPPOSITION:)
+  let questionDialogues = [];
+  let questionDialogueIndex = 0;
+  let questionDialogueCallback = null;
+  let inQuestionDialogue = false;
+
+    function typeText(text, element, callback) {
+      targetText = text;
+      currentText = '';
+      charIndex = 0;
+      isTyping = true;
+      element.textContent = '';
+
+      function typeChar() {
+        if (charIndex < targetText.length) {
+          if (charIndex % 3 === 0) sounds.textBlip(); // Less frequent beeps
+          currentText += targetText[charIndex];
+          element.textContent = currentText;
+          charIndex++;
+          setTimeout(typeChar, 20); // Faster typing for longer text
+        } else {
+          isTyping = false;
+          if (callback) callback();
+        }
+      }
+      typeChar();
+    }
+
+    function startDialogue() {
+      gameMode = 'dialogue'; dialogueIndex = 0; dialogues = [...narratorDialogues]; currentDialoguePhase = 'narrator';
+      const dialogueBox = document.getElementById('dialogue-box');
+      gsap.fromTo('#dialogue-box', { opacity: 0, y: -20 }, {
+        opacity: 1, y: 0, duration: 0.3,
+        onStart: () => { dialogueBox.classList.add('active'); }
+      });
+      showNextDialogue();
+    }
+
+    function showNextDialogue() {
+      if (dialogueIndex < dialogues.length) {
+        const dialogue = typeof dialogues[dialogueIndex] === 'function' ? dialogues[dialogueIndex]() : dialogues[dialogueIndex];
+        typeText(dialogue, document.getElementById('dialogue-text'));
+        dialogueIndex++;
+      } else {
+        if (currentDialoguePhase === 'narrator') {
+          dialogues = [...npcTipsDialogues];
+          dialogueIndex = 0;
+          currentDialoguePhase = 'npc';
+          transitionToScene('library');
+          showNextDialogue();
+        } else if (currentDialoguePhase === 'npc') {
+          gsap.to('#dialogue-box', {
+            opacity: 0, duration: 0.3, onComplete: () => {
+              document.getElementById('dialogue-box').classList.remove('active');
+              showTipsMenu();
+            }
+          });
+        } else if (currentDialoguePhase === 'tipInfo') {
+          gsap.to('#dialogue-box', {
+            opacity: 0, duration: 0.3, onComplete: () => {
+              document.getElementById('dialogue-box').classList.remove('active');
+              showTipsMenu();
+            }
+          });
+        }
+      }
+    }
+
+    function showTipsMenu() {
+      document.getElementById('tips-choice-box').classList.add('active');
+      gsap.fromTo('#tips-choice-box', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.3 });
+    }
+
+    // Show a sequence of small dialogues before a question (e.g., JUDGE:, PROSECUTOR:, OPPOSITION:)
+    function showQuestionDialogues(lines, onComplete) {
+      if (!lines || !lines.length) { onComplete && onComplete(); return; }
+      questionDialogues = lines.slice();
+      questionDialogueIndex = 0;
+      questionDialogueCallback = onComplete || null;
+      inQuestionDialogue = true;
+
+      const dialogueBox = document.getElementById('dialogue-box');
+      const battleBox = document.getElementById('battle-box');
+
+      // Hide the battle box first so the dialogue appears alone (like showDialogueMessage does)
+      gsap.to('#battle-box', {
+        opacity: 0,
+        duration: 0.2,
+        onComplete: () => {
+          if (battleBox) battleBox.classList.remove('active');
+
+          gsap.fromTo('#dialogue-box', { opacity: 0, y: -20 }, {
+            opacity: 1, y: 0, duration: 0.3,
+            onStart: () => { dialogueBox.classList.add('active'); }
+          });
+
+          // start first line (may include speaker prefix like 'JUDGE: text')
+          applySpeakerAndType(questionDialogues[questionDialogueIndex]);
+        }
+      });
+    }
+
+    function showNextQuestionDialogue() {
+      questionDialogueIndex++;
+      if (questionDialogueIndex < questionDialogues.length) {
+        // show next (may include prefix)
+        applySpeakerAndType(questionDialogues[questionDialogueIndex]);
+      } else {
+        // finished
+        const dialogueBox = document.getElementById('dialogue-box');
+        const battleBox = document.getElementById('battle-box');
+        gsap.to('#dialogue-box', {
+          opacity: 0, duration: 0.3, onComplete: () => {
+            dialogueBox.classList.remove('active');
+            inQuestionDialogue = false;
+
+            // Restore the battle box visuals
+            if (battleBox) {
+              battleBox.classList.add('active');
+              gsap.fromTo('#battle-box', { opacity: 0 }, { opacity: 1, duration: 0.3 });
+            }
+
+            if (questionDialogueCallback) {
+              const cb = questionDialogueCallback;
+              questionDialogueCallback = null;
+              cb();
+            }
+          }
+        });
+      }
+    }
+
+    function applySpeakerAndType(line) {
+      // If the line is a function (like your narratorDialogues entries), evaluate it now so it can use runtime values like playerName
+      if (typeof line === 'function') {
+        try { line = line(); } catch (e) { console.warn('error evaluating dialogue function', e); line = '' + line; }
+      }
+      const speakerLabelEl = document.getElementById('speaker-label');
+      const dialogueBox = document.getElementById('dialogue-box');
+      // Reset classes
+      dialogueBox.classList.remove('judge', 'prosecutor', 'defense');
+      speakerLabelEl.style.display = 'none';
+
+  // Expect format: 'SPEAKER: actual text' (SPEAKER optional)
+      const m = /^\s*([^:]{1,20}):\s*(.*)$/i.exec(line);
+      let speaker = null;
+      let text = line;
+      if (m) { speaker = m[1].trim(); text = m[2].trim(); }
+
+      if (speaker) {
+        speakerLabelEl.textContent = speaker.toUpperCase();
+        speakerLabelEl.style.display = 'inline-block';
+        // quick mapping to CSS class
+        const s = speaker.toLowerCase();
+        if (s.includes('judge')) dialogueBox.classList.add('judge');
+        else if (s.includes('prosecut') || s.includes('you') || s.includes('prosecutor')) dialogueBox.classList.add('prosecutor');
+        else if (s.includes('defense') || s.includes('defendant')) dialogueBox.classList.add('defense');
+      }
+
+      // Type the text portion
+      typeText(text, document.getElementById('dialogue-text'));
+    }
+
+    function showTipInfo(tipKey) {
+      sounds.menuSelect();
+      const tip = tipsInfo[tipKey];
+
+      if (!collectedTips.find(t => t.id === tipKey)) {
+        collectedTips.push({
+          id: tipKey,
+          title: tip.title,
+          subtitle: tip.subtitle,
+          content: tip.dialogue.replace('* ', '')
+        });
+      }
+
+      gsap.to('#tips-choice-box', {
+        opacity: 0, duration: 0.3, onComplete: () => {
+          document.getElementById('tips-choice-box').classList.remove('active');
+
+          dialogues = [tip.dialogue];
+          dialogueIndex = 0;
+          currentDialoguePhase = 'tipInfo';
+
+          const dialogueBox = document.getElementById('dialogue-box');
+          gsap.fromTo('#dialogue-box', { opacity: 0, y: -20 }, {
+            opacity: 1, y: 0, duration: 0.3,
+            onStart: () => { dialogueBox.classList.add('active'); }
+          });
+          showNextDialogue();
+        }
+      });
+    }
+
+    document.getElementById('vocab-btn').onclick = () => showTipInfo('vocab1');
+    document.getElementById('legal1-btn').onclick = () => showTipInfo('legal1');
+    document.getElementById('legal2-btn').onclick = () => showTipInfo('legal2');
+
+    document.getElementById('ready-btn').onclick = () => {
+      sounds.menuSelect();
+      gsap.to('#tips-choice-box', {
+        opacity: 0, duration: 0.3, onComplete: () => {
+          document.getElementById('tips-choice-box').classList.remove('active');
+          transitionToScene('courtroom', () => {
+            startQuiz();
+          });
+        }
+      });
+    };
+
+    function transitionToScene(sceneName, callback) {
+      const libraryScene = document.getElementById('library-scene');
+      const courtroomScene = document.getElementById('courtroom-scene');
+      const transitionOverlay = document.getElementById('transition-overlay');
+
+      const currentScene = !libraryScene.classList.contains('hidden') ? libraryScene :
+        !courtroomScene.classList.contains('hidden') ? courtroomScene : null;
+
+      gsap.to(transitionOverlay, {
+        opacity: 1,
+        duration: 0.4,
+        ease: "power2.in",
+        onComplete: () => {
+          if (currentScene) {
+            gsap.set(currentScene, { opacity: 0 });
+            currentScene.classList.add('hidden');
+          }
+
+          const newScene = sceneName === 'library' ? libraryScene : courtroomScene;
+          newScene.classList.remove('hidden');
+          gsap.set(newScene, { opacity: 1 });
+
+          gsap.to(transitionOverlay, {
+            opacity: 0,
+            duration: 0.6,
+            delay: 0.2,
+            ease: "power2.out",
+            onComplete: callback
+          });
+        }
+      });
+    }
+
+    function startQuiz() {
+      gameMode = 'quiz';
+      const enemySprite = document.getElementById('enemy-sprite'), battleBox = document.getElementById('battle-box');
+      enemySprite.classList.add('active'); battleBox.classList.add('active');
+      gsap.fromTo('#enemy-sprite', { scale: 0, rotation: 180 }, { scale: 1, rotation: 0, duration: 0.8, ease: "back.out(1.7)" });
+      gsap.to('#enemy-sprite', { y: '-=20', duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+      gsap.fromTo('#battle-box', { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 });
+      loadQuestion(currentQuestionIndex);
+    }
+
+    function loadQuestion(index) {
+      if (index >= questions.length) { victory(); return; }
+      const q = questions[index], questionText = document.getElementById('question-text'), answerButtons = document.getElementById('answer-buttons');
+
+      // If the question has a preDialogues array, show those lines first and then render the question
+      if (Array.isArray(q.preDialogues) && q.preDialogues.length > 0) {
+        showQuestionDialogues(q.preDialogues, () => {
+          // after dialogues complete, render the question
+          renderQuestionContent(q, questionText, answerButtons);
+        });
+      } else {
+        renderQuestionContent(q, questionText, answerButtons);
+      }
+    }
+
+    function renderQuestionContent(q, questionText, answerButtons) {
+      typeText(q.text, questionText);
+      answerButtons.innerHTML = '';
+      q.answers.forEach((answer, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn'; btn.textContent = '★ ' + answer;
+        btn.onclick = () => checkAnswer(i);
+        btn.onmouseenter = () => sounds.menuMove();
+        gsap.fromTo(btn, { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, delay: i * 0.1 });
+        answerButtons.appendChild(btn);
+      });
+      answeringQuestion = false;
+    }
+
+    function checkAnswer(selectedIndex) {
+      if (answeringQuestion) return;
+      answeringQuestion = true;
+      const q = questions[currentQuestionIndex], buttons = document.querySelectorAll('.answer-btn');
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (selectedIndex === q.correct) {
+        buttons[selectedIndex].classList.add('correct');
+        sounds.correct();
+        gsap.to('#enemy-sprite', { scale: 1.2, duration: 0.1, yoyo: true, repeat: 1 });
+        score += 100;
+        updateScore();
+        // Support multi-part correct messages (array, function, or string with blank-line separators)
+        let correctParts = [];
+        if (Array.isArray(q.correctMsg)) {
+          correctParts = q.correctMsg.slice();
+        } else if (typeof q.correctMsg === 'function') {
+          correctParts = [q.correctMsg];
+        } else {
+          correctParts = (q.correctMsg || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
+        }
+
+        if (correctParts.length > 1) {
+          showQuestionDialogues(correctParts, () => {
+            currentQuestionIndex++;
+            loadQuestion(currentQuestionIndex);
+          });
+        } else {
+          showDialogueMessage(correctParts[0] || q.correctMsg, () => {
+            currentQuestionIndex++;
+            loadQuestion(currentQuestionIndex);
+          });
+        }
+      } else {
+        buttons[selectedIndex].classList.add('wrong');
+        buttons[q.correct].classList.add('correct');
+        sounds.wrong();
+        gsap.to('#game-container', { x: '+=10', duration: 0.05, yoyo: true, repeat: 5, onComplete: () => gsap.set('#game-container', { x: 0 }) });
+        gsap.to('#enemy-sprite', { scale: 1.3, rotation: 15, duration: 0.2, yoyo: true, repeat: 1, ease: "power2.inOut" });
+        currentHP -= 5;
+        updateHP();
+
+        // Get the specific wrong message for this answer
+        let wrongMsgIndex = selectedIndex;
+        if (selectedIndex > q.correct) {
+          wrongMsgIndex = selectedIndex - 1;
+        }
+        const wrongMessage = q.wrongMsgs[wrongMsgIndex];
+
+        if (currentHP <= 0) {
+          setTimeout(gameOver, 1500);
+        } else {
+          // If the wrong message contains multiple speaker blocks separated by blank lines,
+          // split them and show each as a separate press-to-advance dialogue using showQuestionDialogues.
+          const parts = (wrongMessage || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
+          if (parts.length > 1) {
+            showQuestionDialogues(parts, () => {
+              currentQuestionIndex++;
+              loadQuestion(currentQuestionIndex);
+            });
+          } else {
+            showDialogueMessage(wrongMessage, () => {
+              currentQuestionIndex++;
+              loadQuestion(currentQuestionIndex);
+            });
+          }
+        }
+      }
+    }
+
+    function showDialogueMessage(text, callback) {
+      const dialogueBox = document.getElementById('dialogue-box');
+      const battleBox = document.getElementById('battle-box');
+
+      // Hide battle box first
+      gsap.to('#battle-box', {
+        opacity: 0,
+        duration: 0.2,
+        onComplete: () => {
+          battleBox.classList.remove('active');
+
+          // Show dialogue box
+          dialogueBox.classList.add('active');
+          gsap.fromTo('#dialogue-box',
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.3 }
+          );
+
+          // Type the text (faster for longer messages)
+          typeText(text, document.getElementById('dialogue-text'), () => {
+            // Wait longer for longer messages
+            const waitTime = text.length > 300 ? 4000 : 2500;
+            setTimeout(() => {
+              gsap.to('#dialogue-box', {
+                opacity: 0,
+                duration: 0.3,
+                onComplete: () => {
+                  dialogueBox.classList.remove('active');
+
+                  // Show battle box again
+                  battleBox.classList.add('active');
+                  gsap.fromTo('#battle-box',
+                    { opacity: 0 },
+                    {
+                      opacity: 1, duration: 0.3, onComplete: () => {
+                        if (callback) callback();
+                      }
+                    }
+                  );
+                }
+              });
+            }, waitTime);
+          });
+        }
+      });
+    }
+
+    function updateHP() {
+      document.getElementById('current-hp').textContent = currentHP;
+      const percentage = (currentHP / maxHP) * 100;
+      gsap.to('#hp-bar', { width: percentage + '%', duration: 0.5, ease: "power2.out" });
+      if (percentage <= 25) document.getElementById('hp-bar').style.backgroundColor = '#ff0000';
+    }
+
+    function updateScore() {
+      gsap.to(document.getElementById('score'), { innerText: score, duration: 0.5, snap: { innerText: 1 }, ease: "power2.out" });
+    }
+
+    function victory() {
+      gameMode = 'victory'; sounds.victory();
+      gsap.to('#battle-box', { opacity: 0, y: 50, duration: 0.5, onComplete: () => { document.getElementById('battle-box').classList.remove('active'); } });
+      gsap.to('#enemy-sprite', { scale: 0, rotation: 360, duration: 0.8, onComplete: () => { document.getElementById('enemy-sprite').classList.remove('active'); } });
+      document.getElementById('final-score-victory').textContent = score;
+      gsap.fromTo('#victory-screen', { scale: 0, rotation: -180 }, {
+        scale: 1, rotation: 0, duration: 1, ease: "back.out(1.7)",
+        onStart: () => { document.getElementById('victory-screen').classList.add('active'); }
+      });
+    }
+
+    function gameOver() {
+      gameMode = 'gameover';
+      gsap.to('#battle-box', { opacity: 0, duration: 0.5, onComplete: () => { document.getElementById('battle-box').classList.remove('active'); } });
+      gsap.to('#enemy-sprite', { scale: 1.5, opacity: 0, duration: 1, onComplete: () => { document.getElementById('enemy-sprite').classList.remove('active'); } });
+      document.getElementById('final-score-gameover').textContent = score;
+      gsap.fromTo('#gameover-screen', { opacity: 0, y: 50 }, {
+        opacity: 1, y: 0, duration: 1,
+        onStart: () => { document.getElementById('gameover-screen').classList.add('active'); }
+      });
+    }
+
+    function resetGame() {
+      sounds.menuSelect();
+      score = 0; currentHP = maxHP; currentQuestionIndex = 0; gameMode = 'walking'; dialogueIndex = 0;
+      answeringQuestion = false; currentDialoguePhase = 'narrator'; dialogues = []; collectedTips = [];
+      updateScore(); updateHP();
+      gsap.to('.end-screen.active', {
+        opacity: 0, duration: 0.5, onComplete: () => {
+          document.querySelectorAll('.end-screen').forEach(s => s.classList.remove('active'));
+          gsap.set('.end-screen', { opacity: 1 });
+        }
+      });
+      document.getElementById('battle-box').classList.remove('active');
+      document.getElementById('enemy-sprite').classList.remove('active');
+      document.getElementById('tips-choice-box').classList.remove('active');
+
+      gsap.set('#library-scene', { opacity: 0 });
+      gsap.set('#courtroom-scene', { opacity: 0 });
+      document.getElementById('library-scene').classList.add('hidden');
+      document.getElementById('courtroom-scene').classList.add('hidden');
+
+      gsap.killTweensOf('#enemy-sprite');
+      gsap.set('#enemy-sprite', { scale: 1, rotation: 0, y: 0 });
+      gsap.set('#battle-box', { opacity: 1, y: 0 });
+      player.x = canvas.width / 2; player.y = canvas.height / 2;
+    }
+
+    document.getElementById('restart-victory').onclick = resetGame;
+    document.getElementById('restart-gameover').onclick = resetGame;
+    document.getElementById('act-btn').onclick = () => {
+      if (gameMode === 'quiz' && !answeringQuestion) {
+        sounds.menuSelect();
+        showDialogueMessage("* You tried to ACT...", null);
+      }
+    };
+    document.getElementById('item-btn').onclick = () => {
+      if (gameMode === 'quiz' && !answeringQuestion) {
+        sounds.menuSelect();
+        showInventory();
+      }
+    };
+    document.getElementById('mercy-btn').onclick = () => {
+      if (gameMode === 'quiz' && !answeringQuestion) {
+        sounds.menuSelect();
+        showDialogueMessage("* The enemy refuses your mercy!", null);
+      }
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (gameMode === 'nameEntry') {
+        if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) { e.preventDefault(); sounds.menuMove(); addLetter(e.key.toUpperCase()); }
+        else if (e.key === 'Backspace') { e.preventDefault(); document.getElementById('backspace-btn').click(); }
+        else if (e.key === 'Enter') { e.preventDefault(); if (currentName.length > 0) document.getElementById('done-btn').click(); }
+        return;
+      }
+      keys[e.key] = true;
+
+      // If we're in a per-question dialogue sequence, handle Z/Enter here and don't fall through
+      if (inQuestionDialogue && (e.key === 'z' || e.key === 'Z' || e.key === 'Enter')) {
+        e.preventDefault();
+        if (isTyping) {
+          // finish typing immediately
+          isTyping = false; document.getElementById('dialogue-text').textContent = targetText;
+        } else {
+          sounds.menuSelect();
+          showNextQuestionDialogue();
+        }
+        return;
+      }
+      if ((e.key === 'z' || e.key === 'Z' || e.key === 'Enter')) {
+        e.preventDefault();
+        if (gameMode === 'walking' && canInteract) { sounds.menuSelect(); startDialogue(); }
+        else if (gameMode === 'dialogue' && !isTyping) { sounds.menuSelect(); showNextDialogue(); }
+        else if (gameMode === 'dialogue' && isTyping) { isTyping = false; document.getElementById('dialogue-text').textContent = targetText; }
+      }
+    });
+    document.addEventListener('keyup', (e) => { keys[e.key] = false; });
+
+    function update() {
+      if (gameMode === 'walking') {
+        if (keys['ArrowUp'] || keys['w'] || keys['W']) player.y -= player.speed;
+        if (keys['ArrowDown'] || keys['s'] || keys['S']) player.y += player.speed;
+        if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.x -= player.speed;
+        if (keys['ArrowRight'] || keys['d'] || keys['D']) player.x += player.speed;
+        if (mobileKeys.up) player.y -= player.speed;
+        if (mobileKeys.down) player.y += player.speed;
+        if (mobileKeys.left) player.x -= player.speed;
+        if (mobileKeys.right) player.x += player.speed;
+        player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
+        player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
+        const dist = Math.hypot(player.x - npc.x, player.y - npc.y);
+        canInteract = dist < 80;
+      }
+    }
+
+    function draw() {
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (gameMode === 'walking' || gameMode === 'dialogue') {
+        ctx.fillStyle = npc.color; ctx.fillRect(npc.x - npc.size / 2, npc.y - npc.size / 2, npc.size, npc.size);
+        ctx.fillStyle = '#fff'; ctx.font = '10px "Press Start 2P"'; ctx.textAlign = 'center';
+        ctx.fillText('QUIZ MASTER', npc.x, npc.y - npc.size - 5);
+        ctx.fillStyle = player.color; ctx.fillRect(player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
+        if (canInteract && gameMode === 'walking') {
+          ctx.fillStyle = '#ff8c00'; ctx.font = '8px "Press Start 2P"';
+          ctx.fillText(isMobile ? 'Press Z Button' : 'Press Z', player.x, player.y - 30);
+        }
+      }
+    }
+
+    function gameLoop() { update(); draw(); requestAnimationFrame(gameLoop); }
+
+    createKeyboard();
+    updateNameDisplay();
+    updateHP();
+    updateScore();
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+    gameLoop();
+  </script>
+  </body>
+</html>
