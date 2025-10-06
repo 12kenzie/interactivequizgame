@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Legal Evidence Gathering Game</title>
+  <title>Group 4 MIL PeTa Game</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -1078,7 +1078,11 @@
 
     const questions = [
       {
-        text: "JUDGE: Prosecution, before we hear your witness testimony, please establish the primary legal framework for this case.\n\nUnder which Republic Act and specific section are you prosecuting the gender-based online sexual harassment charges against Ms. Patricia Santos?",
+        preDialogues: [
+          "JUDGE: Prosecution, before we hear your witness testimony, please establish the primary legal framework for this case.",
+          "JUDGE: Under which Republic Act are you primarily prosecuting the defendant of  online harassment charges?"
+        ],
+        text: "Under which Republic Act and specific section are you prosecuting the gender-based online sexual harassment charges against Ms. Patricia Santos?",
         answers: [
           "Republic Act No. 10175 Section 4(c)(4) - Cyber Libel",
           "Republic Act No. 11313 Section 4 - Gender-based Online Sexual Harassment",
@@ -1093,21 +1097,24 @@
           "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 7877—the Anti-Sexual Harassment Act...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution cites outdated law! RA 7877 from 1995 addresses workplace harassment, primarily physical conduct. The modern law for ONLINE gender-based harassment is RA 11313 Section 4, the Safe Spaces Act of 2019!\n\n✗ JUDGE: Sustained. RA 7877 establishes requirements, but RA 11313 Section 4 specifically governs online harassment. Update your legal framework, Counselor."
         ]
       },
-
       {
-        text: "Gender-based harassment specifically refers to...",
+      preDialogues: [
+          "JUDGE: Prosecution, you've presented  CCTV_Footage_NAIA_Terminal3—CCTV footage from NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Under which specific provision are you charging this conduct?"
+        ],
+        text: "CCTV_Footage_NAIA_Terminal3 shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
         answers: [
-          "Any type of harassment",
-          "Harassment based on someone's gender",
-          "Only physical harassment",
-          "Cyber harassment only"
+          "Section 3(a) - Photo voyeurism in private places",
+          "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 5 - Penalties for distribution of voyeuristic materials",
+          "Section 6 - Venue and jurisdiction provisions"
         ],
         correct: 1,
-        correctMsg: "★ Excellent understanding!",
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor! presents evidence dramatically Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos UNDER a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV_Footage_NAIA_Terminal3's CCTV footage shows the defendant positioning her phone at an upward angle beneath the victim Maria's skirt at 2:15 PM.\n\nPhoto_Upskirt_Unauthorized contains the resulting photograph with EXIF metadata matching that exact timestamp! The real case cited in our briefing—the Cebu City councilor prosecuted for identical conduct at this very airport—confirms this is a recognized violation of Section 4(a)!\n\n★ JUDGE: Precisely correct, Counselor. Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
         wrongMsgs: [
-          "✗ Incorrect! Gender-based harassment is more specific than just 'any' harassment.",
-          "✗ Wrong! Gender-based harassment isn't limited to physical forms only.",
-          "✗ Wrong! Gender-based harassment can occur in many contexts, not just cyber."
+          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 10175, Section 4(c)(4)—Cyber Libel...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution misidentifies the primary charge! While RA 10175's cyber libel may apply to defamatory posts, the MAIN charges concern persistent sexual harassment through WhatsApp and Instagram! Those fall under RA 11313 Section 4!\n\n✗ JUDGE: Sustained. Prosecution, RA 11313 Section 4 governs the primary harassment charges. Clarify your primary legal basis.",
+          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 9995 Section 4(a)—Photo and Video Voyeurism...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution conflates separate incidents! Yes, RA 9995 applies to upskirt photography. But the PRIMARY charges involve six months of online sexual harassment through messaging platforms! That's RA 11313 Section 4!\n\n✗ JUDGE: Sustained. Prosecution, distinguish between the voyeurism incident and the online harassment charges. RA 11313 Section 4 governs digital harassment.",
+          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 7877—the Anti-Sexual Harassment Act...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution cites outdated law! RA 7877 from 1995 addresses workplace harassment, primarily physical conduct. The modern law for ONLINE gender-based harassment is RA 11313 Section 4, the Safe Spaces Act of 2019!\n\n✗ JUDGE: Sustained. RA 7877 establishes requirements, but RA 11313 Section 4 specifically governs online harassment. Update your legal framework, Counselor."
         ]
       },
 
@@ -1271,6 +1278,8 @@
   let questionDialogueIndex = 0;
   let questionDialogueCallback = null;
   let inQuestionDialogue = false;
+  let waitingForQuestionConfirm = false;
+  let questionConfirmCallback = null;
 
     function typeText(text, element, callback) {
       targetText = text;
@@ -1364,6 +1373,26 @@
 
           // start first line (may include speaker prefix like 'JUDGE: text')
           applySpeakerAndType(questionDialogues[questionDialogueIndex]);
+        }
+      });
+    }
+
+    function presentQuestionPrompt(q, onConfirm) {
+      const dialogueBox = document.getElementById('dialogue-box');
+      const battleBox = document.getElementById('battle-box');
+      
+      gsap.to('#battle-box', {
+        opacity: 0,
+        duration: 0.2,
+        onComplete: () => {
+          if (battleBox) battleBox.classList.remove('active');
+          dialogueBox.classList.add('active');
+          gsap.fromTo('#dialogue-box', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.3 });
+          
+          typeText(q.text, document.getElementById('dialogue-text'), () => {
+            waitingForQuestionConfirm = true;
+            questionConfirmCallback = onConfirm || null;
+          });
         }
       });
     }
@@ -1526,11 +1555,12 @@
       // If the question has a preDialogues array, show those lines first and then render the question
       if (Array.isArray(q.preDialogues) && q.preDialogues.length > 0) {
         showQuestionDialogues(q.preDialogues, () => {
-          // after dialogues complete, render the question
-          renderQuestionContent(q, questionText, answerButtons);
+          // after dialogues complete, present the question prompt and wait for confirmation before showing choices
+          presentQuestionPrompt(q, () => { renderQuestionContent(q, questionText, answerButtons); });
         });
       } else {
-        renderQuestionContent(q, questionText, answerButtons);
+        // Present the question prompt first; answers will show after pressing Z/ENTER
+        presentQuestionPrompt(q, () => { renderQuestionContent(q, questionText, answerButtons); });
       }
     }
 
@@ -1759,13 +1789,46 @@
         e.preventDefault();
         if (isTyping) {
           // finish typing immediately
-          isTyping = false; document.getElementById('dialogue-text').textContent = targetText;
+          isTyping = false; 
+          document.getElementById('dialogue-text').textContent = targetText;
         } else {
           sounds.menuSelect();
           showNextQuestionDialogue();
         }
         return;
       }
+
+      // If we're waiting for the player to press Z/ENTER to show the question choices
+      if (waitingForQuestionConfirm && (e.key === 'z' || e.key === 'Z' || e.key === 'Enter')) {
+        e.preventDefault();
+        if (isTyping) {
+          // finish typing immediately
+          isTyping = false;
+          document.getElementById('dialogue-text').textContent = targetText;
+        } else {
+          sounds.menuSelect();
+          waitingForQuestionConfirm = false;
+          const dialogueBox = document.getElementById('dialogue-box');
+          const battleBox = document.getElementById('battle-box');
+          gsap.to('#dialogue-box', {
+            opacity: 0, duration: 0.3, onComplete: () => {
+              dialogueBox.classList.remove('active');
+              // restore battle box visuals and then run the callback to render choices
+              if (battleBox) {
+                battleBox.classList.add('active');
+                gsap.fromTo('#battle-box', { opacity: 0 }, { opacity: 1, duration: 0.3 });
+              }
+              if (questionConfirmCallback) {
+                const cb = questionConfirmCallback;
+                questionConfirmCallback = null;
+                cb();
+              }
+            }
+          });
+        }
+        return;
+      }
+
       if ((e.key === 'z' || e.key === 'Z' || e.key === 'Enter')) {
         e.preventDefault();
         if (gameMode === 'walking' && canInteract) { sounds.menuSelect(); startDialogue(); }
