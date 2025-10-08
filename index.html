@@ -826,6 +826,14 @@
       pointer-events: none;
       z-index: 999;
     }
+
+    .rank-display {
+      color: #ff8c00;
+      font-size: 16px;
+      margin: 15px 0;
+      font-weight: bold;
+      text-shadow: 2px 2px #000;
+    }
   </style>
 </head>
 
@@ -1841,15 +1849,243 @@
       gsap.to(document.getElementById('score'), { innerText: score, duration: 0.5, snap: { innerText: 1 }, ease: "power2.out" });
     }
 
+    // Ending tier configuration based on credibility score
+const ENDING_TIERS = {
+  ACE: { 
+    min: 45, 
+    title: '★ ACE PROSECUTOR ★', 
+    rank: 'S',
+    dialogues: [
+      "JUDGE: *strikes gavel with finality* The court will now render its verdict based on the evidence and arguments presented.",
+      `JUDGE: Based on the overwhelming evidence presented by the prosecution, this court finds the defendant, Mr. Dwg, GUILTY on all counts:
+      
+      - GUILTY of Gender-based Online Sexual Harassment under RA 11313 Section 4
+      - GUILTY of Photo Voyeurism under RA 9995 Section 4(a)
+      - GUILTY of violating the Safe Spaces Act provisions
+            
+      The defendant's systematic harassment of Ms. Patricia Santos over six months, combined with the deplorable upskirt photography at NAIA Terminal 3, represents a clear pattern of predatory behavior.`,
+            () => `JUDGE: Attorney ${playerName}, your prosecution was nothing short of exemplary. Every statute cited was precise, every piece of evidence meticulously presented, and every legal argument devastatingly effective.`,
+            "DEFENSE ATTORNEY SANTIAGO: *extends hand* Masterful prosecution. You may have presented an airtight case to damage my case record, but we'll see if it's just beginner's luck. You have my regards—this is what competent advocacy looks like. *applauds*",
+            `★ ACHIEVEMENT UNLOCKED: "CHAMPION OF JUSTICE" ★
+
+    The Department of Justice sends formal commendation. You're invited to train prosecutors on cybercrime cases nationwide. Media coverage highlights your expert handling of gender-based online harassment prosecution.
+    
+    Your name is being recommended for the Anti-Cybercrime Task Force!`
+        ]
+  },
+  
+  SKILLED: { 
+    min: 35, 
+    title: '★ SKILLED PROSECUTOR ★', 
+    rank: 'A',
+    dialogues: [
+      "JUDGE: *strikes gavel* The court has reached a verdict after careful deliberation.",
+      `JUDGE: This court finds the defendant GUILTY on the primary charges:
+      
+      - GUILTY of Gender-based Online Sexual Harassment under RA 11313 Section 4
+      - GUILTY of Photo Voyeurism under RA 9995 Section 4(a)
+            
+      While some procedural issues arose during trial, the core evidence was compelling and properly presented.`,
+            () => `JUDGE: Attorney ${playerName}, you demonstrated strong legal acumen. A few stumbles in statute citation, but overall a solid prosecution that achieved justice.`,
+            "DEFENSE ATTORNEY SANTIAGO: *nods respectfully* Well fought, Counselor. You had me worried several times. With more experience, you'll be formidable.",
+            `★ ACHIEVEMENT UNLOCKED: "RISING STAR" ★
+
+    Your supervisor notes your strong performance. You're assigned more complex cases and recommended for advanced cybercrime law training.
+
+    Local legal journals mention your successful prosecution of this high-profile case.`
+    ]
+  },
+  COMPETENT: { 
+    min: 25, 
+    title: '★ COMPETENT PROSECUTOR ★', 
+    rank: 'B',
+    dialogues: [
+      "JUDGE: *strikes gavel* After reviewing all evidence, the court renders the following verdict.",
+      `JUDGE: The defendant is found GUILTY on the main charge:
+      
+      - GUILTY of Gender-based Online Sexual Harassment under RA 11313 Section 4
+      
+      However, the voyeurism charge under RA 9995 resulted in a lesser conviction due to procedural concerns raised by the defense.`,
+        () => `JUDGE: Attorney ${playerName}, justice was served today, though your case had vulnerabilities. I recommend reviewing the specific provisions of RA 9995 before your next similar case.`,
+        "DEFENSE ATTORNEY SANTIAGO: *brief nod* You got the conviction, but you made it harder on yourself than necessary. Study more. The law rewards precision.",
+        `★ ACHIEVEMENT UNLOCKED: "JUSTICE SERVED" ★
+
+        Your case is won, and the victim receives some measure of justice. Your supervisor provides feedback on areas for improvement, particularly on statute specificity and evidence presentation.
+        
+        You're cleared to continue handling standard cybercrime cases.`
+    ]
+  },
+  STRUGGLING: { 
+    min: 15, 
+    title: '★ STRUGGLING PROSECUTOR ★', 
+    rank: 'C',
+    dialogues: [
+      "JUDGE: *strikes gavel with visible concern* This court has deliberated extensively given the... complications during trial.",
+      `JUDGE: The defendant is found GUILTY on reduced charges:
+      
+      - GUILTY of Online Harassment (lesser included offense)
+            
+      The primary charges under RA 11313 Section 4 and RA 9995 Section 4(a) could not be sustained due to significant evidentiary and procedural issues presented by the prosecution.`,
+            () => `JUDGE: Attorney ${playerName}, while you secured a conviction, your numerous legal errors nearly resulted in dismissal. This performance is concerning for someone representing the People.`,
+            "DEFENSE ATTORNEY SANTIAGO: *barely conceals smirk* Lucky for you the evidence spoke for itself, because your arguments certainly didn't. Hit the law books, rookie.",
+            `★ ACHIEVEMENT: "NARROW ESCAPE" ★
+
+      Your supervisor schedules a formal review meeting. You're required to complete remedial training on RA 11313, RA 9995, and proper evidence presentation before handling cybercrime cases again.
+      
+      The victim's family expresses disappointment at the reduced charges.`
+    ]
+  },
+  INADEQUATE: { 
+    min: 0, 
+    title: '★ INADEQUATE PERFORMANCE ★', 
+    rank: 'D',
+    dialogues: [
+      "JUDGE: *strikes gavel heavily* This has been one of the most troubling prosecutions this court has witnessed.",
+      `JUDGE: Due to the prosecution's repeated misidentification of applicable statutes, improper evidence handling, and fundamental misunderstanding of the legal framework...
+
+      This court has no choice but to find the defendant GUILTY only on the most basic charge:
+            
+      - GUILTY of Unjust Vexation (minor offense)
+            
+      All major charges are DISMISSED due to prosecutorial incompetence.`,
+            () => `JUDGE: Attorney ${playerName}, your performance was unacceptable. The victim deserved better representation. I'm recommending a formal review of your qualifications.`,
+            "DEFENSE ATTORNEY SANTIAGO: *shakes head* I didn't even need to try. You did my job for me. Please don't practice law until you actually learn it.",
+            `★ WARNING: "PROFESSIONAL REVIEW REQUIRED" ★
+      
+      Your law license is under review. You're immediately suspended from handling any cybercrime cases and must complete comprehensive retraining.
+      
+      The victim files a complaint against you with the Integrated Bar of the Philippines.
+      
+      The Department of Justice opens an investigation into your competence.`
+    ]
+  }
+};
+
+    function getEndingTier(finalScore) {
+      if (finalScore >= ENDING_TIERS.ACE.min) return ENDING_TIERS.ACE;
+      if (finalScore >= ENDING_TIERS.SKILLED.min) return ENDING_TIERS.SKILLED;
+      if (finalScore >= ENDING_TIERS.COMPETENT.min) return ENDING_TIERS.COMPETENT;
+      if (finalScore >= ENDING_TIERS.STRUGGLING.min) return ENDING_TIERS.STRUGGLING;
+      return ENDING_TIERS.INADEQUATE;
+    }
+    
     function victory() {
-      gameMode = 'victory'; sounds.victory();
-      gsap.to('#battle-box', { opacity: 0, y: 50, duration: 0.5, onComplete: () => { document.getElementById('battle-box').classList.remove('active'); } });
-      gsap.to('#enemy-sprite', { scale: 0, rotation: 360, duration: 0.8, onComplete: () => { document.getElementById('enemy-sprite').classList.remove('active'); } });
-      document.getElementById('final-score-victory').textContent = score;
-      gsap.fromTo('#victory-screen', { scale: 0, rotation: -180 }, {
-        scale: 1, rotation: 0, duration: 1, ease: "back.out(1.7)",
-        onStart: () => { document.getElementById('victory-screen').classList.add('active'); }
+      gameMode = 'victory'; 
+      sounds.victory();
+      
+      gsap.to('#battle-box', { 
+        opacity: 0, y: 50, duration: 0.5, 
+        onComplete: () => { document.getElementById('battle-box').classList.remove('active'); } 
       });
+      
+      gsap.to('#enemy-sprite', { 
+        scale: 0, rotation: 360, duration: 0.8, 
+        onComplete: () => { document.getElementById('enemy-sprite').classList.remove('active'); } 
+      });
+      
+      // Get the appropriate ending tier based on CREDIBILITY (currentHP), not score
+      const ending = getEndingTier(currentHP);
+      
+      // Process dialogues with playerName function evaluation
+      const processedDialogues = ending.dialogues.map(dialogue => {
+        if (typeof dialogue === 'function') {
+          return dialogue();
+        }
+        return dialogue;
+      });
+      
+      // Show ending dialogue sequence
+      showEndingDialogues(processedDialogues, ending, () => {
+        // After dialogues, show the final victory screen
+        showFinalVictoryScreen(ending);
+      });
+    }
+
+    function showEndingDialogues(dialogues, ending, onComplete) {
+      let currentIndex = 0;
+      
+      const dialogueBox = document.getElementById('dialogue-box');
+      dialogueBox.classList.add('active');
+      gsap.fromTo('#dialogue-box', 
+        { opacity: 0, y: -20 }, 
+        { opacity: 1, y: 0, duration: 0.3 }
+      );
+      
+      function showNext() {
+        if (currentIndex < dialogues.length) {
+          const dialogue = dialogues[currentIndex];
+          applySpeakerAndType(dialogue);
+          currentIndex++;
+          
+          // Set up for next dialogue
+          const checkForNext = setInterval(() => {
+            if (!isTyping) {
+              clearInterval(checkForNext);
+              
+              // Wait for player input to continue
+              const continueHandler = (e) => {
+                if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter') {
+                  sounds.menuSelect();
+                  document.removeEventListener('keydown', continueHandler);
+                  showNext();
+                }
+              };
+              document.addEventListener('keydown', continueHandler);
+              
+              // Mobile support
+              const mobileHandler = () => {
+                sounds.menuSelect();
+                document.getElementById('mobile-action').removeEventListener('touchstart', mobileHandler);
+                document.removeEventListener('keydown', continueHandler);
+                showNext();
+              };
+              document.getElementById('mobile-action').addEventListener('touchstart', mobileHandler, { once: true });
+            }
+          }, 100);
+        } else {
+          // All dialogues shown, fade out and show final screen
+          gsap.to('#dialogue-box', {
+            opacity: 0, duration: 0.3,
+            onComplete: () => {
+              dialogueBox.classList.remove('active');
+              onComplete();
+            }
+          });
+        }
+      }
+  
+      showNext();
+    }
+
+  function showFinalVictoryScreen(ending) {
+      const victoryScreen = document.getElementById('victory-screen');
+      victoryScreen.querySelector('h2').textContent = ending.title;
+      
+      // Update or create rank display
+      let rankDisplay = victoryScreen.querySelector('.rank-display');
+      if (!rankDisplay) {
+        rankDisplay = document.createElement('div');
+        rankDisplay.className = 'rank-display';
+        victoryScreen.insertBefore(rankDisplay, victoryScreen.querySelector('p'));
+      }
+      rankDisplay.textContent = `RANK: ${ending.rank}`;
+      
+      // Update message with credibility instead of score
+      const messageP = victoryScreen.querySelectorAll('p')[0];
+      const lastDialogue = ending.dialogues[ending.dialogues.length - 1];
+      messageP.textContent = lastDialogue.replace(/★|ACHIEVEMENT.*?:|WARNING.*?:/g, '').trim();
+      
+      // Show credibility score instead of regular score
+      const finalScoreElement = document.getElementById('final-score-victory');
+      finalScoreElement.parentElement.innerHTML = `Final Credibility: <span id="final-score-victory">${currentHP}</span> / ${maxHP}<br>Cases Won: <span>${score}</span> points`;
+      
+      gsap.fromTo('#victory-screen', 
+        { scale: 0, rotation: -180 }, 
+        {
+          scale: 1, rotation: 0, duration: 1, ease: "back.out(1.7)",
+          onStart: () => { victoryScreen.classList.add('active'); }
+        }
+      );
     }
 
     function gameOver() {
