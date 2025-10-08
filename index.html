@@ -2243,10 +2243,16 @@ const ENDING_TIERS = {
     function gameLoop() { update(); draw(); requestAnimationFrame(gameLoop); }
 
     createKeyboard();
+
+    createKeyboard();
+    console.log('Keyboard created, button count:', document.querySelectorAll('.key-button').length);
     updateNameDisplay();
     updateHP();
     updateScore();
-    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+    window.addEventListener('resize', () => { 
+      canvas.width = window.innerWidth; 
+      canvas.height = window.innerHeight; 
+    });
     gameLoop();
   </script>
   </body>
