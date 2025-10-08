@@ -1077,7 +1077,7 @@
     let currentDialoguePhase = 'narrator';
 
     const questions = [
-      {
+      {// QUESTION 1
         preDialogues: [
           "JUDGE: Prosecution, before we hear your witness testimony, please establish the primary legal framework for this case.",
           "JUDGE: Under which Republic Act are you primarily prosecuting the defendant of  online harassment charges?"
@@ -1090,84 +1090,198 @@
           "Republic Act No. 7877 - Anti-Sexual Harassment Act"
         ],
         correct: 1,
-        correctMsg: "★ YOU (PROSECUTOR): Your Honor! The prosecution is proceeding under Republic Act No. 11313, Section 4—Gender-based Online Sexual Harassment! This provision explicitly addresses unwanted sexual remarks, threats, and sexually explicit content transmitted through digital platforms!\n\n★ JUDGE: Correctly identified, Counselor. Section 4 of RA 11313 is indeed the primary statute.\n\n★ DEFENSE ATTORNEY: *grimaces* The prosecution knows their law...\n\n★ Credibility Score: +5",
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor! The prosecution is proceeding under Republic Act No. 11313, Section 4—Gender-based Online Sexual Harassment! It  covers unwelcome sexual comments, intimidation, also graphic material shared via social media such as Messenger, Instagram, or Facebook!\n\n★ YOU (PROSECUTOR): Both Chat Log Transcript Alpha and  Chat Log Transcript Beta showcase unwelcome, repeated sexual harassment directed at Maria via social platforms. The Safe Spaces Act exists expressly to fight this kind of online abuse targeting someone because of their gender! \n\n★ JUDGE: I see your point councilor, Its reasonable to say that Section 4 of RA11313 is indeed the primary charge.\n\n★ DEFENSE ATTORNEY: *grimaces* The prosecution knows their doing...\n\n★ Credibility Score: +5",
         wrongMsgs: [
-          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 10175, Section 4(c)(4)—Cyber Libel...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution misidentifies the primary charge! While RA 10175's cyber libel may apply to defamatory posts, the MAIN charges concern persistent sexual harassment through WhatsApp and Instagram! Those fall under RA 11313 Section 4!\n\n✗ JUDGE: Sustained. Prosecution, RA 11313 Section 4 governs the primary harassment charges. Clarify your primary legal basis.",
-          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 9995 Section 4(a)—Photo and Video Voyeurism...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution conflates separate incidents! Yes, RA 9995 applies to upskirt photography. But the PRIMARY charges involve six months of online sexual harassment through messaging platforms! That's RA 11313 Section 4!\n\n✗ JUDGE: Sustained. Prosecution, distinguish between the voyeurism incident and the online harassment charges. RA 11313 Section 4 governs digital harassment.",
-          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 7877—the Anti-Sexual Harassment Act...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution cites outdated law! RA 7877 from 1995 addresses workplace harassment, primarily physical conduct. The modern law for ONLINE gender-based harassment is RA 11313 Section 4, the Safe Spaces Act of 2019!\n\n✗ JUDGE: Sustained. RA 7877 establishes requirements, but RA 11313 Section 4 specifically governs online harassment. Update your legal framework, Counselor."
+          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 10175, Section 4—Cyber Libel...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution misidentifies the primary charge! While RA 10175's cyber libel may apply to defamatory posts, the MAIN charges concern persistent sexual harassment through WhatsApp and Instagram with Chat Log Transcript Alpha and Chat Log Transcript Beta!\n\n✗ DEFENSE ATTORNEY: Those fall under RA 11313 Section 4, Gender-based Online Sexual Harassment! The prosecutor should know which law they're primarily using!\n\n✗ DEFENSE ATTORNEY: Your Honor, this shows fundamental confusion about the case structure!\n\n✗ JUDGE: Sustained. Prosecution, RA 11313 Section 4 governs the primary harassment charges. Cyber libel may be an additional count, but clarify your primary legal basis.",
+          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 9995 Section 4(a)—Photo and Video Voyeurism...\n\n✗ DEFENSE ATTORNEY: HOLD IT! The prosecution is focusing on separate incidents! \n\n✗ DEFENSE ATTORNEY: Yes, RA 9995 applies to the CCTV Footage of NAIA Terminal 3  and the unauthorized picture. But the primary charges involve six months of online sexual harassment through messaging platforms! \n\n✗ DEFENSE ATTORNEY: That's RA 11313 Section 4! Chat Log Transcript Alpha and Chat Log Transcript Beta aren't photos that are under RA995 they're sexually explicit messages and persistent unwanted advances! The prosecutor seems confused about which law governs which conduct!\n\n✗ JUDGE: Sustained. Prosecution, distinguish between the voyeurism incident and the online harassment charges. RA 11313 Section 4 governs digital harassment.",
+          "✗ YOU (PROSECUTOR): Got it,Your Honor, we're prosecuting under RA 7877—the Anti-Sexual Harassment Act..\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution cites an outdated law! RA 7877 from 1995 addresses workplace and educational sexual harassment, primarily physical conduct.\n\n✗ DEFENSE ATTORNEY: This was established way before anyone was posting online. The modern law for ONLINE gender-based harassment is RA 11313 Section 4, the Safe Spaces Act of 2019! \n\n✗ DEFENSE ATTORNEY: Chat Log Transcript Alpha and Chat Log Transcript Beta show Messenger and Instagram harassment—digital platforms that didn't exist when RA 7877 was written! The prosecutor should use the correct, applicable statute!\n\n✗ JUDGE: Sustained. RA 7877 establishes CODI requirements, but RA 11313 Section 4 specifically governs online harassment. Update your legal framework, Counselor."
         ]
       },
-      {
+      { // QUESTION 2
       preDialogues: [
-          "JUDGE: Prosecution, you've presented  CCTV_Footage_NAIA_Terminal3—CCTV footage from NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
           "JUDGE: Under which specific provision are you charging this conduct?"
         ],
-        text: "CCTV_Footage_NAIA_Terminal3 shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
+        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
         answers: [
-          "Section 3(a) - Photo voyeurism in private places",
           "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 3(a) - Photo voyeurism in private places",
           "Section 5 - Penalties for distribution of voyeuristic materials",
           "Section 6 - Venue and jurisdiction provisions"
         ],
-        correct: 1,
-        correctMsg: "★ YOU (PROSECUTOR): Your Honor! presents evidence dramatically Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos UNDER a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV_Footage_NAIA_Terminal3's CCTV footage shows the defendant positioning her phone at an upward angle beneath the victim Maria's skirt at 2:15 PM.\n\nPhoto_Upskirt_Unauthorized contains the resulting photograph with EXIF metadata matching that exact timestamp! The real case cited in our briefing—the Cebu City councilor prosecuted for identical conduct at this very airport—confirms this is a recognized violation of Section 4(a)!\n\n★ JUDGE: Precisely correct, Counselor. Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
+        correct: 0,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
         wrongMsgs: [
-          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 10175, Section 4(c)(4)—Cyber Libel...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution misidentifies the primary charge! While RA 10175's cyber libel may apply to defamatory posts, the MAIN charges concern persistent sexual harassment through WhatsApp and Instagram! Those fall under RA 11313 Section 4!\n\n✗ JUDGE: Sustained. Prosecution, RA 11313 Section 4 governs the primary harassment charges. Clarify your primary legal basis.",
-          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 9995 Section 4(a)—Photo and Video Voyeurism...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution conflates separate incidents! Yes, RA 9995 applies to upskirt photography. But the PRIMARY charges involve six months of online sexual harassment through messaging platforms! That's RA 11313 Section 4!\n\n✗ JUDGE: Sustained. Prosecution, distinguish between the voyeurism incident and the online harassment charges. RA 11313 Section 4 governs digital harassment.",
-          "✗ YOU (PROSECUTOR): Your Honor, we're prosecuting under RA 7877—the Anti-Sexual Harassment Act...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution cites outdated law! RA 7877 from 1995 addresses workplace harassment, primarily physical conduct. The modern law for ONLINE gender-based harassment is RA 11313 Section 4, the Safe Spaces Act of 2019!\n\n✗ JUDGE: Sustained. RA 7877 establishes requirements, but RA 11313 Section 4 specifically governs online harassment. Update your legal framework, Counselor."
+          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n✗ DEFENSE ATTORNEY SANTIAGO: OBJECTION! That application of the law is way off. Section 3(a) specifically concerns itself with peeping into PRIVATE spaces like bathrooms or bedrooms.\n\n✗ DEFENSE ATTORNEY SANTIAGO: But NAIA Terminal 3 is a PUBLIC airport! More importantly, the prosecutor misses the point. A more applicable law would be section 4(a) specifically prohibits photographing UNDER someone's CLOTHING, regardless of location!\n\n✗ DEFENSE ATTORNEY SANTIAGO: Whether in a private location  or public airport,taking photos up someone’s skirt violates Section 4(a). The location doesn't determine the violation; the act of photographing under clothing does!\n\n✗ JUDGE: Sustained. Section 4(a) governs upskirt photography regardless of public or private setting.",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n✗ DEFENSE ATTORNEY SANTIAGO: HOLD IT ! The prosecution charges distribution without proof the defendant did the offense!\n\n ✗ DEFENSE ATTORNEY SANTIAGO:  the prosecution must first prove the photo was illegally OBTAINED under Section 4(a)! Digital Forensics Report shows the photo was found on my client's phone, but there's no evidence of distribution!\n\n✗ DEFENSE ATTORNEY SANTIAGO: The prosecutor is charging the wrong section—Theyre focusing on the charge of distributing the photo not TAKING it!\n\n✗ JUDGE: Sustained. Establish the violation of Section 4(a)  for taking the photo first, Prosecution.",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n✗ DEFENSE ATTORNEY SANTIAGO: OBJECTION! The prosecution is talking about paperwork, not guilt or innocence! Section 6 simply dictates where to bring a case; it doesn’t define the crime itself!\n\n✗ DEFENSE ATTORNEY SANTIAGO:  CCTV Footage of NAIA Terminal 3  allegedly shows my client photographing under someone's clothing. That conduct, if proven, would violate Section 4(a)!\n\n✗ DEFENSE ATTORNEY SANTIAGO: Venue provisions set where a trial happens - not what someone did. The prosecutor confuses procedure with content!\n\n✗ JUDGE: Sustained. Section 6 is about the venue, not the criminal prohibition itself. Section 4(a) defines the offense."
+        ]
+      },
+      { // QUESTION 3
+      preDialogues: [
+          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Under which specific provision are you charging this conduct?"
+        ],
+        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
+        answers: [
+          "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 3(a) - Photo voyeurism in private places",
+          "Section 5 - Penalties for distribution of voyeuristic materials",
+          "Section 6 - Venue and jurisdiction provisions"
+        ],
+        correct: 0,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
+        wrongMsgs: [
+          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
+        ]
+      },
+      { // QUESTION 4
+      preDialogues: [
+          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Under which specific provision are you charging this conduct?"
+        ],
+        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
+        answers: [
+          "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 3(a) - Photo voyeurism in private places",
+          "Section 5 - Penalties for distribution of voyeuristic materials",
+          "Section 6 - Venue and jurisdiction provisions"
+        ],
+        correct: 0,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
+        wrongMsgs: [
+          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
         ]
       },
 
-      {
-        text: "Which act protects citizens from harassment in public spaces?",
-        answers: [
-          "RA 9995",
-          "RA 10175",
-          "RA 11311 (Safe Spaces Act)",
-          "RA 11313"
+      { // QUESTION 5
+      preDialogues: [
+          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Under which specific provision are you charging this conduct?"
         ],
-        correct: 2,
-        correctMsg: "★ Perfect! The Safe Spaces Act!",
+        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
+        answers: [
+          "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 3(a) - Photo voyeurism in private places",
+          "Section 5 - Penalties for distribution of voyeuristic materials",
+          "Section 6 - Venue and jurisdiction provisions"
+        ],
+        correct: 0,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
         wrongMsgs: [
-          "✗ Wrong! RA 9995 is the Anti-Photo/Voyeurism Act, not about public spaces.",
-          "✗ Wrong! RA 10175 is the Cybercrime Prevention Act, different from the Safe Spaces Act.",
-          "✗ Wrong! RA 11313 is not the correct act for public space harassment."
+          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
         ]
       },
 
-      {
-        text: "Taking photos under someone's skirt without consent is...",
-        answers: [
-          "Just a prank",
-          "Covered by Anti-Photo/Voyeurism Act",
-          "Not a crime",
-          "Only harassment"
+      { // QUESTION 6
+      preDialogues: [
+          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Under which specific provision are you charging this conduct?"
         ],
-        correct: 1,
-        correctMsg: "★ Correct! This is voyeurism!",
+        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
+        answers: [
+          "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 3(a) - Photo voyeurism in private places",
+          "Section 5 - Penalties for distribution of voyeuristic materials",
+          "Section 6 - Venue and jurisdiction provisions"
+        ],
+        correct: 0,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
         wrongMsgs: [
-          "✗ Wrong! This is NOT a prank - it's a serious crime under RA 9995!",
-          "✗ Wrong! This IS a crime - voyeurism is punishable under RA 9995.",
-          "✗ Wrong! It's more than harassment - it's a criminal offense of voyeurism."
+          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
+        ]
+      },
+      { // QUESTION 7
+      preDialogues: [
+          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Under which specific provision are you charging this conduct?"
+        ],
+        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
+        answers: [
+          "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 3(a) - Photo voyeurism in private places",
+          "Section 5 - Penalties for distribution of voyeuristic materials",
+          "Section 6 - Venue and jurisdiction provisions"
+        ],
+        correct: 0,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
+        wrongMsgs: [
+          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
         ]
       },
 
-      {
-        text: "The Safe Spaces Act covers which type of harassment?",
-        answers: [
-          "Only online harassment",
-          "Only workplace harassment",
-          "Gender-based sexual harassment in public",
-          "Private harassment only"
+      { // QUESTION 8
+      preDialogues: [
+          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Under which specific provision are you charging this conduct?"
         ],
-        correct: 2,
-        correctMsg: "★ Excellent! Case evidence secured!",
+        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
+        answers: [
+          "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 3(a) - Photo voyeurism in private places",
+          "Section 5 - Penalties for distribution of voyeuristic materials",
+          "Section 6 - Venue and jurisdiction provisions"
+        ],
+        correct: 0,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
         wrongMsgs: [
-          "✗ Incorrect! The Safe Spaces Act covers public spaces, not just online.",
-          "✗ Incorrect! The Safe Spaces Act is broader than just workplace harassment.",
-          "✗ Incorrect! The Safe Spaces Act specifically addresses PUBLIC harassment."
+          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
+        ]
+      },
+
+      { // QUESTION 9
+      preDialogues: [
+          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Under which specific provision are you charging this conduct?"
+        ],
+        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
+        answers: [
+          "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 3(a) - Photo voyeurism in private places",
+          "Section 5 - Penalties for distribution of voyeuristic materials",
+          "Section 6 - Venue and jurisdiction provisions"
+        ],
+        correct: 0,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
+        wrongMsgs: [
+          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
+        ]
+      },
+      { // QUESTION 10
+      preDialogues: [
+          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
+          "JUDGE: Under which specific provision are you charging this conduct?"
+        ],
+        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
+        answers: [
+          "Section 4(a) - Taking photos under a person's clothing without consent",
+          "Section 3(a) - Photo voyeurism in private places",
+          "Section 5 - Penalties for distribution of voyeuristic materials",
+          "Section 6 - Venue and jurisdiction provisions"
+        ],
+        correct: 0,
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
+        wrongMsgs: [
+          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
+          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
         ]
       }
+      // END
     ];
 
     function createKeyboard() {
