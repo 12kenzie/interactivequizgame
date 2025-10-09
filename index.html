@@ -1150,6 +1150,7 @@
           <button class="answer-btn" id="vocab-btn">★ Gender-based Harassment</button>
           <button class="answer-btn" id="legal1-btn">★ Anti-Photo/Voyeurism Act</button>
           <button class="answer-btn" id="legal2-btn">★ Safe Spaces Act</button>
+          <button class="answer-btn" id="legal3-btn">★ Cybercrime Prevention Act of 2012</button>
           <button class="answer-btn" id="ready-btn" style="grid-column: 1 / -1; border-color: #0f0; color: #0f0;">★ I'm
             Ready for the Trial</button>
         </div>
@@ -1425,7 +1426,12 @@
         title: "Section 4 of RA 11311",
         subtitle: "Safe Spaces Act",
         dialogue: "* Section 4 of RA 11311, the Safe Spaces Act, is about gender-based sexual harassment in public spaces. This aims to protect the citizens from sexual harassment in public spaces."
-      }
+      },
+      legal3: {
+        title: "RA 10175",
+        subtitle: "Cybercrime Prevention Act",
+        dialogue: "* RA 10175, or the Cybercrime Prevention Act of 2012, criminalizes offenses committed through digital platforms, including hacking, identity theft, cybersex, and online libel."
+      },
     };
 
     let dialogues = [];
@@ -2063,6 +2069,7 @@
     document.getElementById('vocab-btn').onclick = () => showTipInfo('vocab1');
     document.getElementById('legal1-btn').onclick = () => showTipInfo('legal1');
     document.getElementById('legal2-btn').onclick = () => showTipInfo('legal2');
+    document.getElementById('legal3-btn').onclick = () => showTipInfo('legal3');
 
     document.getElementById('ready-btn').onclick = () => {
       sounds.menuSelect();
