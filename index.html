@@ -862,6 +862,132 @@
       padding: 30px;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
+    /* START MENU STYLES */
+    .start-menu {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .start-menu.hidden {
+      display: none;
+    }
+
+    .start-menu-content {
+      text-align: center;
+      padding: 40px;
+      max-width: 600px;
+    }
+
+    .game-title {
+      font-size: 48px;
+      color: #ff8c00;
+      margin-bottom: 20px;
+      text-shadow: 4px 4px #000, 6px 6px #ff0000;
+      animation: titlePulse 2s infinite;
+    }
+
+    @keyframes titlePulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .game-subtitle {
+      font-size: 14px;
+      color: #fff;
+      margin-bottom: 60px;
+      letter-spacing: 2px;
+    }
+
+    .start-menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .start-menu-btn {
+      background-color: #000;
+      color: #ff8c00;
+      border: 4px solid #ff8c00;
+      padding: 20px 40px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .start-menu-btn:hover,
+    .start-menu-btn:focus {
+      background-color: #ff8c00;
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    .start-menu-btn::before {
+      content: '▶';
+      position: absolute;
+      left: 20px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .start-menu-btn:hover::before {
+      opacity: 1;
+    }
+
+    .start-hint {
+      font-size: 10px;
+      color: #888;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      49% {
+        opacity: 1;
+      }
+
+      50%,
+      100% {
+        opacity: 0.3;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .game-title {
+        font-size: 32px;
+      }
+
+      .game-subtitle {
+        font-size: 10px;
+      }
+
+      .start-menu-btn {
+        padding: 15px 30px;
+        font-size: 11px;
+      }
+    }
+
     /* Evidence Panel Styles */
     .evidence-panel {
       position: fixed;
@@ -1087,6 +1213,17 @@
     <div class="transition-overlay" id="transition-overlay"></div>
     <canvas id="game-canvas"></canvas>
     <div class="ui-overlay">
+      <div class="start-menu" id="start-menu">
+        <div class="start-menu-content">
+          <h1 class="game-title">VERDICT//ZERO</h1>
+          <p class="game-subtitle">A Legal Thriller Adventure</p>
+          <div class="start-menu-buttons">
+            <button class="start-menu-btn" id="start-game-btn">★ START GAME</button>
+            <button class="start-menu-btn" id="credits-btn">★ CREDITS</button>
+          </div>
+          <p class="start-hint">Press ENTER or click START GAME to begin</p>
+        </div>
+      </div>
       <div class="name-input-screen" id="name-screen">
         <div class="name-input-box">
           <h2>Name the Attorney.</h2>
@@ -1302,12 +1439,85 @@
       });
     }
 
-    let gameMode = 'nameEntry', playerName = '', currentName = '';
+    let gameMode = 'startMenu', playerName = '', currentName = '';
     const MAX_NAME_LENGTH = 7;
     let score = 0, maxHP = 20, currentHP = 20, currentQuestionIndex = 0, dialogueIndex = 0, canInteract = false, answeringQuestion = false;
     const player = { x: canvas.width / 2, y: canvas.height / 2, size: 20, speed: 4, color: '#ff0000' };
     const npc = { x: canvas.width / 2, y: 180, size: 40, color: '#ffff00' };
     const keys = {};
+
+    // START MENU FUNCTIONALITY
+    function showStartMenu() {
+      gameMode = 'startMenu';
+      document.getElementById('start-menu').classList.remove('hidden');
+      gsap.fromTo('#start-menu',
+        { opacity: 0 },
+        { opacity: 1, duration: 1 }
+      );
+    }
+
+    function hideStartMenu(callback) {
+      sounds.menuSelect();
+      gsap.to('#start-menu', {
+        opacity: 0,
+        duration: 0.5,
+        onComplete: () => {
+          document.getElementById('start-menu').classList.add('hidden');
+          if (callback) callback();
+        }
+      });
+    }
+
+    function showNameEntry() {
+      gameMode = 'nameEntry';
+      document.getElementById('name-screen').classList.remove('hidden');
+      gsap.fromTo('#name-screen',
+        { opacity: 0, scale: 0.9 },
+        { opacity: 1, scale: 1, duration: 0.5 }
+      );
+    }
+
+    function showCredits() {
+      sounds.menuSelect();
+      const creditsText = `★ VERDICT//ZERO ★
+  
+A Legal Thriller Adventure Game
+
+CREATED BY:
+[Your Team Name]
+
+PROGRAMMING:
+[Your Name]
+
+LEGAL CONTENT:
+Based on Philippine Laws:
+- RA 11313 (Safe Spaces Act)
+- RA 9995 (Anti-Photo Voyeurism)
+- RA 10175 (Cybercrime Prevention)
+
+SPECIAL THANKS:
+To all advocates fighting
+gender-based violence
+
+Press Z or ENTER to return`;
+
+      showDialogueMessage(creditsText, () => {
+        showStartMenu();
+      });
+    }
+
+    // START MENU EVENT LISTENERS
+    document.getElementById('start-game-btn').onclick = () => {
+      hideStartMenu(() => {
+        showNameEntry();
+      });
+    };
+
+    document.getElementById('credits-btn').onclick = () => {
+      hideStartMenu(() => {
+        showCredits();
+      });
+    };
 
     const availableTips = {};
     let collectedTips = [];
@@ -2582,6 +2792,13 @@
     };
 
     document.addEventListener('keydown', (e) => {
+
+      if (gameMode === 'startMenu' && e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('start-game-btn').click();
+        return;
+      }
+
       if (gameMode === 'nameEntry') {
         if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) { e.preventDefault(); sounds.menuMove(); addLetter(e.key.toUpperCase()); }
         else if (e.key === 'Backspace') { e.preventDefault(); document.getElementById('backspace-btn').click(); }
@@ -2712,14 +2929,20 @@
     }
 
     function gameLoop() { update(); draw(); requestAnimationFrame(gameLoop); }
+
+    // INITIALIZE GAME
     initializeEvidence();
     createKeyboard();
-
-    createKeyboard();
-    console.log('Keyboard created, button count:', document.querySelectorAll('.key-button').length);
     updateNameDisplay();
     updateHP();
     updateScore();
+
+    // Start with name screen hidden
+    document.getElementById('name-screen').classList.add('hidden');
+
+    // Show start menu on load
+    showStartMenu();
+
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
