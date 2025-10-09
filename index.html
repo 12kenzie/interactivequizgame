@@ -1187,10 +1187,20 @@
       }
 
       .evidence-detail-image {
-        width: 200px;
-        height: 200px;
-        font-size: 60px;
-      }
+            width: 200px;
+            height: 200px;
+            font-size: 60px;
+          }
+        }
+        .evidence-card.answer-mode {
+      border-color: #0f0;
+      background-color: #002200;
+      animation: evidencePulse 1s infinite;
+    }
+    
+    @keyframes evidencePulse {
+      0%, 100% { border-color: #0f0; }
+      50% { border-color: #00ff00; }
     }
   </style>
 </head>
@@ -1715,27 +1725,18 @@ Press Z or ENTER to return`;
           "✗ YOU (PROSECUTOR): Your Honor, employers must immediately report all incidents to police...\n\n✗ DEFENSE ATTORNEY : HOLD IT! The prosecution doesn't even know mandatory requirements!\n\n✗ DEFENSE ATTORNEY : RA 11313 requires institutions to establish internal investigation mechanisms like CODI to receive and investigate complaints.\n\n✗ DEFENSE ATTORNEY : Victims choose whether to pursue criminal charges separately! The Institutional Policy Document  shows proper procedure.\n\n✗ DEFENSE ATTORNEY : Ms. Maria filed with CODI, they investigated, then SHE decided to file criminal charges.\n\n✗ DEFENSE ATTORNEY : Not all harassment complaints warrant police involvement some require company action only. The prosecutor misunderstands what's the difference between institutional vs. criminal processes!\n\n✗ JUDGE: Sustained. Institutions investigate internally; victims decide whether to pursue criminal charges separately."
         ]
       },
-      { // QUESTION 4: to be accomplished 
+      { // QUESTION 4
+        questionType: 'evidence', // Mark as evidence-based question
         preDialogues: [
-          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
-          "JUDGE: Under which specific provision are you charging this conduct?"
+          "YOU (PROSECUTOR): Your Honor, I'd like to present key evidence that establishes the pattern of harassment.",
+          "DEFENSE ATTORNEY: Objection! Which specific evidence does the prosecution intend to present?",
+          "JUDGE: Prosecution, please identify the evidence that best demonstrates the persistent nature of this harassment."
         ],
-        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
-        answers: [
-          "Section 4(a) - Taking photos under a person's clothing without consent",
-          "Section 3(a) - Photo voyeurism in private places",
-          "Section 5 - Penalties for distribution of voyeuristic materials",
-          "Section 6 - Venue and jurisdiction provisions"
-        ],
-        correct: 0,
-        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
-        wrongMsgs: [
-          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
-          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
-          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
-        ]
+        text: "Select the evidence that BEST demonstrates the defendant's persistent and systematic pattern of online harassment despite explicit rejection.",
+        correctEvidenceId: 'evidence6', // Chat Log Transcript Beta
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor! *presents Chat Log Transcript Beta* This evidence is irrefutable!\n\n★ YOU (PROSECUTOR): Chat Log Transcript Beta shows 47 Instagram messages over 21 days, with 34 messages sent AFTER Ms. Maria explicitly stated 'Please stop contacting me' on March 23!\n\n★ YOU (PROSECUTOR): This demonstrates systematic, deliberate disregard for the victim's boundaries—textbook gender-based harassment under RA 11313 Section 4!\n\n★ JUDGE: Excellent choice, Counselor. This evidence clearly establishes the persistent pattern.\n\n★ MS. MARIA: *tearfully* He wouldn't stop, no matter what I said.\n\n★ Credibility Score: +5",
+        wrongMsg: "✗ DEFENSE ATTORNEY: Objection! That evidence doesn't show the PATTERN of persistent harassment!\n\n✗ DEFENSE ATTORNEY: Your Honor, while the prosecution's selected evidence may be relevant, it doesn't demonstrate the systematic nature of continued contact AFTER explicit rejection!\n\n✗ DEFENSE ATTORNEY: Chat Log Transcript Beta would have been the stronger choice—47 messages with 34 sent after 'Please stop contacting me'!\n\n✗ JUDGE: Sustained. Prosecution, select evidence that directly supports your specific claim about persistent harassment despite rejection.\n\n✗ Credibility Score: -5"
       },
-
       { // QUESTION 5
         preDialogues: [
           "YOU (PROSECUTOR): Your Honor, Chat Log Transcript Beta reveals a disturbing pattern—47 Instagram messages over 21 days.",
@@ -1854,24 +1855,16 @@ Press Z or ENTER to return`;
         ]
       },
       { // QUESTION 10
+        questionType: 'evidence',
         preDialogues: [
-          "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
-          "JUDGE: Under which specific provision are you charging this conduct?"
+          "YOU (PROSECUTOR): Your Honor, we've established multiple violations. Now I must present the evidence that ties all digital communications directly to the defendant.",
+          "DEFENSE ATTORNEY: Your Honor, my client maintains that someone else could have accessed his accounts!",
+          "JUDGE: Prosecution, present the evidence that definitively establishes attribution—that the defendant himself committed these acts."
         ],
-        text: "The  CCTV Footage of NAIA Terminal 3  shows CCTV footage of the defendant taking an upskirt photograph at NAIA. Under which specific section of RA 9995 is this conduct prohibited?",
-        answers: [
-          "Section 4(a) - Taking photos under a person's clothing without consent",
-          "Section 3(a) - Photo voyeurism in private places",
-          "Section 5 - Penalties for distribution of voyeuristic materials",
-          "Section 6 - Venue and jurisdiction provisions"
-        ],
-        correct: 0,
-        correctMsg: "★ YOU (PROSECUTOR): Your Honor!  Section 4(a) of the Anti-Photo and Video Voyeurism Act explicitly prohibits taking photos or videos under a person's clothing without consent!\n\n★ YOU (PROSECUTOR): CCTV Footage of NAIA Terminal 3 's CCTV footage shows the defendant positioning his phone at an upward angle beneath the victim’s skirt at 2:15 PM. \n\n★ YOU (PROSECUTOR): And the photo itself proves it – its data matches the time of the incident exactly. Moreover, a similar prosecution happened right here, involving a Cebu City official, establishing this behavior breaks the law as outlined in Section 4—\n\n★ JUDGE: That’s spot on, Counsel, Section 4(a) is the applicable provision.\n\n★ DEFENSE ATTORNEY: *shuffles papers nervously* The evidence is... concerning..\n\n★ Credibility Score: +5",
-        wrongMsgs: [
-          "✗ YOU (PROSECUTOR): Your Honor, this violates Section 3(a) regarding voyeurism in private places...\n\n",
-          "✗ YOU (PROSECUTOR): Your Honor, Section 5 on distribution penalties applies...\n\n",
-          "✗ YOU (PROSECUTOR): Your Honor, Section 6 regarding venue and jurisdiction...\n\n"
-        ]
+        text: "Select the evidence that DEFINITIVELY proves the defendant personally committed all the digital harassment acts, eliminating any 'someone else used my account' defense.",
+        correctEvidenceId: 'evidence4', // Digital Forensics Report
+        correctMsg: "★ YOU (PROSECUTOR): Your Honor! *presents comprehensive technical report* Digital Forensics Report from the NBI Cybercrime Division!\n\n★ YOU (PROSECUTOR): This 47-page analysis confirms IP addresses, device metadata, EXIF data, and account ownership linking ALL harassing content directly to the defendant's devices and accounts!\n\n★ YOU (PROSECUTOR): The Samsung Galaxy S21 registered to the defendant sent the Messenger messages, HIS Instagram account sent the DMs, HIS Facebook account posted the defamatory content, and HIS phone camera captured the unauthorized photograph!\n\n★ YOU (PROSECUTOR): This eliminates ANY possibility of the 'someone else used my account' defense. Attribution is conclusive!\n\n★ JUDGE: Masterfully presented, Counselor. The forensic evidence is ironclad.\n\n★ DEFENSE ATTORNEY: *reluctantly* The attribution evidence is... comprehensive.\n\n★ Credibility Score: +5",
+        wrongMsg: "✗ DEFENSE ATTORNEY: Hold on! That evidence doesn't prove WHO committed the acts!\n\n✗ DEFENSE ATTORNEY: Your Honor, the prosecution presents evidence that shows WHAT happened, but not definitive proof of WHO did it!\n\n✗ DEFENSE ATTORNEY: Without Digital Forensics Report analyzing device ownership, IP addresses, and account attribution, my client could claim his accounts were compromised!\n\n✗ JUDGE: Sustained. Prosecution, you need forensic attribution evidence to eliminate the 'someone else' defense. Select more carefully.\n\n✗ Credibility Score: -5"
       }
       // END
     ];
@@ -1981,26 +1974,38 @@ Press Z or ENTER to return`;
     function updateEvidenceDisplay() {
       const evidenceList = document.getElementById('evidence-list');
       evidenceList.innerHTML = '';
-
+    
       collectedEvidence.forEach((evidence, index) => {
         const card = document.createElement('div');
-        card.className = 'evidence-card' + (index === selectedEvidenceIndex ? ' selected' : '');
+        let cardClass = 'evidence-card';
+        if (index === selectedEvidenceIndex) {
+          cardClass += ' selected';
+          if (evidenceAnswerMode) cardClass += ' answer-mode';
+        }
+        card.className = cardClass;
+        
         card.innerHTML = `
-      <div class="evidence-icon">${evidence.icon}</div>
-      <div class="evidence-card-info">
-        <div class="evidence-card-title">${evidence.title}</div>
-        <div class="evidence-card-type">${evidence.type}</div>
-      </div>
-    `;
+          <div class="evidence-icon">${evidence.icon}</div>
+          <div class="evidence-card-info">
+            <div class="evidence-card-title">${evidence.title}</div>
+            <div class="evidence-card-type">${evidence.type}</div>
+          </div>
+        `;
         card.onclick = () => selectEvidence(index);
         evidenceList.appendChild(card);
       });
-
+    
       document.getElementById('evidence-count').textContent = collectedEvidence.length;
       document.getElementById('evidence-total').textContent = evidenceDatabase.length;
-
+    
       if (collectedEvidence.length > 0) {
         displayEvidenceDetail(selectedEvidenceIndex);
+      }
+      
+      // Update footer message if in answer mode
+      if (evidenceAnswerMode) {
+        document.getElementById('evidence-panel').querySelector('.evidence-header p').textContent = 
+          '★ SELECT EVIDENCE ★ | Use ARROW KEYS to navigate | Press ENTER to submit your choice';
       }
     }
 
@@ -2008,6 +2013,12 @@ Press Z or ENTER to return`;
       sounds.menuMove();
       selectedEvidenceIndex = index;
       updateEvidenceDisplay();
+      
+      // If we're in evidence-answer mode, highlight the selection
+      if (gameMode === 'evidenceAnswer') {
+        const evidenceId = collectedEvidence[index].id;
+        console.log('Selected evidence:', evidenceId);
+      }
     }
 
     function displayEvidenceDetail(index) {
@@ -2042,7 +2053,118 @@ Press Z or ENTER to return`;
       });
     }
 
-    document.getElementById('evidence-close-btn').onclick = closeEvidencePanel;
+    // Evidence-based question handling
+    let evidenceAnswerMode = false;
+    let currentEvidenceQuestion = null;
+    
+    function startEvidenceQuestion(question) {
+      gameMode = 'evidenceAnswer';
+      evidenceAnswerMode = true;
+      currentEvidenceQuestion = question;
+  
+      // Show instructions in the battle box
+      const questionText = document.getElementById('question-text');
+      const answerButtons = document.getElementById('answer-buttons');
+      
+      typeText(question.text, questionText);
+      
+      // Replace answer buttons with evidence instruction
+      answerButtons.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 20px; border: 3px solid #ff8c00; background-color: #1a1a00;">
+          <p style="font-size: 12px; color: #ff8c00; margin-bottom: 15px;">★ EXAMINE THE EVIDENCE ★</p>
+          <p style="font-size: 10px; color: #fff; line-height: 1.8;">
+            Press TAB to open the Evidence Panel.<br>
+            Select the correct evidence to support your argument.<br>
+            Press ENTER to submit your choice.
+          </p>
+        </div>
+      `;
+  
+      // Auto-open evidence panel after brief delay
+      setTimeout(() => {
+        openEvidencePanel();
+      }, 1000);
+    }
+
+    function submitEvidenceAnswer() {
+      if (!evidenceAnswerMode || !currentEvidenceQuestion) return;
+      
+      const selectedEvidence = collectedEvidence[selectedEvidenceIndex];
+      const q = currentEvidenceQuestion;
+      
+      // Check if selected evidence ID matches the correct answer
+      const isCorrect = selectedEvidence.id === q.correctEvidenceId;
+      
+      // Close evidence panel
+      closeEvidencePanel();
+  
+      // Disable further submissions
+      evidenceAnswerMode = false;
+      answeringQuestion = true;
+      
+      // Visual feedback
+      setTimeout(() => {
+        if (isCorrect) {
+          sounds.correct();
+          gsap.to('#enemy-sprite', { scale: 1.2, duration: 0.1, yoyo: true, repeat: 1 });
+          score += 100;
+          updateScore();
+      
+          // Show correct message
+          const correctParts = Array.isArray(q.correctMsg) ? q.correctMsg.slice() :
+                              typeof q.correctMsg === 'function' ? [q.correctMsg] :
+                              (q.correctMsg || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
+          
+          if (correctParts.length > 1) {
+            showQuestionDialogues(correctParts, () => {
+              currentQuestionIndex++;
+              loadQuestion(currentQuestionIndex);
+            });
+          } else {
+            showDialogueMessage(correctParts[0] || q.correctMsg, () => {
+              currentQuestionIndex++;
+              loadQuestion(currentQuestionIndex);
+            });
+          }
+        } else {
+          sounds.wrong();
+          gsap.to('#game-container', { x: '+=10', duration: 0.05, yoyo: true, repeat: 5, onComplete: () => gsap.set('#game-container', { x: 0 }) });
+          gsap.to('#enemy-sprite', { scale: 1.3, rotation: 15, duration: 0.2, yoyo: true, repeat: 1, ease: "power2.inOut" });
+          currentHP -= 5;
+          updateHP();
+          
+          if (currentHP <= 0) {
+            setTimeout(gameOver, 1500);
+          } else {
+            // Show wrong message
+            const wrongMessage = q.wrongMsg || "✗ That evidence doesn't support your argument! Choose more carefully.";
+            const parts = (wrongMessage || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
+            
+            if (parts.length > 1) {
+              showQuestionDialogues(parts, () => {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+              });
+            } else {
+              showDialogueMessage(wrongMessage, () => {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+              });
+            }
+          }
+        }
+      }, 300);
+    }
+
+    document.getElementById('evidence-close-btn').onclick = () => {
+      // Don't allow closing if in evidence answer mode
+      if (evidenceAnswerMode) {
+        sounds.wrong();
+        showDialogueMessage("* You must select evidence to proceed with your argument!", null);
+        return;
+      }
+      closeEvidencePanel();
+    };
 
     // Evidence panel navigation with arrow keys
     function navigateEvidence(direction) {
@@ -2338,16 +2460,30 @@ Press Z or ENTER to return`;
 
     function loadQuestion(index) {
       if (index >= questions.length) { victory(); return; }
-      const q = questions[index], questionText = document.getElementById('question-text'), answerButtons = document.getElementById('answer-buttons');
-
-      // If the question has a preDialogues array, show those lines first and then render the question
+      const q = questions[index];
+      
+      // Check if this is an evidence-based question
+      if (q.questionType === 'evidence') {
+        // Show pre-dialogues if any, then start evidence question
+        if (Array.isArray(q.preDialogues) && q.preDialogues.length > 0) {
+          showQuestionDialogues(q.preDialogues, () => {
+            startEvidenceQuestion(q);
+          });
+        } else {
+          startEvidenceQuestion(q);
+        }
+        return;
+      }
+      
+      // Regular question flow (existing code)
+      const questionText = document.getElementById('question-text');
+      const answerButtons = document.getElementById('answer-buttons');
+    
       if (Array.isArray(q.preDialogues) && q.preDialogues.length > 0) {
         showQuestionDialogues(q.preDialogues, () => {
-          // after dialogues complete, present the question prompt and wait for confirmation before showing choices
           presentQuestionPrompt(q, () => { renderQuestionContent(q, questionText, answerButtons); });
         });
       } else {
-        // Present the question prompt first; answers will show after pressing Z/ENTER
         presentQuestionPrompt(q, () => { renderQuestionContent(q, questionText, answerButtons); });
       }
     }
@@ -2837,6 +2973,11 @@ Press Z or ENTER to return`;
         } else if (e.key === 'ArrowDown') {
           e.preventDefault();
           navigateEvidence('down');
+          return;
+        } else if (e.key === 'Enter' && evidenceAnswerMode) {
+          // Submit evidence as answer
+          e.preventDefault();
+          submitEvidenceAnswer();
           return;
         }
       }
