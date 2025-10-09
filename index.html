@@ -1389,17 +1389,58 @@
     const bgMusic = new Audio();
     bgMusic.loop = true;
     bgMusic.volume = 0.3;
-    bgMusic.src = 'YOUR_MUSIC_URL_HERE.mp3';
-
+    
+    // Background music tracks for different game states
+    const bgmTracks = {
+      menu: 'https://your-cdn.com/menu_music.mp3',
+      library: 'https://your-cdn.com/library_ambient.mp3',
+      courtroom: 'https://your-cdn.com/courtroom_theme.mp3',
+      battle: 'https://your-cdn.com/battle_intense.mp3',
+      victory: 'https://your-cdn.com/victory_fanfare.mp3',
+      gameover: 'https://your-cdn.com/gameover_sad.mp3'
+    };
+    
+    let currentTrack = null;
+    
     function playBackgroundMusic() {
       if (soundEnabled && bgMusic.src) {
         bgMusic.play().catch(e => console.log('Music play failed:', e));
       }
     }
-
+    
     function stopBackgroundMusic() {
       bgMusic.pause();
       bgMusic.currentTime = 0;
+    }
+    
+    // Function to change background music based on game state
+    function changeBackgroundMusic(trackName) {
+      if (!soundEnabled) return;
+      
+      // Don't restart if same track is already playing
+      if (currentTrack === trackName && !bgMusic.paused) return;
+      
+      // Stop current music
+      stopBackgroundMusic();
+      
+      // Load and play new track with fade-in
+      if (bgmTracks[trackName]) {
+        bgMusic.src = bgmTracks[trackName];
+        bgMusic.volume = 0;
+        currentTrack = trackName;
+        playBackgroundMusic();
+        
+        // Fade in
+        let vol = 0;
+        const fadeIn = setInterval(() => {
+          if (vol < 0.3) {
+            vol += 0.05;
+            bgMusic.volume = Math.min(vol, 0.3);
+          } else {
+            clearInterval(fadeIn);
+          }
+        }, 50);
+      }
     }
 
     function playBeep(freq = 440, dur = 0.1, type = 'square') {
