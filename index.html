@@ -2680,18 +2680,16 @@ Press Z or ENTER to return`;
           "JUDGE: *strikes gavel with finality* The court will now render its verdict based on the evidence and arguments presented.",
           `JUDGE: Based on the overwhelming evidence presented by the prosecution, this court finds the defendant, Mr. Dwg, GUILTY on all counts:
       
-      - GUILTY of Gender-based Online Sexual Harassment under RA 11313 Section 4
-      - GUILTY of Photo Voyeurism under RA 9995 Section 4(a)
-      - GUILTY of violating the Safe Spaces Act provisions
+      - Violation of RA 9995 Section 4(a) for unauthorized upskirt photography at NAIA
+      - Violation of RA 11313 Section 4 for gender-based online sexual harassment against Ms. Maria
+      - Violation of RA 10175 Section 4c for cyber libel
             
       The defendant's systematic harassment of Ms. Patricia Santos over six months, combined with the deplorable upskirt photography at NAIA Terminal 3, represents a clear pattern of predatory behavior.`,
-          () => `JUDGE: Attorney ${playerName}, your prosecution was nothing short of exemplary. Every statute cited was precise, every piece of evidence meticulously presented, and every legal argument devastatingly effective.`,
+          () => `JUDGE: Attorney ${playerName}, I must commend Prosecutor on an exceptional presentation. Your mastery of RA 11313, RA 9995, and RA 10175 was evident throughout the case. Your presentation was flawless, legal arguments were precise, and your understanding of institutional requirements and the  evidence you held  was magnificent. This is exactly the level of prosecution Philippine cybercrime victims needed. Given that you demonstrated expertise, the court strongly recommended you to consider an involvement in training and mentoring future lawyers in the field of cybercrime and digital justice. Your proficiency and clarity in applying these laws would be invaluable in shaping the next generation of prosecutors.Court is adjourned.`,
           "DEFENSE ATTORNEY : *extends hand* Masterful prosecution. You may have presented an airtight case to damage my case record, but we'll see if it's just beginner's luck. You have my regards—this is what competent advocacy looks like. *applauds*",
           `★ ACHIEVEMENT UNLOCKED: "CHAMPION OF JUSTICE" ★
 
-    The Department of Justice sends formal commendation. You're invited to train prosecutors on cybercrime cases nationwide. Media coverage highlights your expert handling of gender-based online harassment prosecution.
-    
-    Your name is being recommended for the Anti-Cybercrime Task Force!`
+          The Department of Justice sends commendation. You're invited to train prosecutors on cybercrime cases nationwide. Media coverage highlights your expert handling of gender-based online harassment prosecution.`
         ]
       },
 
@@ -2701,15 +2699,12 @@ Press Z or ENTER to return`;
         rank: 'A',
         dialogues: [
           "JUDGE: *strikes gavel* The court has reached a verdict after careful deliberation.",
-          `JUDGE: This court finds the defendant GUILTY on the primary charges:
-      
-      - GUILTY of Gender-based Online Sexual Harassment under RA 11313 Section 4
-      - GUILTY of Photo Voyeurism under RA 9995 Section 4(a)
+          `JUDGE: The court finds the defendant GUILTY on both counts. Prosecutor, you have conducted a solid prosecution with clear understanding of the applicable laws. Though there were visible confusion about evidence presentation, the court still finds your claims as reasonable. Court is adjourned.
             
       While some procedural issues arose during trial, the core evidence was compelling and properly presented.`,
           () => `JUDGE: Attorney ${playerName}, you demonstrated strong legal acumen. A few stumbles in statute citation, but overall a solid prosecution that achieved justice.`,
           "DEFENSE ATTORNEY : *nods respectfully* Well fought, Counselor. You had me worried several times. With more experience, you'll be formidable.",
-          `★ ACHIEVEMENT UNLOCKED: "RISING STAR" ★
+          `★ ACHIEVEMENT UNLOCKED: "RISING PROSECUTOR" ★
 
     Your supervisor notes your strong performance. You're assigned more complex cases and recommended for advanced cybercrime law training.
 
@@ -2718,22 +2713,17 @@ Press Z or ENTER to return`;
       },
       COMPETENT: {
         min: 25,
-        title: '★ COMPETENT PROSECUTOR ★',
+        title: '★ ADEQUATE PROSECUTOR ★',
         rank: 'B',
         dialogues: [
           "JUDGE: *strikes gavel* After reviewing all evidence, the court renders the following verdict.",
-          `JUDGE: The defendant is found GUILTY on the main charge:
-      
-      - GUILTY of Gender-based Online Sexual Harassment under RA 11313 Section 4
-      
-      However, the voyeurism charge under RA 9995 resulted in a lesser conviction due to procedural concerns raised by the defense.`,
+          `JUDGE: This court finds the defendant GUILTY, though the prosecution's case made the court hesitant to decide for a decision, the court still finds your argument slightly confusing but the intent was understandable. Your confusion with evidence purposes and institutional requirements is concerning. I appoint you with court seminars. The court is adjourned.`,
           () => `JUDGE: Attorney ${playerName}, justice was served today, though your case had vulnerabilities. I recommend reviewing the specific provisions of RA 9995 before your next similar case.`,
-          "DEFENSE ATTORNEY : *brief nod* You got the conviction, but you made it harder on yourself than necessary. Study more. The law rewards precision.",
-          `★ ACHIEVEMENT UNLOCKED: "JUSTICE SERVED" ★
+          "MS. MARIA: We won, but... it was harder than it should have been.",
+          "DEFENSE ATTORNEY: The evidence was overwhelming, but your presentation had significant gaps.",
+          `★ ACHIEVEMENT UNLOCKED: "NEEDS IMPROVEMENT" ★
 
-        Your case is won, and the victim receives some measure of justice. Your supervisor provides feedback on areas for improvement, particularly on statute specificity and evidence presentation.
-        
-        You're cleared to continue handling standard cybercrime cases.`
+        Mandatory CLE on cybercrime prosecution required before handling similar cases.`
         ]
       },
       STRUGGLING: {
@@ -2742,42 +2732,29 @@ Press Z or ENTER to return`;
         rank: 'C',
         dialogues: [
           "JUDGE: *strikes gavel with visible concern* This court has deliberated extensively given the... complications during trial.",
-          `JUDGE: The defendant is found GUILTY on reduced charges:
-      
-      - GUILTY of Online Harassment (lesser included offense)
-            
-      The primary charges under RA 11313 Section 4 and RA 9995 Section 4(a) could not be sustained due to significant evidentiary and procedural issues presented by the prosecution.`,
-          () => `JUDGE: Attorney ${playerName}, while you secured a conviction, your numerous legal errors nearly resulted in dismissal. This performance is concerning for someone representing the People.`,
-          "DEFENSE ATTORNEY : *barely conceals smirk* Lucky for you the evidence spoke for itself, because your arguments certainly didn't. Hit the law books, rookie.",
-          `★ ACHIEVEMENT: "NARROW ESCAPE" ★
+          `JUDGE: The court finds that there is not enough evidence to reach a verdict, I hereby dismiss the case for now… The defendant has a competent lawyer, while the prosecutor struggles and confuses the court with their decisions, this is a warning for you… This is no playground, this is a courtroom for Professionals.  Do not Mistake my court as a JOKE. Court is adjourned.`,
+          () => `MS. MARIA: *disappointed* There is no justice yet, please do better!`
+          "DEFENSE ATTORNEY : Your case was gift-wrapped with evidence, yet you struggled. Concerning.",
+          `★ ACHIEVEMENT: "FORMAL WARNING" ★
 
-      Your supervisor schedules a formal review meeting. You're required to complete remedial training on RA 11313, RA 9995, and proper evidence presentation before handling cybercrime cases again.
-      
-      The victim's family expresses disappointment at the reduced charges.`
+      Department of Justice review of competency. Mandatory remedial training. Supervised cases only.`
         ]
       },
       INADEQUATE: {
         min: 0,
-        title: '★ INADEQUATE PERFORMANCE ★',
+        title: '★ FAILED PROSECUTOR ★',
         rank: 'D',
         dialogues: [
           "JUDGE: *strikes gavel heavily* This has been one of the most troubling prosecutions this court has witnessed.",
-          `JUDGE: Due to the prosecution's repeated misidentification of applicable statutes, improper evidence handling, and fundamental misunderstanding of the legal framework...
-
-      This court has no choice but to find the defendant GUILTY only on the most basic charge:
-            
-      - GUILTY of Unjust Vexation (minor offense)
-            
-      All major charges are DISMISSED due to prosecutorial incompetence.`,
+          `JUDGE: *visibly angry* This court finds the defendant Innocent because of the prosecution's appalling incompetence. You demonstrated fundamental ignorance of the Republic Acts, confused basic evidence, and repeatedly argued AGAINST your own case!`,
+          `JUDGE: I am formally reporting you to the Department of Justice for review of prosecutorial competency. You will not handle cases without supervision pending investigation. This was professional malpractice barely saved by overwhelming evidence. Court is adjourned.`,
           () => `JUDGE: Attorney ${playerName}, your performance was unacceptable. The victim deserved better representation. I'm recommending a formal review of your qualifications.`,
-          "DEFENSE ATTORNEY : *shakes head* I didn't even need to try. You did my job for me. Please don't practice law until you actually learn it.",
-          `★ WARNING: "PROFESSIONAL REVIEW REQUIRED" ★
+          "MS. MARIA: *furious* You lost a case with mountains of evidence! You argued AGAINST me! I'm filing complaints!",
+          "DEFENSE ATTORNEY : I've never seen such incompetent prosecution. You did my job for me.",
+          "SUPERVISOR: Office. Now. You're suspended from all prosecutions pending DOJ investigation. You sabotaged your own case repeatedly. We're reviewing whether you're fit for this position.",
+          `★ WARNING: "CAREER CRISIS" ★
       
-      Your law license is under review. You're immediately suspended from handling any cybercrime cases and must complete comprehensive retraining.
-      
-      The victim files a complaint against you with the Integrated Bar of the Philippines.
-      
-      The Department of Justice opens an investigation into your competence.`
+      DOJ investigation opened. Suspension from prosecutorial duties. Competency hearing scheduled. Career in jeopardy.`
         ]
       }
     };
