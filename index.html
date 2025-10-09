@@ -1726,16 +1726,30 @@ Press Z or ENTER to return`;
         ]
       },
       { // QUESTION 4
-        questionType: 'evidence', // Mark as evidence-based question
+        questionType: 'evidence',
         preDialogues: [
-          "YOU (PROSECUTOR): Your Honor, I'd like to present key evidence that establishes the pattern of harassment.",
-          "DEFENSE ATTORNEY: Objection! Which specific evidence does the prosecution intend to present?",
-          "JUDGE: Prosecution, please identify the evidence that best demonstrates the persistent nature of this harassment."
+          "YOU (PROSECUTOR): Your Honor, I direct the court's attention to Evidence: Chat Log Transcript Alpha dated March 15, 2025.",
+          "The screen displays the text messages : \"You know you want me,\" \"I can't stop thinking about your body,\" \"Why are you ignoring me? I know you're attracted to me too.\"",
+          "DEFENSE ATTORNEY: Your Honor, how do we know these messages came from my client?",
+          "JUDGE: Prosecution, you must establish a connection between the texts and the defendant . What evidence proves these messages originated from the defendant?"
         ],
-        text: "Select the evidence that BEST demonstrates the defendant's persistent and systematic pattern of online harassment despite explicit rejection.",
-        correctEvidenceId: 'evidence6', // Chat Log Transcript Beta
-        correctMsg: "★ YOU (PROSECUTOR): Your Honor! *presents Chat Log Transcript Beta* This evidence is irrefutable!\n\n★ YOU (PROSECUTOR): Chat Log Transcript Beta shows 47 Instagram messages over 21 days, with 34 messages sent AFTER Ms. Maria explicitly stated 'Please stop contacting me' on March 23!\n\n★ YOU (PROSECUTOR): This demonstrates systematic, deliberate disregard for the victim's boundaries—textbook gender-based harassment under RA 11313 Section 4!\n\n★ JUDGE: Excellent choice, Counselor. This evidence clearly establishes the persistent pattern.\n\n★ MS. MARIA: *tearfully* He wouldn't stop, no matter what I said.\n\n★ Credibility Score: +5",
-        wrongMsg: "✗ DEFENSE ATTORNEY: Objection! That evidence doesn't show the PATTERN of persistent harassment!\n\n✗ DEFENSE ATTORNEY: Your Honor, while the prosecution's selected evidence may be relevant, it doesn't demonstrate the systematic nature of continued contact AFTER explicit rejection!\n\n✗ DEFENSE ATTORNEY: Chat Log Transcript Beta would have been the stronger choice—47 messages with 34 sent after 'Please stop contacting me'!\n\n✗ JUDGE: Sustained. Prosecution, select evidence that directly supports your specific claim about persistent harassment despite rejection.\n\n✗ Credibility Score: -5"
+        text: "To conclusively prove that the messages in Chat Log Transcript Alpha were sent by the defendant, which piece of evidence must you present to establish the connection between the phone number (+63-917-5554-XXX) and Mr. Dwg?",
+        correctEvidenceIds: ['evidence4', 'evidence6'],
+        correctMsgs: {
+          'evidence4': "★ YOU (PROSECUTOR): Your Honor! *presents Digital Forensics Report* This forensic analysis is conclusive!\n\n★ YOU (PROSECUTOR): The NBI Cybercrime Division confirmed that the phone number +63-917-5554-XXX and the WhatsApp account are registered to and actively used by the defendant, Mr. Dwg!\n\n★ YOU (PROSECUTOR): Device metadata, IP addresses, and account ownership all point directly to him—there's no possibility of mistaken identity!\n\n★ JUDGE: Excellent choice, Counselor. The forensic attribution is ironclad.\n\n★ DEFENSE ATTORNEY: *grudgingly* The technical evidence is... solid.\n\n★ Credibility Score: +5",
+          'evidence6': "★ YOU (PROSECUTOR): Your Honor! *presents Chat Log Transcript Beta* This evidence is irrefutable!\n\n★ YOU (PROSECUTOR): Chat Log Transcript Beta shows 47 Instagram messages over 21 days, with 34 messages sent AFTER Ms. Maria explicitly stated 'Please stop contacting me' on March 23!\n\n★ YOU (PROSECUTOR): This demonstrates systematic, deliberate disregard for the victim's boundaries—textbook gender-based harassment under RA 11313 Section 4!\n\n★ JUDGE: Excellent choice, Counselor. This evidence clearly establishes the persistent pattern.\n\n★ MS. MARIA: *tearfully* He wouldn't stop, no matter what I said.\n\n★ Credibility Score: +5"
+        },
+        wrongMsgs: {
+          'evidence1': "✗ YOU (PROSECUTOR): Your Honor, I present Chat Log Transcript Alpha—\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecutor is presenting the SAME evidence we're trying to authenticate!\n\n✗ DEFENSE ATTORNEY: Your Honor, we need DIFFERENT evidence to prove Chat Log Transcript Alpha came from my client! You can't use evidence to prove itself!\n\n✗ DEFENSE ATTORNEY: This is circular reasoning! The prosecutor needs the Digital Forensics Report or corroborating message logs!\n\n✗ JUDGE: Sustained. Prosecution, you cannot use evidence to authenticate itself. Select different evidence.\n\n✗ Credibility Score: -5",
+          'evidence2': "✗ YOU (PROSECUTOR): Your Honor, the CCTV footage from NAIA shows—\n\n✗ DEFENSE ATTORNEY: HOLD IT! The prosecutor is confusing two separate incidents!\n\n✗ DEFENSE ATTORNEY: The CCTV footage proves the upskirt photography at the airport—a completely different violation! We're discussing WhatsApp messages right now!\n\n✗ DEFENSE ATTORNEY: This video evidence doesn't link phone numbers to my client! The prosecutor is mixing up their cases!\n\n✗ JUDGE: Sustained. The CCTV evidence pertains to voyeurism, not message attribution. Stay focused, Counselor.\n\n✗ Credibility Score: -5",
+          'evidence3': "✗ YOU (PROSECUTOR): Your Honor, the unauthorized upskirt photograph—\n\n✗ DEFENSE ATTORNEY: OBJECTION! Again, the prosecutor conflates separate incidents!\n\n✗ DEFENSE ATTORNEY: That photograph relates to RA 9995 voyeurism charges! We're establishing WHO sent WhatsApp messages under RA 11313!\n\n✗ DEFENSE ATTORNEY: A photo taken at NAIA doesn't prove phone ownership or message origin! This is completely irrelevant to the question!\n\n✗ JUDGE: Sustained. Focus on evidence that establishes message attribution, not photography.\n\n✗ Credibility Score: -5",
+          'evidence5': "✗ YOU (PROSECUTOR): Your Honor, this Facebook post shows—\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecutor presents evidence from a different platform!\n\n✗ DEFENSE ATTORNEY: A Facebook post doesn't authenticate WhatsApp messages! These are separate accounts on separate platforms!\n\n✗ DEFENSE ATTORNEY: You need forensic attribution linking the phone number to my client, not social media posts! This is sloppy prosecution!\n\n✗ JUDGE: Sustained. Facebook evidence doesn't establish WhatsApp message origin. Select appropriate evidence.\n\n✗ Credibility Score: -5",
+          'evidence7': "✗ YOU (PROSECUTOR): Your Honor, the psychological report demonstrates—\n\n✗ DEFENSE ATTORNEY: HOLD IT! The prosecutor presents evidence of harm, not identity!\n\n✗ DEFENSE ATTORNEY: The psychological assessment proves Ms. Maria suffered—we're not disputing that! But it doesn't prove WHO sent the messages!\n\n✗ DEFENSE ATTORNEY: You're confusing impact evidence with attribution evidence! The prosecutor needs forensics or corroborating logs!\n\n✗ JUDGE: Sustained. Psychological harm is relevant to damages, not to proving who sent the messages.\n\n✗ Credibility Score: -5",
+          'evidence8': "✗ YOU (PROSECUTOR): Your Honor, the institutional policy document—\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecutor presents procedural paperwork!\n\n✗ DEFENSE ATTORNEY: Company policies don't prove who sent messages! This document shows the employer followed CODI procedures—it doesn't authenticate communications!\n\n✗ DEFENSE ATTORNEY: You need technical attribution evidence, not administrative records! This is completely off-base!\n\n✗ JUDGE: Sustained. Institutional procedures don't establish message origin. Select technical evidence.\n\n✗ Credibility Score: -5",
+          'evidence9': "✗ YOU (PROSECUTOR): Your Honor, witness testimony confirms—\n\n✗ DEFENSE ATTORNEY: HOLD IT! Witnesses observed workplace behavior, not digital communications!\n\n✗ DEFENSE ATTORNEY: Colleagues can testify to what they SAW in person, but they can't authenticate phone messages they never witnessed!\n\n✗ DEFENSE ATTORNEY: You need forensic technical evidence linking devices to my client, not eyewitness accounts of office conduct!\n\n✗ JUDGE: Sustained. Witness testimony addresses workplace harassment, not message authentication.\n\n✗ Credibility Score: -5",
+          'evidence10': "✗ YOU (PROSECUTOR): Your Honor, the email thread evidence—\n\n✗ DEFENSE ATTORNEY: OBJECTION! Wrong communication platform entirely!\n\n✗ DEFENSE ATTORNEY: Company emails don't authenticate personal WhatsApp messages! These are completely separate communication systems!\n\n✗ DEFENSE ATTORNEY: You need forensics tying the phone number to my client, not workplace email records! This is basic attribution logic!\n\n✗ JUDGE: Sustained. Email evidence doesn't prove WhatsApp message origin. Think more carefully, Prosecution.\n\n✗ Credibility Score: -5"
+        },
+        defaultWrongMsg: "✗ DEFENSE ATTORNEY: Objection! That evidence doesn't directly prove WHO sent the messages!\n\n✗ DEFENSE ATTORNEY: Your Honor, while the prosecution's selected evidence may be relevant, it doesn't establish the attribution we need!\n\n✗ JUDGE: Sustained. Prosecution, select evidence that directly proves the defendant sent these specific messages.\n\n✗ Credibility Score: -5"
       },
       { // QUESTION 5
         preDialogues: [
@@ -2092,12 +2106,26 @@ Press Z or ENTER to return`;
       const selectedEvidence = collectedEvidence[selectedEvidenceIndex];
       const q = currentEvidenceQuestion;
       
-      // Check if selected evidence ID matches the correct answer
-      const isCorrect = selectedEvidence.id === q.correctEvidenceId;
+      // Check if selected evidence ID matches any correct answer
+      // Support both single correctEvidenceId and multiple correctEvidenceIds
+      let isCorrect = false;
+      let correctMessage = q.correctMsg;
+      
+      if (q.correctEvidenceIds && Array.isArray(q.correctEvidenceIds)) {
+        // Multiple correct answers
+        isCorrect = q.correctEvidenceIds.includes(selectedEvidence.id);
+        if (isCorrect && q.correctMsgs) {
+          // Use specific message for this evidence
+          correctMessage = q.correctMsgs[selectedEvidence.id] || q.correctMsg;
+        }
+      } else if (q.correctEvidenceId) {
+        // Single correct answer (backward compatibility)
+        isCorrect = selectedEvidence.id === q.correctEvidenceId;
+      }
       
       // Close evidence panel
       closeEvidencePanel();
-  
+    
       // Disable further submissions
       evidenceAnswerMode = false;
       answeringQuestion = true;
@@ -2111,9 +2139,9 @@ Press Z or ENTER to return`;
           updateScore();
       
           // Show correct message
-          const correctParts = Array.isArray(q.correctMsg) ? q.correctMsg.slice() :
-                              typeof q.correctMsg === 'function' ? [q.correctMsg] :
-                              (q.correctMsg || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
+          const correctParts = Array.isArray(correctMessage) ? correctMessage.slice() :
+                              typeof correctMessage === 'function' ? [correctMessage] :
+                              (correctMessage || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
           
           if (correctParts.length > 1) {
             showQuestionDialogues(correctParts, () => {
@@ -2121,7 +2149,7 @@ Press Z or ENTER to return`;
               loadQuestion(currentQuestionIndex);
             });
           } else {
-            showDialogueMessage(correctParts[0] || q.correctMsg, () => {
+            showDialogueMessage(correctParts[0] || correctMessage, () => {
               currentQuestionIndex++;
               loadQuestion(currentQuestionIndex);
             });
@@ -2136,8 +2164,13 @@ Press Z or ENTER to return`;
           if (currentHP <= 0) {
             setTimeout(gameOver, 1500);
           } else {
-            // Show wrong message
-            const wrongMessage = q.wrongMsg || "✗ That evidence doesn't support your argument! Choose more carefully.";
+            // Get specific wrong message for this evidence, or use default
+            let wrongMessage = q.defaultWrongMsg || q.wrongMsg || "✗ That evidence doesn't support your argument! Choose more carefully.";
+            
+            if (q.wrongMsgs && q.wrongMsgs[selectedEvidence.id]) {
+              wrongMessage = q.wrongMsgs[selectedEvidence.id];
+            }
+            
             const parts = (wrongMessage || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
             
             if (parts.length > 1) {
