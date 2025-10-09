@@ -2157,14 +2157,9 @@ Press Z or ENTER to return`;
     }
 
     document.getElementById('evidence-close-btn').onclick = () => {
-      // Don't allow closing if in evidence answer mode
-      if (evidenceAnswerMode) {
-        sounds.wrong();
-        showDialogueMessage("* You must select evidence to proceed with your argument!", null);
-        return;
-      }
-      closeEvidencePanel();
-    };
+      // Allow closing in evidence answer mode - user can review question
+        closeEvidencePanel();
+      };
 
     // Evidence panel navigation with arrow keys
     function navigateEvidence(direction) {
