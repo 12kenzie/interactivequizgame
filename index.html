@@ -643,9 +643,17 @@
     }
 
     /* Speaker-specific styles applied to the dialogue-box for visual separation */
-    .dialogue-box.judge { border-color: #4169e1; }
-    .dialogue-box.prosecutor { border-color: #0f0; }
-    .dialogue-box.defense { border-color: #f00; }
+    .dialogue-box.judge {
+      border-color: #4169e1;
+    }
+
+    .dialogue-box.prosecutor {
+      border-color: #0f0;
+    }
+
+    .dialogue-box.defense {
+      border-color: #f00;
+    }
 
     .dialogue-box.active {
       display: block;
@@ -834,6 +842,224 @@
       font-weight: bold;
       text-shadow: 2px 2px #000;
     }
+
+    .inventory-item-content {
+      color: #fff;
+      font-size: 9px;
+      line-height: 1.6;
+    }
+
+    .empty-inventory {
+      color: #666;
+      font-size: 10px;
+      text-align: center;
+      padding: 30px;
+    }
+
+    /* Evidence Panel Styles */
+    .evidence-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.95);
+      display: none;
+      z-index: 1500;
+    }
+
+    .evidence-panel.active {
+      display: flex;
+    }
+
+    .evidence-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .evidence-header {
+      text-align: center;
+      padding: 20px;
+      border-bottom: 4px solid #ff8c00;
+      margin-bottom: 20px;
+    }
+
+    .evidence-header h2 {
+      color: #ff8c00;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .evidence-header p {
+      color: #fff;
+      font-size: 8px;
+      line-height: 1.6;
+    }
+
+    .evidence-display {
+      display: flex;
+      flex: 1;
+      gap: 20px;
+      overflow: hidden;
+    }
+
+    .evidence-list {
+      width: 35%;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .evidence-card {
+      background-color: #111;
+      border: 3px solid #666;
+      padding: 15px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .evidence-card:hover {
+      border-color: #ff8c00;
+      background-color: #1a1a00;
+      transform: translateX(5px);
+    }
+
+    .evidence-card.selected {
+      border-color: #0f0;
+      background-color: #001100;
+    }
+
+    .evidence-icon {
+      width: 60px;
+      height: 60px;
+      background-color: #333;
+      border: 2px solid #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      flex-shrink: 0;
+    }
+
+    .evidence-card.selected .evidence-icon {
+      border-color: #0f0;
+    }
+
+    .evidence-card-info {
+      flex: 1;
+    }
+
+    .evidence-card-title {
+      color: #ff8c00;
+      font-size: 10px;
+      margin-bottom: 5px;
+    }
+
+    .evidence-card-type {
+      color: #888;
+      font-size: 7px;
+    }
+
+    .evidence-detail {
+      width: 65%;
+      background-color: #000;
+      border: 4px solid #ff8c00;
+      padding: 30px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .evidence-detail-image {
+      width: 300px;
+      height: 300px;
+      background-color: #222;
+      border: 3px solid #ff8c00;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+    }
+
+    .evidence-detail-title {
+      color: #ff8c00;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .evidence-detail-type {
+      color: #ffff00;
+      font-size: 9px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .evidence-detail-description {
+      color: #fff;
+      font-size: 10px;
+      line-height: 1.8;
+      text-align: left;
+      max-width: 500px;
+    }
+
+    .evidence-footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 4px solid #ff8c00;
+      margin-top: 20px;
+    }
+
+    .evidence-footer p {
+      color: #ff8c00;
+      font-size: 8px;
+    }
+
+    .evidence-close-btn {
+      background-color: #000;
+      color: #fff;
+      border: 3px solid #fff;
+      padding: 12px 30px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 15px;
+    }
+
+    .evidence-close-btn:hover {
+      background-color: #ff8c00;
+      color: #000;
+      border-color: #ff8c00;
+    }
+
+    @media (max-width: 768px) {
+      .evidence-display {
+        flex-direction: column;
+      }
+
+      .evidence-list {
+        width: 100%;
+        max-height: 40%;
+      }
+
+      .evidence-detail {
+        width: 100%;
+      }
+
+      .evidence-detail-image {
+        width: 200px;
+        height: 200px;
+        font-size: 60px;
+      }
+    }
   </style>
 </head>
 
@@ -963,6 +1189,35 @@
         <p>Final Score: <span id="final-score-gameover">0</span></p>
         <button class="restart-btn" id="restart-gameover">Try Again</button>
       </div>
+
+      <div class="evidence-panel" id="evidence-panel">
+        <div class="evidence-container">
+          <div class="evidence-header">
+            <h2>📋 EVIDENCE COURT RECORD</h2>
+            <p>Press TAB or ESC to close | Use ARROW KEYS or MOUSE to navigate</p>
+          </div>
+
+          <div class="evidence-display">
+            <div class="evidence-list" id="evidence-list">
+              <!-- Evidence cards will be inserted here -->
+            </div>
+
+            <div class="evidence-detail" id="evidence-detail">
+              <div class="evidence-detail-image" id="evidence-image">📄</div>
+              <div class="evidence-detail-title" id="evidence-title">Select an evidence</div>
+              <div class="evidence-detail-type" id="evidence-type">Click on evidence to view details</div>
+              <div class="evidence-detail-description" id="evidence-description">
+                Navigate through the evidence list to examine each piece of evidence collected during the investigation.
+              </div>
+            </div>
+          </div>
+
+          <div class="evidence-footer">
+            <p>EVIDENCE COUNT: <span id="evidence-count">0</span> / <span id="evidence-total">10</span></p>
+            <button class="evidence-close-btn" id="evidence-close-btn">Close Evidence Panel</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1050,6 +1305,92 @@
     const availableTips = {};
     let collectedTips = [];
 
+    // Evidence system
+    let collectedEvidence = [];
+    let selectedEvidenceIndex = 0;
+
+    // Placeholder evidence data (replace icons with your PNG URLs later)
+    const evidenceDatabase = [
+      {
+        id: 'evidence1',
+        title: 'Chat Log Transcript Alpha',
+        type: 'Digital Evidence',
+        icon: '💬',
+        description: 'WhatsApp conversation logs showing persistent unwanted sexual advances and explicit messages sent to the victim over a period of three months. Messages include sexually suggestive content and continued after explicit rejection.'
+      },
+      {
+        id: 'evidence2',
+        title: 'CCTV Footage NAIA Terminal 3',
+        type: 'Video Evidence',
+        icon: '📹',
+        description: 'Security camera footage from NAIA Terminal 3 showing the defendant positioning their mobile phone at an upward angle beneath the victim\'s skirt at 2:15 PM on February 8, 2025.'
+      },
+      {
+        id: 'evidence3',
+        title: 'Unauthorized Upskirt Photo',
+        type: 'Physical Evidence',
+        icon: '📷',
+        description: 'Photographic evidence recovered from the defendant\'s device. EXIF metadata confirms the photo was taken at NAIA Terminal 3 at the exact time shown in CCTV footage.'
+      },
+      {
+        id: 'evidence4',
+        title: 'Digital Forensics Report',
+        type: 'Technical Analysis',
+        icon: '🔍',
+        description: 'NBI Cybercrime Division analysis confirming IP addresses, device metadata, and account ownership linking all harassing content to the defendant. 47-page comprehensive technical report.'
+      },
+      {
+        id: 'evidence5',
+        title: 'Screenshot Public Facebook Post',
+        type: 'Digital Evidence',
+        icon: '📱',
+        description: 'Public Facebook post containing false defamatory statements about the victim\'s personal life, shared 847 times and reaching approximately 47,000 users before removal.'
+      },
+      {
+        id: 'evidence6',
+        title: 'Chat Log Transcript Beta',
+        type: 'Digital Evidence',
+        icon: '📝',
+        description: 'Instagram direct messages showing 47 messages sent over 21 days, with 34 messages sent AFTER the victim explicitly stated "Please stop contacting me" on March 23.'
+      },
+      {
+        id: 'evidence7',
+        title: 'Expert Psychological Report',
+        type: 'Medical Evidence',
+        icon: '🏥',
+        description: 'Licensed psychologist\'s assessment documenting clinical anxiety disorder, sleep disturbances, and workplace performance decline directly attributable to sustained online harassment.'
+      },
+      {
+        id: 'evidence8',
+        title: 'Institutional Policy Document',
+        type: 'Legal Document',
+        icon: '📋',
+        description: 'Employer\'s Committee on Decorum and Investigation (CODI) procedures and internal investigation findings regarding the workplace harassment complaint filed by the victim.'
+      },
+      {
+        id: 'evidence9',
+        title: 'Witness Testimony Records',
+        type: 'Testimonial Evidence',
+        icon: '👥',
+        description: 'Sworn statements from colleagues who observed the defendant\'s inappropriate behavior and the victim\'s visible distress during the period of harassment.'
+      },
+      {
+        id: 'evidence10',
+        title: 'Email Thread Evidence',
+        type: 'Digital Evidence',
+        icon: '✉️',
+        description: 'Company email communications showing the victim\'s formal complaints to HR and the defendant\'s attempts to contact the victim through work channels after being blocked on personal platforms.'
+      }
+    ];
+
+    // Initialize evidence collection (evidence gets collected automatically for demo purposes)
+    function initializeEvidence() {
+      // For now, collect all evidence automatically
+      // Later you can make this conditional based on correct answers
+      collectedEvidence = evidenceDatabase.map(e => ({ ...e }));
+      updateEvidenceDisplay();
+    }
+
     const narratorDialogues = [
       () => `* Welcome Attorney ${playerName}! As you may know, you have been called here to solve a particular case in which a public figure "X" and some authorities have been caught engaging in online-based violence.`,
       "* A female lawyer was the one who filed the case. According to her, she was preparing to travel when someone captured a photo under her skirt without her consent.",
@@ -1106,7 +1447,7 @@
         ]
       },
       { // QUESTION 2
-      preDialogues: [
+        preDialogues: [
           "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
           "JUDGE: Under which specific provision are you charging this conduct?"
         ],
@@ -1126,7 +1467,7 @@
         ]
       },
       { // QUESTION 3
-      preDialogues: [
+        preDialogues: [
           "YOU (PROSECUTOR): Your Honor, I call the defendant’s co-worker and the victim  Ms. Maria to the stand.",
           "(Ms. Maria approach the stand to take an oath)",
           "YOU (PROSECUTOR): So, Ms. Maria…",
@@ -1134,10 +1475,10 @@
           "MS. MARIA: Yes, I followed the company's procedures first, not to get involved in some serious policy violation, if I disobeyed I might get fired.",
           "MS. MARIA: Which is bad for me since I’m building a great portfolio.",
           "DEFENSE ATTORNEY SANTIAGO: Your Honor, what relevance does institutional policy have to criminal proceedings?"
-        
+
         ],
         text: "Institutional Policy Document shows the employer's established harassment complaint procedures. Under RA 11313, what are employers and institutions REQUIRED to do regarding gender-based harassment?",
-      
+
         answers: [
           "Simply post the law on bulletin boards",
           "Terminate accused employees upon any complaint",
@@ -1153,7 +1494,7 @@
         ]
       },
       { // QUESTION 4: to be accomplished 
-      preDialogues: [
+        preDialogues: [
           "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
           "JUDGE: Under which specific provision are you charging this conduct?"
         ],
@@ -1174,7 +1515,7 @@
       },
 
       { // QUESTION 5
-      preDialogues: [
+        preDialogues: [
           "YOU (PROSECUTOR): Your Honor, Chat Log Transcript Beta reveals a disturbing pattern—47 Instagram messages over 21 days.",
           "(The screen shows messages including: \"You're so sexy in your stories,\" \"I deserve a chance,\" \"Don't be cold to me\")",
           "YOU (PROSECUTOR): Ms. Maria, did you respond to these messages?",
@@ -1199,7 +1540,7 @@
       },
 
       { // QUESTION 6
-      preDialogues: [
+        preDialogues: [
           "YOU (PROSECUTOR): Your Honor, I now present a Screenshot of a Public Facebook Post from May 2, 2025.",
           "(The screen displays: \"Maria is secretly gay but pretends to be straight to get women. I have proof he's been lying to everyone.\")",
           "YOU (PROSECUTOR): This post was shared 847 times, reaching 47,000 people before removal.",
@@ -1222,7 +1563,7 @@
         ]
       },
       { // QUESTION 7
-      preDialogues: [
+        preDialogues: [
           "YOU (PROSECUTOR): Your Honor, I present the NBI Cybercrime Division's comprehensive Digital Forensics Report.",
           "(A thick technical document is displayed showing IP addresses, device metadata, EXIF data, and account ownership analysis.)",
           "DEFENSE ATTORNEY SANTIAGO: Your Honor, this is just technical jargon! What does it actually prove?",
@@ -1245,7 +1586,7 @@
       },
 
       { // QUESTION 8
-      preDialogues: [
+        preDialogues: [
           "YOU (PROSECUTOR): Your Honor, I now present an expert psychological report of the psychological impact assessment.",
           "(The screen displays excerpts: \"Patient presents with symptoms consistent with anxiety disorder directly attributable to sustained online harassment. Sleep disturbances, hypervigilance, workplace performance decline, and social withdrawal documented.\")",
           "DEFENSE ATTORNEY SANTIAGO: Your Honor, these are just emotional complaints! Real harm requires physical injury!",
@@ -1268,12 +1609,12 @@
       },
 
       { // QUESTION 9
-      preDialogues: [
-        "YOU (PROSECUTOR): Your Honor, the initial upskirt photography incident at NAIA occurred on February 8, 2025. The victim, Maria, initially filed her complaint with the Lapu-Lapu City Prosecutor's Office, which dismissed it for lack of jurisdiction.",
-        "YOU (PROSECUTOR): She then successfully filed with the Pasay City Prosecutor's Office, which we are prosecuting today.",
-        "DEFENSE ATTORNEY SANTIAGO: Your Honor, why is the venue even relevant? It feels like they’re stretching for something here!",
-        "JUDGE: Prosecution, explain why jurisdiction was properly established in Pasay City."
-      ],
+        preDialogues: [
+          "YOU (PROSECUTOR): Your Honor, the initial upskirt photography incident at NAIA occurred on February 8, 2025. The victim, Maria, initially filed her complaint with the Lapu-Lapu City Prosecutor's Office, which dismissed it for lack of jurisdiction.",
+          "YOU (PROSECUTOR): She then successfully filed with the Pasay City Prosecutor's Office, which we are prosecuting today.",
+          "DEFENSE ATTORNEY SANTIAGO: Your Honor, why is the venue even relevant? It feels like they’re stretching for something here!",
+          "JUDGE: Prosecution, explain why jurisdiction was properly established in Pasay City."
+        ],
 
         text: " The upskirt photography incident at NAIA was initially filed in Lapu-Lapu City but dismissed for lack of jurisdiction, then properly filed in Pasay City. Why does Pasay City have proper jurisdiction?",
         answers: [
@@ -1291,7 +1632,7 @@
         ]
       },
       { // QUESTION 10
-      preDialogues: [
+        preDialogues: [
           "JUDGE: Prosecution, you've presented,CCTV Footage of NAIA Terminal 3 showing the defendant photographing under a woman's skirt.",
           "JUDGE: Under which specific provision are you charging this conduct?"
         ],
@@ -1414,15 +1755,96 @@
       });
     };
 
-  let isTyping = false, currentText = '', targetText = '', charIndex = 0;
+    // Evidence Panel Functions
+    function updateEvidenceDisplay() {
+      const evidenceList = document.getElementById('evidence-list');
+      evidenceList.innerHTML = '';
 
-  // Per-question dialogue sequencing (e.g., JUDGE:, PROSECUTOR:, OPPOSITION:)
-  let questionDialogues = [];
-  let questionDialogueIndex = 0;
-  let questionDialogueCallback = null;
-  let inQuestionDialogue = false;
-  let waitingForQuestionConfirm = false;
-  let questionConfirmCallback = null;
+      collectedEvidence.forEach((evidence, index) => {
+        const card = document.createElement('div');
+        card.className = 'evidence-card' + (index === selectedEvidenceIndex ? ' selected' : '');
+        card.innerHTML = `
+      <div class="evidence-icon">${evidence.icon}</div>
+      <div class="evidence-card-info">
+        <div class="evidence-card-title">${evidence.title}</div>
+        <div class="evidence-card-type">${evidence.type}</div>
+      </div>
+    `;
+        card.onclick = () => selectEvidence(index);
+        evidenceList.appendChild(card);
+      });
+
+      document.getElementById('evidence-count').textContent = collectedEvidence.length;
+      document.getElementById('evidence-total').textContent = evidenceDatabase.length;
+
+      if (collectedEvidence.length > 0) {
+        displayEvidenceDetail(selectedEvidenceIndex);
+      }
+    }
+
+    function selectEvidence(index) {
+      sounds.menuMove();
+      selectedEvidenceIndex = index;
+      updateEvidenceDisplay();
+    }
+
+    function displayEvidenceDetail(index) {
+      if (index < 0 || index >= collectedEvidence.length) return;
+
+      const evidence = collectedEvidence[index];
+      document.getElementById('evidence-image').textContent = evidence.icon;
+      document.getElementById('evidence-title').textContent = evidence.title;
+      document.getElementById('evidence-type').textContent = evidence.type;
+      document.getElementById('evidence-description').textContent = evidence.description;
+    }
+
+    function openEvidencePanel() {
+      sounds.menuSelect();
+      const panel = document.getElementById('evidence-panel');
+      panel.classList.add('active');
+      gsap.fromTo('#evidence-panel',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 }
+      );
+      updateEvidenceDisplay();
+    }
+
+    function closeEvidencePanel() {
+      sounds.menuSelect();
+      const panel = document.getElementById('evidence-panel');
+      gsap.to('#evidence-panel', {
+        opacity: 0, duration: 0.3,
+        onComplete: () => {
+          panel.classList.remove('active');
+        }
+      });
+    }
+
+    document.getElementById('evidence-close-btn').onclick = closeEvidencePanel;
+
+    // Evidence panel navigation with arrow keys
+    function navigateEvidence(direction) {
+      if (collectedEvidence.length === 0) return;
+
+      if (direction === 'up') {
+        selectedEvidenceIndex = Math.max(0, selectedEvidenceIndex - 1);
+      } else if (direction === 'down') {
+        selectedEvidenceIndex = Math.min(collectedEvidence.length - 1, selectedEvidenceIndex + 1);
+      }
+
+      sounds.menuMove();
+      updateEvidenceDisplay();
+    }
+
+    let isTyping = false, currentText = '', targetText = '', charIndex = 0;
+
+    // Per-question dialogue sequencing (e.g., JUDGE:, PROSECUTOR:, OPPOSITION:)
+    let questionDialogues = [];
+    let questionDialogueIndex = 0;
+    let questionDialogueCallback = null;
+    let inQuestionDialogue = false;
+    let waitingForQuestionConfirm = false;
+    let questionConfirmCallback = null;
 
     function typeText(text, element, callback) {
       targetText = text;
@@ -1523,7 +1945,7 @@
     function presentQuestionPrompt(q, onConfirm) {
       const dialogueBox = document.getElementById('dialogue-box');
       const battleBox = document.getElementById('battle-box');
-      
+
       gsap.to('#battle-box', {
         opacity: 0,
         duration: 0.2,
@@ -1531,7 +1953,7 @@
           if (battleBox) battleBox.classList.remove('active');
           dialogueBox.classList.add('active');
           gsap.fromTo('#dialogue-box', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.3 });
-          
+
           typeText(q.text, document.getElementById('dialogue-text'), () => {
             waitingForQuestionConfirm = true;
             questionConfirmCallback = onConfirm || null;
@@ -1581,7 +2003,7 @@
       dialogueBox.classList.remove('judge', 'prosecutor', 'defense');
       speakerLabelEl.style.display = 'none';
 
-  // Expect format: 'SPEAKER: actual text' (SPEAKER optional)
+      // Expect format: 'SPEAKER: actual text' (SPEAKER optional)
       const m = /^\s*([^:]{1,20}):\s*(.*)$/i.exec(line);
       let speaker = null;
       let text = line;
@@ -1850,116 +2272,116 @@
     }
 
     // Ending tier configuration based on credibility score
-const ENDING_TIERS = {
-  ACE: { 
-    min: 45, 
-    title: '★ ACE PROSECUTOR ★', 
-    rank: 'S',
-    dialogues: [
-      "JUDGE: *strikes gavel with finality* The court will now render its verdict based on the evidence and arguments presented.",
-      `JUDGE: Based on the overwhelming evidence presented by the prosecution, this court finds the defendant, Mr. Dwg, GUILTY on all counts:
+    const ENDING_TIERS = {
+      ACE: {
+        min: 45,
+        title: '★ ACE PROSECUTOR ★',
+        rank: 'S',
+        dialogues: [
+          "JUDGE: *strikes gavel with finality* The court will now render its verdict based on the evidence and arguments presented.",
+          `JUDGE: Based on the overwhelming evidence presented by the prosecution, this court finds the defendant, Mr. Dwg, GUILTY on all counts:
       
       - GUILTY of Gender-based Online Sexual Harassment under RA 11313 Section 4
       - GUILTY of Photo Voyeurism under RA 9995 Section 4(a)
       - GUILTY of violating the Safe Spaces Act provisions
             
       The defendant's systematic harassment of Ms. Patricia Santos over six months, combined with the deplorable upskirt photography at NAIA Terminal 3, represents a clear pattern of predatory behavior.`,
-            () => `JUDGE: Attorney ${playerName}, your prosecution was nothing short of exemplary. Every statute cited was precise, every piece of evidence meticulously presented, and every legal argument devastatingly effective.`,
-            "DEFENSE ATTORNEY SANTIAGO: *extends hand* Masterful prosecution. You may have presented an airtight case to damage my case record, but we'll see if it's just beginner's luck. You have my regards—this is what competent advocacy looks like. *applauds*",
-            `★ ACHIEVEMENT UNLOCKED: "CHAMPION OF JUSTICE" ★
+          () => `JUDGE: Attorney ${playerName}, your prosecution was nothing short of exemplary. Every statute cited was precise, every piece of evidence meticulously presented, and every legal argument devastatingly effective.`,
+          "DEFENSE ATTORNEY SANTIAGO: *extends hand* Masterful prosecution. You may have presented an airtight case to damage my case record, but we'll see if it's just beginner's luck. You have my regards—this is what competent advocacy looks like. *applauds*",
+          `★ ACHIEVEMENT UNLOCKED: "CHAMPION OF JUSTICE" ★
 
     The Department of Justice sends formal commendation. You're invited to train prosecutors on cybercrime cases nationwide. Media coverage highlights your expert handling of gender-based online harassment prosecution.
     
     Your name is being recommended for the Anti-Cybercrime Task Force!`
         ]
-  },
-  
-  SKILLED: { 
-    min: 35, 
-    title: '★ SKILLED PROSECUTOR ★', 
-    rank: 'A',
-    dialogues: [
-      "JUDGE: *strikes gavel* The court has reached a verdict after careful deliberation.",
-      `JUDGE: This court finds the defendant GUILTY on the primary charges:
+      },
+
+      SKILLED: {
+        min: 35,
+        title: '★ SKILLED PROSECUTOR ★',
+        rank: 'A',
+        dialogues: [
+          "JUDGE: *strikes gavel* The court has reached a verdict after careful deliberation.",
+          `JUDGE: This court finds the defendant GUILTY on the primary charges:
       
       - GUILTY of Gender-based Online Sexual Harassment under RA 11313 Section 4
       - GUILTY of Photo Voyeurism under RA 9995 Section 4(a)
             
       While some procedural issues arose during trial, the core evidence was compelling and properly presented.`,
-            () => `JUDGE: Attorney ${playerName}, you demonstrated strong legal acumen. A few stumbles in statute citation, but overall a solid prosecution that achieved justice.`,
-            "DEFENSE ATTORNEY SANTIAGO: *nods respectfully* Well fought, Counselor. You had me worried several times. With more experience, you'll be formidable.",
-            `★ ACHIEVEMENT UNLOCKED: "RISING STAR" ★
+          () => `JUDGE: Attorney ${playerName}, you demonstrated strong legal acumen. A few stumbles in statute citation, but overall a solid prosecution that achieved justice.`,
+          "DEFENSE ATTORNEY SANTIAGO: *nods respectfully* Well fought, Counselor. You had me worried several times. With more experience, you'll be formidable.",
+          `★ ACHIEVEMENT UNLOCKED: "RISING STAR" ★
 
     Your supervisor notes your strong performance. You're assigned more complex cases and recommended for advanced cybercrime law training.
 
     Local legal journals mention your successful prosecution of this high-profile case.`
-    ]
-  },
-  COMPETENT: { 
-    min: 25, 
-    title: '★ COMPETENT PROSECUTOR ★', 
-    rank: 'B',
-    dialogues: [
-      "JUDGE: *strikes gavel* After reviewing all evidence, the court renders the following verdict.",
-      `JUDGE: The defendant is found GUILTY on the main charge:
+        ]
+      },
+      COMPETENT: {
+        min: 25,
+        title: '★ COMPETENT PROSECUTOR ★',
+        rank: 'B',
+        dialogues: [
+          "JUDGE: *strikes gavel* After reviewing all evidence, the court renders the following verdict.",
+          `JUDGE: The defendant is found GUILTY on the main charge:
       
       - GUILTY of Gender-based Online Sexual Harassment under RA 11313 Section 4
       
       However, the voyeurism charge under RA 9995 resulted in a lesser conviction due to procedural concerns raised by the defense.`,
-        () => `JUDGE: Attorney ${playerName}, justice was served today, though your case had vulnerabilities. I recommend reviewing the specific provisions of RA 9995 before your next similar case.`,
-        "DEFENSE ATTORNEY SANTIAGO: *brief nod* You got the conviction, but you made it harder on yourself than necessary. Study more. The law rewards precision.",
-        `★ ACHIEVEMENT UNLOCKED: "JUSTICE SERVED" ★
+          () => `JUDGE: Attorney ${playerName}, justice was served today, though your case had vulnerabilities. I recommend reviewing the specific provisions of RA 9995 before your next similar case.`,
+          "DEFENSE ATTORNEY SANTIAGO: *brief nod* You got the conviction, but you made it harder on yourself than necessary. Study more. The law rewards precision.",
+          `★ ACHIEVEMENT UNLOCKED: "JUSTICE SERVED" ★
 
         Your case is won, and the victim receives some measure of justice. Your supervisor provides feedback on areas for improvement, particularly on statute specificity and evidence presentation.
         
         You're cleared to continue handling standard cybercrime cases.`
-    ]
-  },
-  STRUGGLING: { 
-    min: 15, 
-    title: '★ STRUGGLING PROSECUTOR ★', 
-    rank: 'C',
-    dialogues: [
-      "JUDGE: *strikes gavel with visible concern* This court has deliberated extensively given the... complications during trial.",
-      `JUDGE: The defendant is found GUILTY on reduced charges:
+        ]
+      },
+      STRUGGLING: {
+        min: 15,
+        title: '★ STRUGGLING PROSECUTOR ★',
+        rank: 'C',
+        dialogues: [
+          "JUDGE: *strikes gavel with visible concern* This court has deliberated extensively given the... complications during trial.",
+          `JUDGE: The defendant is found GUILTY on reduced charges:
       
       - GUILTY of Online Harassment (lesser included offense)
             
       The primary charges under RA 11313 Section 4 and RA 9995 Section 4(a) could not be sustained due to significant evidentiary and procedural issues presented by the prosecution.`,
-            () => `JUDGE: Attorney ${playerName}, while you secured a conviction, your numerous legal errors nearly resulted in dismissal. This performance is concerning for someone representing the People.`,
-            "DEFENSE ATTORNEY SANTIAGO: *barely conceals smirk* Lucky for you the evidence spoke for itself, because your arguments certainly didn't. Hit the law books, rookie.",
-            `★ ACHIEVEMENT: "NARROW ESCAPE" ★
+          () => `JUDGE: Attorney ${playerName}, while you secured a conviction, your numerous legal errors nearly resulted in dismissal. This performance is concerning for someone representing the People.`,
+          "DEFENSE ATTORNEY SANTIAGO: *barely conceals smirk* Lucky for you the evidence spoke for itself, because your arguments certainly didn't. Hit the law books, rookie.",
+          `★ ACHIEVEMENT: "NARROW ESCAPE" ★
 
       Your supervisor schedules a formal review meeting. You're required to complete remedial training on RA 11313, RA 9995, and proper evidence presentation before handling cybercrime cases again.
       
       The victim's family expresses disappointment at the reduced charges.`
-    ]
-  },
-  INADEQUATE: { 
-    min: 0, 
-    title: '★ INADEQUATE PERFORMANCE ★', 
-    rank: 'D',
-    dialogues: [
-      "JUDGE: *strikes gavel heavily* This has been one of the most troubling prosecutions this court has witnessed.",
-      `JUDGE: Due to the prosecution's repeated misidentification of applicable statutes, improper evidence handling, and fundamental misunderstanding of the legal framework...
+        ]
+      },
+      INADEQUATE: {
+        min: 0,
+        title: '★ INADEQUATE PERFORMANCE ★',
+        rank: 'D',
+        dialogues: [
+          "JUDGE: *strikes gavel heavily* This has been one of the most troubling prosecutions this court has witnessed.",
+          `JUDGE: Due to the prosecution's repeated misidentification of applicable statutes, improper evidence handling, and fundamental misunderstanding of the legal framework...
 
       This court has no choice but to find the defendant GUILTY only on the most basic charge:
             
       - GUILTY of Unjust Vexation (minor offense)
             
       All major charges are DISMISSED due to prosecutorial incompetence.`,
-            () => `JUDGE: Attorney ${playerName}, your performance was unacceptable. The victim deserved better representation. I'm recommending a formal review of your qualifications.`,
-            "DEFENSE ATTORNEY SANTIAGO: *shakes head* I didn't even need to try. You did my job for me. Please don't practice law until you actually learn it.",
-            `★ WARNING: "PROFESSIONAL REVIEW REQUIRED" ★
+          () => `JUDGE: Attorney ${playerName}, your performance was unacceptable. The victim deserved better representation. I'm recommending a formal review of your qualifications.`,
+          "DEFENSE ATTORNEY SANTIAGO: *shakes head* I didn't even need to try. You did my job for me. Please don't practice law until you actually learn it.",
+          `★ WARNING: "PROFESSIONAL REVIEW REQUIRED" ★
       
       Your law license is under review. You're immediately suspended from handling any cybercrime cases and must complete comprehensive retraining.
       
       The victim files a complaint against you with the Integrated Bar of the Philippines.
       
       The Department of Justice opens an investigation into your competence.`
-    ]
-  }
-};
+        ]
+      }
+    };
 
     function getEndingTier(finalScore) {
       if (finalScore >= ENDING_TIERS.ACE.min) return ENDING_TIERS.ACE;
@@ -1968,24 +2390,24 @@ const ENDING_TIERS = {
       if (finalScore >= ENDING_TIERS.STRUGGLING.min) return ENDING_TIERS.STRUGGLING;
       return ENDING_TIERS.INADEQUATE;
     }
-    
+
     function victory() {
-      gameMode = 'victory'; 
+      gameMode = 'victory';
       sounds.victory();
-      
-      gsap.to('#battle-box', { 
-        opacity: 0, y: 50, duration: 0.5, 
-        onComplete: () => { document.getElementById('battle-box').classList.remove('active'); } 
+
+      gsap.to('#battle-box', {
+        opacity: 0, y: 50, duration: 0.5,
+        onComplete: () => { document.getElementById('battle-box').classList.remove('active'); }
       });
-      
-      gsap.to('#enemy-sprite', { 
-        scale: 0, rotation: 360, duration: 0.8, 
-        onComplete: () => { document.getElementById('enemy-sprite').classList.remove('active'); } 
+
+      gsap.to('#enemy-sprite', {
+        scale: 0, rotation: 360, duration: 0.8,
+        onComplete: () => { document.getElementById('enemy-sprite').classList.remove('active'); }
       });
-      
+
       // Get the appropriate ending tier based on CREDIBILITY (currentHP), not score
       const ending = getEndingTier(currentHP);
-      
+
       // Process dialogues with playerName function evaluation
       const processedDialogues = ending.dialogues.map(dialogue => {
         if (typeof dialogue === 'function') {
@@ -1993,7 +2415,7 @@ const ENDING_TIERS = {
         }
         return dialogue;
       });
-      
+
       // Show ending dialogue sequence
       showEndingDialogues(processedDialogues, ending, () => {
         // After dialogues, show the final victory screen
@@ -2003,25 +2425,25 @@ const ENDING_TIERS = {
 
     function showEndingDialogues(dialogues, ending, onComplete) {
       let currentIndex = 0;
-      
+
       const dialogueBox = document.getElementById('dialogue-box');
       dialogueBox.classList.add('active');
-      gsap.fromTo('#dialogue-box', 
-        { opacity: 0, y: -20 }, 
+      gsap.fromTo('#dialogue-box',
+        { opacity: 0, y: -20 },
         { opacity: 1, y: 0, duration: 0.3 }
       );
-      
+
       function showNext() {
         if (currentIndex < dialogues.length) {
           const dialogue = dialogues[currentIndex];
           applySpeakerAndType(dialogue);
           currentIndex++;
-          
+
           // Set up for next dialogue
           const checkForNext = setInterval(() => {
             if (!isTyping) {
               clearInterval(checkForNext);
-              
+
               // Wait for player input to continue
               const continueHandler = (e) => {
                 if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter') {
@@ -2031,7 +2453,7 @@ const ENDING_TIERS = {
                 }
               };
               document.addEventListener('keydown', continueHandler);
-              
+
               // Mobile support
               const mobileHandler = () => {
                 sounds.menuSelect();
@@ -2053,14 +2475,14 @@ const ENDING_TIERS = {
           });
         }
       }
-  
+
       showNext();
     }
 
-  function showFinalVictoryScreen(ending) {
+    function showFinalVictoryScreen(ending) {
       const victoryScreen = document.getElementById('victory-screen');
       victoryScreen.querySelector('h2').textContent = ending.title;
-      
+
       // Update or create rank display
       let rankDisplay = victoryScreen.querySelector('.rank-display');
       if (!rankDisplay) {
@@ -2069,18 +2491,18 @@ const ENDING_TIERS = {
         victoryScreen.insertBefore(rankDisplay, victoryScreen.querySelector('p'));
       }
       rankDisplay.textContent = `RANK: ${ending.rank}`;
-      
+
       // Update message with credibility instead of score
       const messageP = victoryScreen.querySelectorAll('p')[0];
       const lastDialogue = ending.dialogues[ending.dialogues.length - 1];
       messageP.textContent = lastDialogue.replace(/★|ACHIEVEMENT.*?:|WARNING.*?:/g, '').trim();
-      
+
       // Show credibility score instead of regular score
       const finalScoreElement = document.getElementById('final-score-victory');
       finalScoreElement.parentElement.innerHTML = `Final Credibility: <span id="final-score-victory">${currentHP}</span> / ${maxHP}<br>Cases Won: <span>${score}</span> points`;
-      
-      gsap.fromTo('#victory-screen', 
-        { scale: 0, rotation: -180 }, 
+
+      gsap.fromTo('#victory-screen',
+        { scale: 0, rotation: -180 },
         {
           scale: 1, rotation: 0, duration: 1, ease: "back.out(1.7)",
           onStart: () => { victoryScreen.classList.add('active'); }
@@ -2153,6 +2575,42 @@ const ENDING_TIERS = {
         else if (e.key === 'Enter') { e.preventDefault(); if (currentName.length > 0) document.getElementById('done-btn').click(); }
         return;
       }
+
+      // TAB key to open/close evidence panel
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const evidencePanel = document.getElementById('evidence-panel');
+        if (evidencePanel.classList.contains('active')) {
+          closeEvidencePanel();
+        } else if (gameMode === 'quiz') {
+          openEvidencePanel();
+        }
+        return;
+      }
+
+      // ESC key to close evidence panel
+      if (e.key === 'Escape') {
+        const evidencePanel = document.getElementById('evidence-panel');
+        if (evidencePanel.classList.contains('active')) {
+          e.preventDefault();
+          closeEvidencePanel();
+        }
+        return;
+      }
+
+      // Arrow navigation in evidence panel
+      if (document.getElementById('evidence-panel').classList.contains('active')) {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          navigateEvidence('up');
+          return;
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          navigateEvidence('down');
+          return;
+        }
+      }
+
       keys[e.key] = true;
 
       // If we're in a per-question dialogue sequence, handle Z/Enter here and don't fall through
@@ -2160,7 +2618,7 @@ const ENDING_TIERS = {
         e.preventDefault();
         if (isTyping) {
           // finish typing immediately
-          isTyping = false; 
+          isTyping = false;
           document.getElementById('dialogue-text').textContent = targetText;
         } else {
           sounds.menuSelect();
@@ -2241,7 +2699,7 @@ const ENDING_TIERS = {
     }
 
     function gameLoop() { update(); draw(); requestAnimationFrame(gameLoop); }
-
+    initializeEvidence();
     createKeyboard();
 
     createKeyboard();
@@ -2249,11 +2707,12 @@ const ENDING_TIERS = {
     updateNameDisplay();
     updateHP();
     updateScore();
-    window.addEventListener('resize', () => { 
-      canvas.width = window.innerWidth; 
-      canvas.height = window.innerHeight; 
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     });
     gameLoop();
   </script>
-  </body>
+</body>
+
 </html>
