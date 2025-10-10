@@ -568,34 +568,26 @@
     }
 
     @media (max-width: 768px) {
-      .question-text {
-        font-size: 11px;
-        max-height: 150px;
+      #battle-box {
         overflow-y: auto;
-        overflow-x: hidden;
-        padding-right: 10px;
-        min-height: auto;
+        max-height: calc(100vh - 100px); /* Adjust based on header/footer */
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
       }
-
-      /* Custom scrollbar for question text */
-      .question-text::-webkit-scrollbar {
-        width: 6px;
+    
+      .question-text {
+        overflow: visible;
+        max-height: unset;
+        padding-right: 0;
+        margin-bottom: 20px;
       }
-
-      .question-text::-webkit-scrollbar-track {
-        background: #000;
-        border: 1px solid #ff8c00;
-      }
-
-      .question-text::-webkit-scrollbar-thumb {
-        background: #ff8c00;
-        border-radius: 3px;
-      }
-
-      .question-text::-webkit-scrollbar-thumb:hover {
-        background: #ffa500;
+    
+      .answer-buttons {
+        margin-bottom: 30px;
       }
     }
+
 
     .answer-buttons {
       display: grid;
