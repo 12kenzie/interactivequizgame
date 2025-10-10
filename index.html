@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html> -->
 <html lang="en">
 
 <head>
@@ -1538,16 +1538,6 @@
         dialogueBox.style.top = '50%';
         dialogueBox.style.transform = 'translate(-50%, -50%)';
         
-        function showCredits() {
-      sounds.menuSelect();
-      hideStartMenu(() => {
-        const dialogueBox = document.getElementById('dialogue-box');
-        
-        // Center the dialogue box for credits
-        dialogueBox.style.bottom = 'auto';
-        dialogueBox.style.top = '50%';
-        dialogueBox.style.transform = 'translate(-50%, -50%)';
-        
         const creditsText = `★ VERDICT//ZERO ★
 
 A Legal Thriller Adventure Game
@@ -1623,7 +1613,7 @@ Press Z or ENTER to return`;
         });
       });
     }
-
+    
     // START MENU EVENT LISTENERS
     document.getElementById('start-game-btn').onclick = () => {
       hideStartMenu(() => {
