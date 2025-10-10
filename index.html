@@ -14,9 +14,6 @@
       box-sizing: border-box;
       font-family: 'Press Start 2P', monospace;
       -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      user-select: none;
     }
 
     body {
@@ -32,6 +29,24 @@
       width: 100vw;
       height: 100vh;
       background-color: #000;
+    }
+
+    .scene-courtroom {
+      background-image: url('courtroom.png');
+      background-size: cover;
+      /* Automatically scales to fit screen */
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Optional: Adjust for very small screens */
+    @media (max-width: 768px) {
+      .scene-courtroom {
+        background-size: cover;
+        /* Keeps full coverage */
+        background-position: center bottom;
+        /* Adjust focus area if needed */
+      }
     }
 
     canvas {
@@ -111,7 +126,7 @@
 
     .mobile-controls {
       position: absolute;
-      bottom: 10px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       display: none;
@@ -194,28 +209,6 @@
       .score-display {
         font-size: 8px;
       }
-
-      .answer-btn {
-        padding: 20px;
-        font-size: 12px;
-        min-height: 60px;
-      }
-      
-      .action-btn {
-        padding: 15px 20px;
-        font-size: 11px;
-        min-height: 50px;
-      }
-      
-      .mobile-btn {
-        min-width: 45px;
-        min-height: 45px;
-      }
-      
-      .mobile-action {
-        min-width: 70px;
-        min-height: 70px;
-      }
     }
 
     .name-input-screen {
@@ -272,14 +265,6 @@
       max-width: 500px;
       margin-left: auto;
       margin-right: auto;
-    }
-
-    /* Prevent scrolling on mobile */
-    html, body {
-      position: fixed;
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
     }
 
     @media (max-width: 768px) {
@@ -532,10 +517,9 @@
         width: 95%;
         min-height: 300px;
         padding: 15px;
-        bottom: 90px; /* Changed from 180px to avoid mobile controls */
-        max-height: calc(100vh - 200px);
-        overflow-y: auto;
+        bottom: 180px;
       }
+    }
 
     .stats-bar {
       display: flex;
@@ -577,10 +561,7 @@
 
     @media (max-width: 768px) {
       .question-text {
-        font-size: 10px;
-        min-height: 80px;
-        max-height: 150px;
-        overflow-y: auto;
+        font-size: 11px;
       }
     }
 
@@ -593,8 +574,7 @@
 
     @media (max-width: 768px) {
       .answer-buttons {
-        max-height: 300px;
-        overflow-y: auto;
+        grid-template-columns: 1fr;
       }
     }
 
@@ -721,9 +701,7 @@
       .dialogue-box {
         width: 95%;
         padding: 15px;
-        bottom: 90px; /* Same as battle-box */
-        max-height: calc(100vh - 200px);
-        overflow-y: auto;
+        bottom: 180px;
       }
     }
 
@@ -1453,22 +1431,6 @@
     canvas.height = window.innerHeight;
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
-    document.addEventListener('touchmove', (e) => {
-      if (e.target.closest('canvas') || e.target.closest('.mobile-controls')) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-
-    let lastTouchEnd = 0;
-    document.addEventListener('touchend', (e) => {
-      const now = Date.now();
-      if (now - lastTouchEnd <= 300) {
-        e.preventDefault();
-      }
-      lastTouchEnd = now;
-    }, false);
-
-    
     // Enhanced color palette for office background
     const officeColors = {
       floor: '#5A4A3A',
@@ -1613,55 +1575,13 @@
         btn.addEventListener('touchend', (e) => { e.preventDefault(); mobileKeys[dir] = false; });
       });
       document.getElementById('mobile-action').addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        
-        // Handle question dialogues
-        if (inQuestionDialogue) {
-          if (isTyping) {
-            isTyping = false;
-            document.getElementById('dialogue-text').textContent = targetText;
-          } else {
-            sounds.menuSelect();
-            showNextQuestionDialogue();
-          }
-          return;
-        }
-        
-        // Handle question confirmation prompt
-        if (waitingForQuestionConfirm) {
-          if (isTyping) {
-            isTyping = false;
-            document.getElementById('dialogue-text').textContent = targetText;
-          } else {
-            sounds.menuSelect();
-            waitingForQuestionConfirm = false;
-            const dialogueBox = document.getElementById('dialogue-box');
-            const battleBox = document.getElementById('battle-box');
-            gsap.to('#dialogue-box', {
-              opacity: 0, duration: 0.3, onComplete: () => {
-                dialogueBox.classList.remove('active');
-                if (battleBox) {
-                  battleBox.classList.add('active');
-                  gsap.fromTo('#battle-box', { opacity: 0 }, { opacity: 1, duration: 0.3 });
-                }
-                if (questionConfirmCallback) {
-                  const cb = questionConfirmCallback;
-                  questionConfirmCallback = null;
-                  cb();
-                }
-              }
-            });
-          }
-          return;
-        }
-        
-        // Regular game actions
-        sounds.menuSelect();
+        e.preventDefault(); sounds.menuSelect();
         if (gameMode === 'walking' && canInteract) startDialogue();
         else if (gameMode === 'dialogue' && !isTyping) showNextDialogue();
         else if (gameMode === 'dialogue' && isTyping) { isTyping = false; document.getElementById('dialogue-text').textContent = targetText; }
       });
     }
+
     let gameMode = 'startMenu', playerName = '', currentName = '';
     const MAX_NAME_LENGTH = 7;
     let score = 0, maxHP = 20, currentHP = 20, currentQuestionIndex = 0, dialogueIndex = 0, canInteract = false, answeringQuestion = false;
@@ -2819,13 +2739,6 @@ Press Z or ENTER to return`;
         answerButtons.appendChild(btn);
       });
       answeringQuestion = false;
-
-      if (isMobile) {
-        setTimeout(() => {
-          const battleBox = document.getElementById('battle-box');
-          battleBox.scrollTop = 0;
-        }, 100);
-      }
     }
 
     function checkAnswer(selectedIndex) {
@@ -3578,10 +3491,18 @@ Press Z or ENTER to return`;
       ctx.fillStyle = shadowGrad;
       ctx.fillRect(0, 0, officeCanvas.width, officeCanvas.height);
 
-      // Draw carpet in center
-      const aisleWidth = 200;
+      // Responsive desk and aisle positioning
+      const isMobileView = officeCanvas.width < 768;
+      const aisleWidth = isMobileView ? Math.min(150, officeCanvas.width * 0.4) : 200;
       const aisleX = (officeCanvas.width - aisleWidth) / 2;
 
+      // Calculate desk positions - ensure they stay outside the aisle
+      const deskWidth = isMobileView ? 80 : 120;
+      const deskHeight = isMobileView ? 60 : 80;
+      const leftDeskX = Math.max(10, aisleX - deskWidth - 20);
+      const rightDeskX = Math.min(officeCanvas.width - deskWidth - 10, aisleX + aisleWidth + 20);
+
+      // Draw carpet in center (drawn before desks so desks appear on top)
       ctx.fillStyle = colors.carpet;
       ctx.fillRect(aisleX, 0, aisleWidth, officeCanvas.height);
 
@@ -3593,8 +3514,9 @@ Press Z or ENTER to return`;
       for (let y = 40; y < officeCanvas.height; y += 80) {
         ctx.fillStyle = colors.carpetDark;
         for (let i = 0; i < 4; i++) {
-          ctx.fillRect(aisleX + 80 + i * 4, y + i * 2, 40 - i * 8, 2);
-          ctx.fillRect(aisleX + 80 + i * 4, y + 16 - i * 2, 40 - i * 8, 2);
+          const patternX = aisleX + (aisleWidth / 2) - 20 + i * 4;
+          ctx.fillRect(patternX, y + i * 2, 40 - i * 8, 2);
+          ctx.fillRect(patternX, y + 16 - i * 2, 40 - i * 8, 2);
         }
         ctx.fillStyle = colors.goldDark;
         ctx.fillRect(aisleX + 20, y + 4, 8, 8);
@@ -3603,35 +3525,42 @@ Press Z or ENTER to return`;
 
       const sway = plantSway[officeAnimFrame % plantSway.length] * 2;
 
-      // Draw plants
-      drawSimplePlant(100, officeCanvas.height / 2 - 100, sway);
-      drawSimplePlant(officeCanvas.width - 140, officeCanvas.height / 2 - 100, -sway);
-      drawSimplePlant(100, officeCanvas.height / 2 + 150, -sway);
-      drawSimplePlant(officeCanvas.width - 140, officeCanvas.height / 2 + 150, sway);
+      // Draw plants at appropriate positions
+      const plantX = isMobileView ? 15 : 100;
+      const plantRightX = isMobileView ? officeCanvas.width - 55 : officeCanvas.width - 140;
 
-      // Desks
+      drawSimplePlant(plantX, officeCanvas.height / 2 - 100, sway);
+      drawSimplePlant(plantRightX, officeCanvas.height / 2 - 100, -sway);
+      drawSimplePlant(plantX, officeCanvas.height / 2 + 150, -sway);
+      drawSimplePlant(plantRightX, officeCanvas.height / 2 + 150, sway);
+
+      // Desks - now positioned outside the carpet aisle
       const deskColor = colors.desk;
       const deskDark = colors.deskDark;
+      const topDeskY = 200;
+      const bottomDeskY = officeCanvas.height - (isMobileView ? 340 : 280);
 
+      // Left desks
       ctx.fillStyle = deskColor;
-      ctx.fillRect(60, 200, 120, 80);
-      ctx.fillRect(60, officeCanvas.height - 280, 120, 80);
+      ctx.fillRect(leftDeskX, topDeskY, deskWidth, deskHeight);
+      ctx.fillRect(leftDeskX, bottomDeskY, deskWidth, deskHeight);
       ctx.fillStyle = deskDark;
-      ctx.fillRect(60, 270, 120, 10);
-      ctx.fillRect(60, officeCanvas.height - 210, 120, 10);
+      ctx.fillRect(leftDeskX, topDeskY + deskHeight - 10, deskWidth, 10);
+      ctx.fillRect(leftDeskX, bottomDeskY + deskHeight - 10, deskWidth, 10);
 
+      // Right desks
       ctx.fillStyle = deskColor;
-      ctx.fillRect(officeCanvas.width - 180, 200, 120, 80);
-      ctx.fillRect(officeCanvas.width - 180, officeCanvas.height - 280, 120, 80);
+      ctx.fillRect(rightDeskX, topDeskY, deskWidth, deskHeight);
+      ctx.fillRect(rightDeskX, bottomDeskY, deskWidth, deskHeight);
       ctx.fillStyle = deskDark;
-      ctx.fillRect(officeCanvas.width - 180, 270, 120, 10);
-      ctx.fillRect(officeCanvas.width - 180, officeCanvas.height - 210, 120, 10);
+      ctx.fillRect(rightDeskX, topDeskY + deskHeight - 10, deskWidth, 10);
+      ctx.fillRect(rightDeskX, bottomDeskY + deskHeight - 10, deskWidth, 10);
 
       // Lamp glows on desks
-      drawLampGlow(ctx, 100, 220);
-      drawLampGlow(ctx, 100, officeCanvas.height - 260);
-      drawLampGlow(ctx, officeCanvas.width - 140, 220);
-      drawLampGlow(ctx, officeCanvas.width - 140, officeCanvas.height - 260);
+      drawLampGlow(ctx, leftDeskX + deskWidth / 2 - 20, topDeskY + 20);
+      drawLampGlow(ctx, leftDeskX + deskWidth / 2 - 20, bottomDeskY + 20);
+      drawLampGlow(ctx, rightDeskX + deskWidth / 2 - 20, topDeskY + 20);
+      drawLampGlow(ctx, rightDeskX + deskWidth / 2 - 20, bottomDeskY + 20);
 
       // Floating dust particles
       updateAndDrawParticles(ctx);
