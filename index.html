@@ -33,8 +33,20 @@
 
     canvas {
       display: block;
-      background-color: #000;
       image-rendering: pixelated;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    
+    #office-canvas {
+      background-color: #000;
+      z-index: 1;
+    }
+    
+    #game-canvas {
+      background-color: transparent;
+      z-index: 2;
     }
 
     .ui-overlay {
@@ -1221,6 +1233,7 @@
       <div class="scene-decoration" style="bottom: 20%; right: 20%;">⚖️</div>
     </div>
     <div class="transition-overlay" id="transition-overlay"></div>
+    <canvas id="office-canvas"></canvas>
     <canvas id="game-canvas"></canvas>
     <div class="ui-overlay">
       <div class="start-menu" id="start-menu">
@@ -1377,12 +1390,63 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script>
+    // Background office canvas
+    const officeCanvas = document.getElementById('office-canvas');
+    const officeCtx = officeCanvas.getContext('2d');
+    officeCanvas.width = window.innerWidth;
+    officeCanvas.height = window.innerHeight;
+    
+    // Foreground game canvas (for player/NPCs)
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
+    // Enhanced color palette for office background
+    const officeColors = {
+      floor: '#8B7355',
+      floorDark: '#654321',
+      floorLight: '#A0826D',
+      floorHighlight: '#B8967A',
+      wall: '#4A4A4A',
+      wallDark: '#2A2A2A',
+      wallMid: '#3A3A3A',
+      wallLight: '#6A6A6A',
+      desk: '#5C4033',
+      deskDark: '#3E2723',
+      deskMid: '#4D3128',
+      deskLight: '#7A5A46',
+      carpet: '#8B0000',
+      carpetDark: '#5C0000',
+      carpetMid: '#750000',
+      carpetLight: '#A01010',
+      bookshelf: '#654321',
+      paper: '#EFEFEF',
+      paperDark: '#CCCCCC',
+      gold: '#FFD700',
+      goldDark: '#DAA520',
+      goldMid: '#EEC757',
+      plant: '#228B22',
+      plantDark: '#006400',
+      plantMid: '#1A7A1A',
+      plantLight: '#32CD32',
+      wood: '#8B4513',
+      woodDark: '#5C2E0A',
+      leather: '#4A2511',
+      leatherDark: '#2A1507',
+      computer: '#1A1A1A',
+      computerScreen: '#4A90E2',
+      lamp: '#FFF8DC',
+      lampBase: '#B8860B'
+    };
+    
+    // Animation state for background
+    let officeAnimFrame = 0;
+    const plantSway = [0, 1, 2, 1, 0, -1, -2, -1];
+    const screenFlicker = [0, 0, 0, 0, 1, 0, 0, 0];
+    const lampGlow = [0, 1, 2, 3, 2, 1];
+    
     let soundEnabled = true;
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -3193,7 +3257,117 @@ Press Z or ENTER to return`;
       }
     }
 
-    function gameLoop() { update(); draw(); requestAnimationFrame(gameLoop); }
+    function drawOfficeBackground() {
+      const ctx = officeCtx;
+      const colors = officeColors;
+      
+      // Scale factor to fit screen
+      const scaleX = officeCanvas.width / 240;
+      const scaleY = officeCanvas.height / 180;
+      ctx.save();
+      ctx.scale(scaleX, scaleY);
+      
+      // Clear and draw floor
+      ctx.fillStyle = colors.floor;
+      ctx.fillRect(0, 0, 240, 180);
+      
+      // Draw floor tiles with shading
+      for (let y = 0; y < 180; y += 8) {
+        for (let x = 0; x < 240; x += 8) {
+          if ((x/8 + y/8) % 2 === 0) {
+            ctx.fillStyle = colors.floorDark;
+            ctx.fillRect(x, y, 8, 8);
+          } else {
+            ctx.fillStyle = colors.floor;
+            ctx.fillRect(x, y, 8, 8);
+          }
+          ctx.fillStyle = colors.floorHighlight;
+          ctx.fillRect(x + 1, y + 1, 3, 1);
+          ctx.fillRect(x + 1, y + 1, 1, 3);
+          ctx.fillStyle = colors.floorDark;
+          ctx.fillRect(x, y, 8, 1);
+          ctx.fillRect(x, y, 1, 8);
+        }
+      }
+      
+      // Draw carpet
+      const aisleWidth = 48;
+      const aisleX = (240 - aisleWidth) / 2;
+      
+      ctx.fillStyle = colors.carpet;
+      ctx.fillRect(aisleX, 0, aisleWidth, 180);
+      
+      ctx.fillStyle = colors.carpetMid;
+      for (let i = 0; i < 8; i++) {
+        ctx.fillRect(aisleX + 4 + i * 2, 0, 1, 180);
+      }
+      
+      ctx.fillStyle = colors.goldDark;
+      ctx.fillRect(aisleX, 0, 2, 180);
+      ctx.fillRect(aisleX + aisleWidth - 2, 0, 2, 180);
+      ctx.fillStyle = colors.goldMid;
+      ctx.fillRect(aisleX + 2, 0, 1, 180);
+      ctx.fillRect(aisleX + aisleWidth - 3, 0, 1, 180);
+      
+      // Draw furniture (simplified for brevity - you can add the full furniture drawing functions)
+      // For now, just draw some basic shapes to show it works
+      
+      // Draw some desks
+      ctx.fillStyle = colors.desk;
+      ctx.fillRect(16, 130, 30, 18);
+      ctx.fillRect(194, 130, 30, 18);
+      ctx.fillRect(16, 28, 30, 18);
+      ctx.fillRect(194, 28, 30, 18);
+      
+      // Draw animated plants
+      const sway = plantSway[officeAnimFrame % plantSway.length];
+      
+      // Left plant
+      drawPlant(20, 60, sway);
+      // Right plant
+      drawPlant(206, 60, sway);
+      
+      ctx.restore();
+      officeAnimFrame++;
+    }
+    
+    function drawPlant(x, y, sway) {
+      const ctx = officeCtx;
+      const colors = officeColors;
+      
+      // Pot
+      ctx.fillStyle = '#8B4513';
+      ctx.fillRect(x + 2, y + 10, 10, 10);
+      ctx.fillStyle = '#A0522D';
+      ctx.fillRect(x + 1, y + 10, 12, 2);
+      
+      // Soil
+      ctx.fillStyle = colors.woodDark;
+      ctx.fillRect(x + 3, y + 11, 8, 2);
+      
+      // Stems with animation
+      ctx.fillStyle = colors.plantDark;
+      ctx.fillRect(x + 6 + sway, y + 6, 2, 5);
+      ctx.fillRect(x + 4 + Math.floor(sway * 0.7), y + 8, 2, 3);
+      
+      // Leaves with animation
+      ctx.fillStyle = colors.plant;
+      ctx.fillRect(x + 2 + Math.floor(sway * 0.8), y + 6, 3, 3);
+      ctx.fillRect(x + 5 + sway, y + 3, 4, 4);
+      ctx.fillRect(x + 9 + Math.floor(sway * 0.5), y + 5, 3, 3);
+      
+      // Highlights
+      ctx.fillStyle = colors.plantLight;
+      ctx.fillRect(x + 3 + Math.floor(sway * 0.8), y + 7, 1, 1);
+      ctx.fillRect(x + 6 + sway, y + 4, 1, 1);
+    }
+
+    function gameLoop() {
+      drawOfficeBackground(); // Draw animated background first
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
 
     // INITIALIZE GAME
     initializeEvidence();
@@ -3209,6 +3383,8 @@ Press Z or ENTER to return`;
     showStartMenu();
 
     window.addEventListener('resize', () => {
+      officeCanvas.width = window.innerWidth;
+      officeCanvas.height = window.innerHeight;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     });
