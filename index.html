@@ -1613,13 +1613,55 @@
         btn.addEventListener('touchend', (e) => { e.preventDefault(); mobileKeys[dir] = false; });
       });
       document.getElementById('mobile-action').addEventListener('touchstart', (e) => {
-        e.preventDefault(); sounds.menuSelect();
+        e.preventDefault();
+        
+        // Handle question dialogues
+        if (inQuestionDialogue) {
+          if (isTyping) {
+            isTyping = false;
+            document.getElementById('dialogue-text').textContent = targetText;
+          } else {
+            sounds.menuSelect();
+            showNextQuestionDialogue();
+          }
+          return;
+        }
+        
+        // Handle question confirmation prompt
+        if (waitingForQuestionConfirm) {
+          if (isTyping) {
+            isTyping = false;
+            document.getElementById('dialogue-text').textContent = targetText;
+          } else {
+            sounds.menuSelect();
+            waitingForQuestionConfirm = false;
+            const dialogueBox = document.getElementById('dialogue-box');
+            const battleBox = document.getElementById('battle-box');
+            gsap.to('#dialogue-box', {
+              opacity: 0, duration: 0.3, onComplete: () => {
+                dialogueBox.classList.remove('active');
+                if (battleBox) {
+                  battleBox.classList.add('active');
+                  gsap.fromTo('#battle-box', { opacity: 0 }, { opacity: 1, duration: 0.3 });
+                }
+                if (questionConfirmCallback) {
+                  const cb = questionConfirmCallback;
+                  questionConfirmCallback = null;
+                  cb();
+                }
+              }
+            });
+          }
+          return;
+        }
+        
+        // Regular game actions
+        sounds.menuSelect();
         if (gameMode === 'walking' && canInteract) startDialogue();
         else if (gameMode === 'dialogue' && !isTyping) showNextDialogue();
         else if (gameMode === 'dialogue' && isTyping) { isTyping = false; document.getElementById('dialogue-text').textContent = targetText; }
       });
     }
-
     let gameMode = 'startMenu', playerName = '', currentName = '';
     const MAX_NAME_LENGTH = 7;
     let score = 0, maxHP = 20, currentHP = 20, currentQuestionIndex = 0, dialogueIndex = 0, canInteract = false, answeringQuestion = false;
