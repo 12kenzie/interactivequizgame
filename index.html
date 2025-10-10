@@ -1530,30 +1530,79 @@
 
     function showCredits() {
       sounds.menuSelect();
-      const creditsText = `★ VERDICT//ZERO ★
+      hideStartMenu(() => {
+        const dialogueBox = document.getElementById('dialogue-box');
+        const creditsText = `★ VERDICT//ZERO ★
   
-A Legal Thriller Adventure Game
+    A Legal Thriller Adventure Game
+    
+    CREATED BY:
+    12-REVERIE GROUP 4
 
-CREATED BY:
-[Your Team Name]
+    SPRITES:
+    ARCE, MIGUEL PHILIP
+    
+    CONTENTS AND DIALOGUES:
+    GUINTO, YOHAN
+    NOLASCO, TERENCE DOMINIC D.
+    AMOR, ROZEAH
+    ADEVA, ALLIANA YSABELLE
+    
+    PROGRAMMING:
+    RIGUER, MACKENZIE C.
+    
+    LEGAL CONTENT:
+    Based on Philippine Laws:
+    - RA 11313 (Safe Spaces Act)
+    - RA 9995 (Anti-Photo Voyeurism)
+    - RA 10175 (Cybercrime Prevention)
+    
+    SPECIAL THANKS:
+    To all advocates fighting
+    gender-based violence
+    
+    Press Z or ENTER to return`;
 
-PROGRAMMING:
-[Your Name]
+        dialogueBox.classList.add('active');
+        gsap.fromTo('#dialogue-box',
+          { opacity: 0, y: -20 },
+          { opacity: 1, y: 0, duration: 0.3 }
+        );
 
-LEGAL CONTENT:
-Based on Philippine Laws:
-- RA 11313 (Safe Spaces Act)
-- RA 9995 (Anti-Photo Voyeurism)
-- RA 10175 (Cybercrime Prevention)
+        typeText(creditsText, document.getElementById('dialogue-text'), () => {
+          // Wait for player input to return
+          const returnHandler = (e) => {
+            if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter') {
+              sounds.menuSelect();
+              document.removeEventListener('keydown', returnHandler);
+              
+              gsap.to('#dialogue-box', {
+                opacity: 0, duration: 0.3,
+                onComplete: () => {
+                  dialogueBox.classList.remove('active');
+                  showStartMenu();
+                }
+              });
+            }
+          };
+          document.addEventListener('keydown', returnHandler);
 
-SPECIAL THANKS:
-To all advocates fighting
-gender-based violence
-
-Press Z or ENTER to return`;
-
-      showDialogueMessage(creditsText, () => {
-        showStartMenu();
+          // Mobile support
+          const mobileHandler = () => {
+            sounds.menuSelect();
+            document.getElementById('mobile-action').removeEventListener('touchstart', mobileHandler);
+            document.removeEventListener('keydown', returnHandler);
+            
+            gsap.to('#dialogue-box', {
+              opacity: 0, duration: 0.3,
+              onComplete: () => {
+                dialogueBox.classList.remove('active');
+                showStartMenu();
+              }
+            });
+          };
+          document.getElementById('mobile-action').addEventListener('touchstart', mobileHandler, { once: true });
+        });
       });
     }
 
