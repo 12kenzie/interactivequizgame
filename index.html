@@ -2342,13 +2342,13 @@ Press Z or ENTER to return`;
       currentText = '';
       charIndex = 0;
       isTyping = true;
-      element.textContent = '';
+      element.innerHTML = '';
 
       function typeChar() {
         if (charIndex < targetText.length) {
           if (charIndex % 3 === 0) sounds.textBlip(); // Less frequent beeps
           currentText += targetText[charIndex];
-          element.textContent = currentText;
+          element.innerHTML = currentText.replace(/\n/g, '<br>');  
           charIndex++;
           setTimeout(typeChar, 20); // Faster typing for longer text
         } else {
