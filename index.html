@@ -570,6 +570,30 @@
     @media (max-width: 768px) {
       .question-text {
         font-size: 11px;
+        max-height: 150px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 10px;
+        min-height: auto;
+      }
+
+      /* Custom scrollbar for question text */
+      .question-text::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .question-text::-webkit-scrollbar-track {
+        background: #000;
+        border: 1px solid #ff8c00;
+      }
+
+      .question-text::-webkit-scrollbar-thumb {
+        background: #ff8c00;
+        border-radius: 3px;
+      }
+
+      .question-text::-webkit-scrollbar-thumb:hover {
+        background: #ffa500;
       }
     }
 
