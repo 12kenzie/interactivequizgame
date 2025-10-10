@@ -1532,41 +1532,40 @@
       sounds.menuSelect();
       hideStartMenu(() => {
         const dialogueBox = document.getElementById('dialogue-box');
+        
+        // Center the dialogue box for credits
+        dialogueBox.style.bottom = 'auto';
+        dialogueBox.style.top = '50%';
+        dialogueBox.style.transform = 'translate(-50%, -50%)';
+        
         const creditsText = `★ VERDICT//ZERO ★
   
-    A Legal Thriller Adventure Game
-    
+A Legal Thriller Adventure Game
+
     CREATED BY:
+
     12-REVERIE GROUP 4
 
     SPRITES:
     ARCE, MIGUEL PHILIP
-    
+
     CONTENTS AND DIALOGUES:
     GUINTO, YOHAN
     NOLASCO, TERENCE DOMINIC D.
     AMOR, ROZEAH
     ADEVA, ALLIANA YSABELLE
-    
+
     PROGRAMMING:
     RIGUER, MACKENZIE C.
     
-    LEGAL CONTENT:
-    Based on Philippine Laws:
-    - RA 11313 (Safe Spaces Act)
-    - RA 9995 (Anti-Photo Voyeurism)
-    - RA 10175 (Cybercrime Prevention)
-    
     SPECIAL THANKS:
     To all advocates fighting
-    gender-based violence
-    
-    Press Z or ENTER to return`;
+    gender-based violence`;
 
         dialogueBox.classList.add('active');
         gsap.fromTo('#dialogue-box',
-          { opacity: 0, y: -20 },
-          { opacity: 1, y: 0, duration: 0.3 }
+          { opacity: 0, scale: 0.9 },
+          { opacity: 1, scale: 1, duration: 0.5 }
         );
 
         typeText(creditsText, document.getElementById('dialogue-text'), () => {
@@ -1577,9 +1576,13 @@
               document.removeEventListener('keydown', returnHandler);
               
               gsap.to('#dialogue-box', {
-                opacity: 0, duration: 0.3,
+                opacity: 0, scale: 0.9, duration: 0.3,
                 onComplete: () => {
                   dialogueBox.classList.remove('active');
+                  // Reset dialogue box position
+                  dialogueBox.style.bottom = '20px';
+                  dialogueBox.style.top = 'auto';
+                  dialogueBox.style.transform = 'translateX(-50%)';
                   showStartMenu();
                 }
               });
@@ -1594,9 +1597,13 @@
             document.removeEventListener('keydown', returnHandler);
             
             gsap.to('#dialogue-box', {
-              opacity: 0, duration: 0.3,
+              opacity: 0, scale: 0.9, duration: 0.3,
               onComplete: () => {
                 dialogueBox.classList.remove('active');
+                // Reset dialogue box position
+                dialogueBox.style.bottom = '20px';
+                dialogueBox.style.top = 'auto';
+                dialogueBox.style.transform = 'translateX(-50%)';
                 showStartMenu();
               }
             });
