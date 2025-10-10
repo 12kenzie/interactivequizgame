@@ -37,13 +37,15 @@
       position: absolute;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
     }
-    
+
     #office-canvas {
       background-color: #000;
       z-index: 1;
     }
-    
+
     #game-canvas {
       background-color: transparent;
       z-index: 2;
@@ -801,7 +803,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 0;
+      z-index: 1;
       opacity: 0;
     }
 
@@ -1199,20 +1201,28 @@
       }
 
       .evidence-detail-image {
-            width: 200px;
-            height: 200px;
-            font-size: 60px;
-          }
-        }
-        .evidence-card.answer-mode {
+        width: 200px;
+        height: 200px;
+        font-size: 60px;
+      }
+    }
+
+    .evidence-card.answer-mode {
       border-color: #0f0;
       background-color: #002200;
       animation: evidencePulse 1s infinite;
     }
-    
+
     @keyframes evidencePulse {
-      0%, 100% { border-color: #0f0; }
-      50% { border-color: #00ff00; }
+
+      0%,
+      100% {
+        border-color: #0f0;
+      }
+
+      50% {
+        border-color: #00ff00;
+      }
     }
   </style>
 </head>
@@ -1395,7 +1405,7 @@
     const officeCtx = officeCanvas.getContext('2d');
     officeCanvas.width = window.innerWidth;
     officeCanvas.height = window.innerHeight;
-    
+
     // Foreground game canvas (for player/NPCs)
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
@@ -1405,55 +1415,55 @@
 
     // Enhanced color palette for office background
     const officeColors = {
-      floor: '#8B7355',
-      floorDark: '#654321',
-      floorLight: '#A0826D',
-      floorHighlight: '#B8967A',
-      wall: '#4A4A4A',
-      wallDark: '#2A2A2A',
-      wallMid: '#3A3A3A',
-      wallLight: '#6A6A6A',
-      desk: '#5C4033',
-      deskDark: '#3E2723',
-      deskMid: '#4D3128',
-      deskLight: '#7A5A46',
-      carpet: '#8B0000',
-      carpetDark: '#5C0000',
-      carpetMid: '#750000',
-      carpetLight: '#A01010',
-      bookshelf: '#654321',
-      paper: '#EFEFEF',
-      paperDark: '#CCCCCC',
-      gold: '#FFD700',
-      goldDark: '#DAA520',
-      goldMid: '#EEC757',
-      plant: '#228B22',
-      plantDark: '#006400',
-      plantMid: '#1A7A1A',
-      plantLight: '#32CD32',
-      wood: '#8B4513',
+      floor: '#5A4A3A',
+      floorDark: '#3E2F23',
+      floorLight: '#6F5E4D',
+      wall: '#2A2A2A',
+      wallDark: '#1A1A1A',
+      wallLight: '#3A3A3A',
+      desk: '#3E2723',
+      deskDark: '#2A1A15',
+      deskLight: '#5C3828',
+      carpet: '#5C0000',
+      carpetDark: '#3A0000',
+      gold: '#B8860B',
+      goldDark: '#8B6914',
+      plant: '#1A5A1A',
+      plantDark: '#0F3A0F',
+      plantLight: '#287028',
+      wood: '#5C3317',
       woodDark: '#5C2E0A',
-      leather: '#4A2511',
-      leatherDark: '#2A1507',
-      computer: '#1A1A1A',
-      computerScreen: '#4A90E2',
-      lamp: '#FFF8DC',
+      bookshelf: '#654321',
+      paper: '#C8C8C8',
+      paperDark: '#A0A0A0',
+      lamp: '#FFA500',
       lampBase: '#B8860B'
     };
-    
+    // Dust particles
+    let particles = [];
+    for (let i = 0; i < 30; i++) {
+      particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: Math.random() * 2 + 1,
+        speedY: Math.random() * 0.3 + 0.1,
+        speedX: (Math.random() - 0.5) * 0.2,
+        opacity: Math.random() * 0.3 + 0.1
+      });
+    }
     // Animation state for background
     let officeAnimFrame = 0;
     const plantSway = [0, 1, 2, 1, 0, -1, -2, -1];
     const screenFlicker = [0, 0, 0, 0, 1, 0, 0, 0];
     const lampGlow = [0, 1, 2, 3, 2, 1];
-    
+
     let soundEnabled = true;
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     const bgMusic = new Audio();
     bgMusic.loop = true;
     bgMusic.volume = 0.3;
-    
+
     // Background music tracks for different game states
     const bgmTracks = {
       menu: 'https://your-cdn.com/menu_music.mp3',
@@ -1463,37 +1473,37 @@
       victory: 'https://your-cdn.com/victory_fanfare.mp3',
       gameover: 'https://your-cdn.com/gameover_sad.mp3'
     };
-    
+
     let currentTrack = null;
-    
+
     function playBackgroundMusic() {
       if (soundEnabled && bgMusic.src) {
         bgMusic.play().catch(e => console.log('Music play failed:', e));
       }
     }
-    
+
     function stopBackgroundMusic() {
       bgMusic.pause();
       bgMusic.currentTime = 0;
     }
-    
+
     // Function to change background music based on game state
     function changeBackgroundMusic(trackName) {
       if (!soundEnabled) return;
-      
+
       // Don't restart if same track is already playing
       if (currentTrack === trackName && !bgMusic.paused) return;
-      
+
       // Stop current music
       stopBackgroundMusic();
-      
+
       // Load and play new track with fade-in
       if (bgmTracks[trackName]) {
         bgMusic.src = bgmTracks[trackName];
         bgMusic.volume = 0;
         currentTrack = trackName;
         playBackgroundMusic();
-        
+
         // Fade in
         let vol = 0;
         const fadeIn = setInterval(() => {
@@ -1597,16 +1607,16 @@
       hideStartMenu(() => {
         const dialogueBox = document.getElementById('dialogue-box');
         const dialogueText = document.getElementById('dialogue-text');
-        
+
         // Center the dialogue box for credits
         dialogueBox.style.bottom = 'auto';
         dialogueBox.style.top = '50%';
         dialogueBox.style.transform = 'translate(-50%, -50%)';
-        
+
         // Center-align text and preserve line breaks
         dialogueText.style.textAlign = 'center';
         dialogueText.style.whiteSpace = 'pre-line';
-        
+
         const creditsText = `★ VERDICT//ZERO ★
 
 A Legal Thriller Adventure Game
@@ -1644,7 +1654,7 @@ Press Z or ENTER to return`;
             if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter') {
               sounds.menuSelect();
               document.removeEventListener('keydown', returnHandler);
-              
+
               gsap.to('#dialogue-box', {
                 opacity: 0, scale: 0.9, duration: 0.3,
                 onComplete: () => {
@@ -1667,7 +1677,7 @@ Press Z or ENTER to return`;
             sounds.menuSelect();
             document.getElementById('mobile-action').removeEventListener('touchstart', mobileHandler);
             document.removeEventListener('keydown', returnHandler);
-            
+
             gsap.to('#dialogue-box', {
               opacity: 0, scale: 0.9, duration: 0.3,
               onComplete: () => {
@@ -1686,7 +1696,7 @@ Press Z or ENTER to return`;
         });
       });
     }
-    
+
     // START MENU EVENT LISTENERS
     document.getElementById('start-game-btn').onclick = () => {
       hideStartMenu(() => {
@@ -2040,29 +2050,29 @@ Press Z or ENTER to return`;
         ]
       },
       { // QUESTION 10
-      questionType: 'evidence',
-      preDialogues: [
-        "YOU (PROSECUTOR): Your Honor, we approach the end of this case. The prosecution has presented overwhelming evidence: The CCTV footage, digital forensics, chat logs, psychological assessments, and institutional documentation.",
-        "JUDGE: Prosecution, you've presented evidence spanning multiple incidents, multiple Republic Acts, and systematic harassment. For your final presentation, demonstrate how institutional mechanisms properly addressed these complaints before criminal prosecution."
-      ],
-      text: "The prosecution has shown a pattern of gender-based harassment across multiple victims and platforms. Which piece of evidence BEST demonstrates that proper institutional procedures were followed before bringing criminal charges, showing the systematic and appropriate response to harassment complaints?",
-      correctEvidenceIds: ['evidence9'],
-      correctMsgs: {
-        'evidence9': "★ YOU (PROSECUTOR): *stands and presents with authority* Your Honor, I present the Institutional Policy Document! This proves Ms. Maria followed proper procedure!\n\n★ YOU (PROSECUTOR): Before bringing criminal charges, she filed with her employer's Committee on Decorum and Investigation as stated by RA 11313 and RA 7877! This document shows the employer established comprehensive policies, provided training about gender-based harassment, and implemented investigation mechanisms!\n\n★ YOU (PROSECUTOR): The CODI investigated, gathered evidence, provided due process, and determined the harassment warranted both administrative action AND criminal referral!\n\n★ YOU (PROSECUTOR): The abuse went so far that every internal option was tried prior to involving law enforcement. It shows the process functioned correctly.\n\n★ JUDGE: Excellent final presentation, Counselor. The Institutional Policy Document demonstrates proper institutional response and the seriousness warranting criminal charges.\n\n★ MS. MARIA: I ensure that all procedures were observed upon appearing to court.\n\n★ DEFENSE ATTORNEY: *reluctantly* The institutional procedure was... properly followed with no loopholes. Very good."
+        questionType: 'evidence',
+        preDialogues: [
+          "YOU (PROSECUTOR): Your Honor, we approach the end of this case. The prosecution has presented overwhelming evidence: The CCTV footage, digital forensics, chat logs, psychological assessments, and institutional documentation.",
+          "JUDGE: Prosecution, you've presented evidence spanning multiple incidents, multiple Republic Acts, and systematic harassment. For your final presentation, demonstrate how institutional mechanisms properly addressed these complaints before criminal prosecution."
+        ],
+        text: "The prosecution has shown a pattern of gender-based harassment across multiple victims and platforms. Which piece of evidence BEST demonstrates that proper institutional procedures were followed before bringing criminal charges, showing the systematic and appropriate response to harassment complaints?",
+        correctEvidenceIds: ['evidence9'],
+        correctMsgs: {
+          'evidence9': "★ YOU (PROSECUTOR): *stands and presents with authority* Your Honor, I present the Institutional Policy Document! This proves Ms. Maria followed proper procedure!\n\n★ YOU (PROSECUTOR): Before bringing criminal charges, she filed with her employer's Committee on Decorum and Investigation as stated by RA 11313 and RA 7877! This document shows the employer established comprehensive policies, provided training about gender-based harassment, and implemented investigation mechanisms!\n\n★ YOU (PROSECUTOR): The CODI investigated, gathered evidence, provided due process, and determined the harassment warranted both administrative action AND criminal referral!\n\n★ YOU (PROSECUTOR): The abuse went so far that every internal option was tried prior to involving law enforcement. It shows the process functioned correctly.\n\n★ JUDGE: Excellent final presentation, Counselor. The Institutional Policy Document demonstrates proper institutional response and the seriousness warranting criminal charges.\n\n★ MS. MARIA: I ensure that all procedures were observed upon appearing to court.\n\n★ DEFENSE ATTORNEY: *reluctantly* The institutional procedure was... properly followed with no loopholes. Very good."
+        },
+        wrongMsgs: {
+          'evidence1': "✗ YOU (PROSECUTOR): Your Honor, I present the defendant's phone...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution shows us the TOOL of harassment, not proof of proper procedures! Evidence 001 proves WHO harassed, not that institutional policies were followed!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates CODI procedures were properly executed before criminal charges! The prosecutor confuses evidence types!\n\n✗ JUDGE: Sustained. Show evidence of institutional compliance, not the devices used in the crime.",
+          'evidence2': "✗ YOU (PROSECUTOR): Your Honor, Chat Log Transcript Alpha shows...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents harassment evidence instead of procedural compliance! Chat Log Transcript Alpha demonstrates the CRIME, not that proper institutional mechanisms were followed!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document shows the employer's CODI investigation and compliance with RA 11313 requirements!\n\n✗ JUDGE: Sustained. We need evidence of institutional procedure, not the harassment itself.",
+          'evidence3': "✗ YOU (PROSECUTOR): Your Honor, Chat Log Transcript Beta demonstrates...\n\n✗ DEFENSE ATTORNEY: OBJECTION! More harassment evidence when we need procedural proof! Chat Log Transcript Beta shows persistent harassment, not institutional compliance!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates proper CODI procedures were followed!\n\n✗ JUDGE: Sustained. Present evidence of institutional response, not the underlying harassment.",
+          'evidence4': "✗ YOU (PROSECUTOR): Your Honor, the CCTV footage...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents voyeurism evidence instead of procedural documentation! CCTV Footage shows a CRIME, not institutional compliance!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document proves proper procedures were followed!\n\n✗ JUDGE: Sustained. We need proof of proper institutional handling, not crime footage.",
+          'evidence5': "✗ YOU (PROSECUTOR): Your Honor, the unauthorized picture...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution shows the RESULT of voyeurism, not procedural compliance! The unauthorized picture is crime evidence, not proof of institutional response!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates proper CODI procedures!\n\n✗ JUDGE: Sustained. Present institutional compliance evidence, not crime evidence.",
+          'evidence6': "✗ YOU (PROSECUTOR): Your Honor, the Digital Forensics Report...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents technical attribution when we need procedural documentation! The Digital Forensics Report proves WHO committed crimes, not that institutions followed proper procedures!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document shows CODI compliance!\n\n✗ JUDGE: Sustained. We need institutional procedure evidence, not forensic attribution.",
+          'evidence7': "✗ YOU (PROSECUTOR): Your Honor, the Victim's Account...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents victim testimony instead of procedural proof! The Victim's Account describes harassment impact, not institutional compliance!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates proper CODI procedures were followed!\n\n✗ JUDGE: Sustained. We need proof institutions acted properly, not victim statements.",
+          'evidence8': "✗ YOU (PROSECUTOR): Your Honor, the Facebook post...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents cyber libel evidence instead of procedural documentation! The Facebook post shows defamation, not institutional compliance!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document proves proper procedures!\n\n✗ JUDGE: Sustained. Present institutional compliance, not additional crime evidence.",
+          'evidence10': "✗ YOU (PROSECUTOR): Your Honor, the psychological report...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents harm evidence instead of procedural proof! The Expert Psychological Report shows IMPACT, not that proper institutional procedures were followed!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates CODI compliance with RA 11313!\n\n✗ JUDGE: Sustained. We need proof of proper institutional handling, not psychological harm assessment."
+        },
+        defaultWrongMsg: "✗ DEFENSE ATTORNEY: Objection! That evidence doesn't prove proper institutional procedures were followed!\n\n✗ DEFENSE ATTORNEY: Your Honor, while the prosecution's selected evidence may be relevant to the case, it doesn't demonstrate that institutional mechanisms properly addressed the complaints!\n\n✗ JUDGE: Sustained. Prosecution, select evidence that directly proves institutional compliance and proper procedures.\n\n✗ Credibility Score: -5"
       },
-      wrongMsgs: {
-        'evidence1': "✗ YOU (PROSECUTOR): Your Honor, I present the defendant's phone...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution shows us the TOOL of harassment, not proof of proper procedures! Evidence 001 proves WHO harassed, not that institutional policies were followed!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates CODI procedures were properly executed before criminal charges! The prosecutor confuses evidence types!\n\n✗ JUDGE: Sustained. Show evidence of institutional compliance, not the devices used in the crime.",
-        'evidence2': "✗ YOU (PROSECUTOR): Your Honor, Chat Log Transcript Alpha shows...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents harassment evidence instead of procedural compliance! Chat Log Transcript Alpha demonstrates the CRIME, not that proper institutional mechanisms were followed!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document shows the employer's CODI investigation and compliance with RA 11313 requirements!\n\n✗ JUDGE: Sustained. We need evidence of institutional procedure, not the harassment itself.",
-        'evidence3': "✗ YOU (PROSECUTOR): Your Honor, Chat Log Transcript Beta demonstrates...\n\n✗ DEFENSE ATTORNEY: OBJECTION! More harassment evidence when we need procedural proof! Chat Log Transcript Beta shows persistent harassment, not institutional compliance!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates proper CODI procedures were followed!\n\n✗ JUDGE: Sustained. Present evidence of institutional response, not the underlying harassment.",        
-        'evidence4': "✗ YOU (PROSECUTOR): Your Honor, the CCTV footage...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents voyeurism evidence instead of procedural documentation! CCTV Footage shows a CRIME, not institutional compliance!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document proves proper procedures were followed!\n\n✗ JUDGE: Sustained. We need proof of proper institutional handling, not crime footage.",        
-        'evidence5': "✗ YOU (PROSECUTOR): Your Honor, the unauthorized picture...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution shows the RESULT of voyeurism, not procedural compliance! The unauthorized picture is crime evidence, not proof of institutional response!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates proper CODI procedures!\n\n✗ JUDGE: Sustained. Present institutional compliance evidence, not crime evidence.",        
-        'evidence6': "✗ YOU (PROSECUTOR): Your Honor, the Digital Forensics Report...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents technical attribution when we need procedural documentation! The Digital Forensics Report proves WHO committed crimes, not that institutions followed proper procedures!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document shows CODI compliance!\n\n✗ JUDGE: Sustained. We need institutional procedure evidence, not forensic attribution.",        
-        'evidence7': "✗ YOU (PROSECUTOR): Your Honor, the Victim's Account...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents victim testimony instead of procedural proof! The Victim's Account describes harassment impact, not institutional compliance!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates proper CODI procedures were followed!\n\n✗ JUDGE: Sustained. We need proof institutions acted properly, not victim statements.",        
-        'evidence8': "✗ YOU (PROSECUTOR): Your Honor, the Facebook post...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents cyber libel evidence instead of procedural documentation! The Facebook post shows defamation, not institutional compliance!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document proves proper procedures!\n\n✗ JUDGE: Sustained. Present institutional compliance, not additional crime evidence.",        
-        'evidence10': "✗ YOU (PROSECUTOR): Your Honor, the psychological report...\n\n✗ DEFENSE ATTORNEY: OBJECTION! The prosecution presents harm evidence instead of procedural proof! The Expert Psychological Report shows IMPACT, not that proper institutional procedures were followed!\n\n✗ DEFENSE ATTORNEY: The Institutional Policy Document demonstrates CODI compliance with RA 11313!\n\n✗ JUDGE: Sustained. We need proof of proper institutional handling, not psychological harm assessment."
-      },
-      defaultWrongMsg: "✗ DEFENSE ATTORNEY: Objection! That evidence doesn't prove proper institutional procedures were followed!\n\n✗ DEFENSE ATTORNEY: Your Honor, while the prosecution's selected evidence may be relevant to the case, it doesn't demonstrate that institutional mechanisms properly addressed the complaints!\n\n✗ JUDGE: Sustained. Prosecution, select evidence that directly proves institutional compliance and proper procedures.\n\n✗ Credibility Score: -5"
-    },
       // END
     ];
 
@@ -2171,7 +2181,7 @@ Press Z or ENTER to return`;
     function updateEvidenceDisplay() {
       const evidenceList = document.getElementById('evidence-list');
       evidenceList.innerHTML = '';
-    
+
       collectedEvidence.forEach((evidence, index) => {
         const card = document.createElement('div');
         let cardClass = 'evidence-card';
@@ -2180,7 +2190,7 @@ Press Z or ENTER to return`;
           if (evidenceAnswerMode) cardClass += ' answer-mode';
         }
         card.className = cardClass;
-        
+
         card.innerHTML = `
           <div class="evidence-icon"><img src="${evidence.icon}" style="width:100%;height:100%;object-fit:cover;"></div>
           <div class="evidence-card-info">
@@ -2191,17 +2201,17 @@ Press Z or ENTER to return`;
         card.onclick = () => selectEvidence(index);
         evidenceList.appendChild(card);
       });
-    
+
       document.getElementById('evidence-count').textContent = collectedEvidence.length;
       document.getElementById('evidence-total').textContent = evidenceDatabase.length;
-    
+
       if (collectedEvidence.length > 0) {
         displayEvidenceDetail(selectedEvidenceIndex);
       }
-      
+
       // Update footer message if in answer mode
       if (evidenceAnswerMode) {
-        document.getElementById('evidence-panel').querySelector('.evidence-header p').textContent = 
+        document.getElementById('evidence-panel').querySelector('.evidence-header p').textContent =
           '★ SELECT EVIDENCE ★ | Use ARROW KEYS to navigate | Press ENTER to submit your choice';
       }
     }
@@ -2210,7 +2220,7 @@ Press Z or ENTER to return`;
       sounds.menuMove();
       selectedEvidenceIndex = index;
       updateEvidenceDisplay();
-      
+
       // If we're in evidence-answer mode, highlight the selection
       if (gameMode === 'evidenceAnswer') {
         const evidenceId = collectedEvidence[index].id;
@@ -2253,18 +2263,18 @@ Press Z or ENTER to return`;
     // Evidence-based question handling
     let evidenceAnswerMode = false;
     let currentEvidenceQuestion = null;
-    
+
     function startEvidenceQuestion(question) {
       gameMode = 'evidenceAnswer';
       evidenceAnswerMode = true;
       currentEvidenceQuestion = question;
-  
+
       // Show instructions in the battle box
       const questionText = document.getElementById('question-text');
       const answerButtons = document.getElementById('answer-buttons');
-      
+
       typeText(question.text, questionText);
-      
+
       // Replace answer buttons with evidence instruction
       answerButtons.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 20px; border: 3px solid #ff8c00; background-color: #1a1a00;">
@@ -2276,7 +2286,7 @@ Press Z or ENTER to return`;
           </p>
         </div>
       `;
-  
+
       // Auto-open evidence panel after brief delay
       setTimeout(() => {
         openEvidencePanel();
@@ -2285,15 +2295,15 @@ Press Z or ENTER to return`;
 
     function submitEvidenceAnswer() {
       if (!evidenceAnswerMode || !currentEvidenceQuestion) return;
-      
+
       const selectedEvidence = collectedEvidence[selectedEvidenceIndex];
       const q = currentEvidenceQuestion;
-      
+
       // Check if selected evidence ID matches any correct answer
       // Support both single correctEvidenceId and multiple correctEvidenceIds
       let isCorrect = false;
       let correctMessage = q.correctMsg;
-      
+
       if (q.correctEvidenceIds && Array.isArray(q.correctEvidenceIds)) {
         // Multiple correct answers
         isCorrect = q.correctEvidenceIds.includes(selectedEvidence.id);
@@ -2305,14 +2315,14 @@ Press Z or ENTER to return`;
         // Single correct answer (backward compatibility)
         isCorrect = selectedEvidence.id === q.correctEvidenceId;
       }
-      
+
       // Close evidence panel
       closeEvidencePanel();
-    
+
       // Disable further submissions
       evidenceAnswerMode = false;
       answeringQuestion = true;
-      
+
       // Visual feedback
       setTimeout(() => {
         if (isCorrect) {
@@ -2320,12 +2330,12 @@ Press Z or ENTER to return`;
           gsap.to('#enemy-sprite', { scale: 1.2, duration: 0.1, yoyo: true, repeat: 1 });
           score += 100;
           updateScore();
-      
+
           // Show correct message
           const correctParts = Array.isArray(correctMessage) ? correctMessage.slice() :
-                              typeof correctMessage === 'function' ? [correctMessage] :
-                              (correctMessage || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
-          
+            typeof correctMessage === 'function' ? [correctMessage] :
+              (correctMessage || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
+
           if (correctParts.length > 1) {
             showQuestionDialogues(correctParts, () => {
               currentQuestionIndex++;
@@ -2343,19 +2353,19 @@ Press Z or ENTER to return`;
           gsap.to('#enemy-sprite', { scale: 1.3, rotation: 15, duration: 0.2, yoyo: true, repeat: 1, ease: "power2.inOut" });
           currentHP -= 5;
           updateHP();
-          
+
           if (currentHP <= 0) {
             setTimeout(gameOver, 1500);
           } else {
             // Get specific wrong message for this evidence, or use default
             let wrongMessage = q.defaultWrongMsg || q.wrongMsg || "✗ That evidence doesn't support your argument! Choose more carefully.";
-            
+
             if (q.wrongMsgs && q.wrongMsgs[selectedEvidence.id]) {
               wrongMessage = q.wrongMsgs[selectedEvidence.id];
             }
-            
+
             const parts = (wrongMessage || '').split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
-            
+
             if (parts.length > 1) {
               showQuestionDialogues(parts, () => {
                 currentQuestionIndex++;
@@ -2374,8 +2384,8 @@ Press Z or ENTER to return`;
 
     document.getElementById('evidence-close-btn').onclick = () => {
       // Allow closing in evidence answer mode - user can review question
-        closeEvidencePanel();
-      };
+      closeEvidencePanel();
+    };
 
     // Evidence panel navigation with arrow keys
     function navigateEvidence(direction) {
@@ -2412,7 +2422,7 @@ Press Z or ENTER to return`;
         if (charIndex < targetText.length) {
           if (charIndex % 3 === 0) sounds.textBlip(); // Less frequent beeps
           currentText += targetText[charIndex];
-          element.innerHTML = currentText.replace(/\n/g, '<br>');  
+          element.innerHTML = currentText.replace(/\n/g, '<br>');
           charIndex++;
           setTimeout(typeChar, 20); // Faster typing for longer text
         } else {
@@ -2672,7 +2682,7 @@ Press Z or ENTER to return`;
     function loadQuestion(index) {
       if (index >= questions.length) { victory(); return; }
       const q = questions[index];
-      
+
       // Check if this is an evidence-based question
       if (q.questionType === 'evidence') {
         // Show pre-dialogues if any, then start evidence question
@@ -2685,11 +2695,11 @@ Press Z or ENTER to return`;
         }
         return;
       }
-      
+
       // Regular question flow (existing code)
       const questionText = document.getElementById('question-text');
       const answerButtons = document.getElementById('answer-buttons');
-    
+
       if (Array.isArray(q.preDialogues) && q.preDialogues.length > 0) {
         showQuestionDialogues(q.preDialogues, () => {
           presentQuestionPrompt(q, () => { renderQuestionContent(q, questionText, answerButtons); });
@@ -3244,7 +3254,7 @@ Press Z or ENTER to return`;
     }
 
     function draw() {
-      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (gameMode === 'walking' || gameMode === 'dialogue') {
         ctx.fillStyle = npc.color; ctx.fillRect(npc.x - npc.size / 2, npc.y - npc.size / 2, npc.size, npc.size);
         ctx.fillStyle = '#fff'; ctx.font = '10px "Press Start 2P"'; ctx.textAlign = 'center';
@@ -3257,118 +3267,321 @@ Press Z or ENTER to return`;
       }
     }
 
+    function drawDesk(ctx, x, y, scale) {
+      const s = scale;
+
+      // Desk shadow
+      ctx.fillStyle = officeColors.deskDark;
+      ctx.fillRect(x + s, y + 17 * s, 30 * s, 2 * s);
+
+      // Desk top
+      ctx.fillStyle = officeColors.desk;
+      ctx.fillRect(x, y, 30 * s, 18 * s);
+
+      // Wood grain
+      ctx.fillStyle = officeColors.deskLight;
+      ctx.fillRect(x + 2 * s, y + s, 26 * s, s);
+      ctx.fillRect(x + 2 * s, y + 4 * s, 26 * s, s);
+
+      // Desk edge
+      ctx.fillStyle = officeColors.deskDark;
+      ctx.fillRect(x, y + 16 * s, 30 * s, 2 * s);
+
+      // Drawer handles
+      ctx.fillStyle = officeColors.gold;
+      ctx.fillRect(x + 4 * s, y + 10 * s, 4 * s, 2 * s);
+      ctx.fillRect(x + 22 * s, y + 10 * s, 4 * s, 2 * s);
+
+      // Papers
+      ctx.fillStyle = officeColors.paper;
+      ctx.fillRect(x + 3 * s, y + 3 * s, 8 * s, 6 * s);
+      ctx.fillStyle = officeColors.paperDark;
+      ctx.fillRect(x + 3 * s, y + 3 * s, 8 * s, s);
+
+      // Book
+      ctx.fillStyle = '#8B0000';
+      ctx.fillRect(x + 13 * s, y + 2 * s, 5 * s, 8 * s);
+      ctx.fillStyle = officeColors.gold;
+      ctx.fillRect(x + 14 * s, y + 4 * s, 3 * s, s);
+
+      // Coffee mug
+      ctx.fillStyle = '#4A2511';
+      ctx.fillRect(x + 20 * s, y + 4 * s, 4 * s, 4 * s);
+      ctx.fillRect(x + 24 * s, y + 5 * s, 2 * s, 2 * s);
+
+      // Lamp
+      ctx.fillStyle = officeColors.lampBase;
+      ctx.fillRect(x + 2 * s, y + 11 * s, 2 * s, 4 * s);
+      ctx.fillStyle = officeColors.lamp;
+      ctx.fillRect(x, y + 8 * s, 4 * s, 3 * s);
+    }
+
+    function drawBookshelf(ctx, x, y, w, scale) {
+      const s = scale;
+
+      // Frame
+      ctx.fillStyle = officeColors.bookshelf;
+      ctx.fillRect(x, y, w * s, 32 * s);
+
+      // Border
+      ctx.fillStyle = officeColors.woodDark;
+      ctx.fillRect(x, y, w * s, 2 * s);
+      ctx.fillRect(x, y + 30 * s, w * s, 2 * s);
+      ctx.fillRect(x, y, 2 * s, 32 * s);
+      ctx.fillRect(x + (w - 2) * s, y, 2 * s, 32 * s);
+
+      // Shelves
+      ctx.fillStyle = officeColors.wood;
+      ctx.fillRect(x + 2 * s, y + 10 * s, (w - 4) * s, 2 * s);
+      ctx.fillRect(x + 2 * s, y + 20 * s, (w - 4) * s, 2 * s);
+
+      // Books
+      const bookColors = ['#8B0000', '#00008B', '#006400', '#8B008B', '#FF8C00'];
+      let bookX = x + 3 * s;
+
+      for (let shelf = 0; shelf < 3; shelf++) {
+        bookX = x + 3 * s;
+        const shelfY = y + (3 + shelf * 10) * s;
+
+        for (let i = 0; i < 8; i++) {
+          const bookWidth = (3 + (i % 2)) * s;
+          const bookHeight = (6 + (i % 3)) * s;
+          const bookColor = bookColors[i % bookColors.length];
+
+          ctx.fillStyle = bookColor;
+          ctx.fillRect(bookX, shelfY, bookWidth, bookHeight);
+
+          ctx.fillStyle = officeColors.gold;
+          ctx.fillRect(bookX, shelfY + 2 * s, bookWidth, s);
+
+          bookX += bookWidth + s;
+          if (bookX > x + w * s - 10 * s) break;
+        }
+      }
+    }
+
+    function drawSimplePlant(x, y, sway) {
+      const ctx = officeCtx;
+
+      // Pot
+      ctx.fillStyle = '#8B4513';
+      ctx.fillRect(x, y + 60, 40, 40);
+
+      // Pot rim
+      ctx.fillStyle = '#A0522D';
+      ctx.fillRect(x - 5, y + 60, 50, 10);
+
+      // Pot decoration
+      ctx.fillStyle = officeColors.gold;
+      ctx.fillRect(x + 5, y + 70, 30, 2);
+
+      // Stems with sway
+      ctx.fillStyle = officeColors.plantDark;
+      ctx.fillRect(x + 15 + sway, y + 20, 10, 40);
+      ctx.fillRect(x + 10 + Math.floor(sway * 0.7), y + 30, 8, 30);
+      ctx.fillRect(x + 25 + Math.floor(sway * 0.5), y + 25, 8, 35);
+
+      // Leaves with animation
+      ctx.fillStyle = officeColors.plant;
+      ctx.fillRect(x + 5 + Math.floor(sway * 0.8), y + 20, 20, 20);
+      ctx.fillRect(x + 20 + sway, y + 10, 20, 20);
+      ctx.fillRect(x + 30 + Math.floor(sway * 0.5), y + 30, 20, 20);
+
+      // Highlights
+      ctx.fillStyle = officeColors.plantLight;
+      ctx.fillRect(x + 10 + Math.floor(sway * 0.8), y + 25, 5, 5);
+      ctx.fillRect(x + 25 + sway, y + 15, 5, 5);
+      ctx.fillRect(x + 35 + Math.floor(sway * 0.5), y + 35, 5, 5);
+    }
+    function drawLampGlow(ctx, x, y) {
+      const glowIntensity = 0.8 + Math.sin(officeAnimFrame * 0.05) * 0.2;
+
+      const grad = ctx.createRadialGradient(x + 20, y + 36, 5, x + 20, y + 36, 80);
+      grad.addColorStop(0, `rgba(255,165,0,${0.4 * glowIntensity})`);
+      grad.addColorStop(0.5, `rgba(255,140,0,${0.15 * glowIntensity})`);
+      grad.addColorStop(1, 'rgba(255,140,0,0)');
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(x - 60, y - 44, 160, 160);
+    }
+
+    function updateAndDrawParticles(ctx) {
+      particles.forEach(p => {
+        p.y += p.speedY;
+        p.x += p.speedX;
+
+        if (p.y > officeCanvas.height) {
+          p.y = 0;
+          p.x = Math.random() * officeCanvas.width;
+        }
+        if (p.x < 0) p.x = officeCanvas.width;
+        if (p.x > officeCanvas.width) p.x = 0;
+
+        ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      });
+    }
+
+    function drawLightRays(ctx) {
+      ctx.save();
+      ctx.globalAlpha = 0.1 + Math.sin(officeAnimFrame * 0.03) * 0.05;
+
+      for (let i = 0; i < 5; i++) {
+        const x = 200 + i * 150;
+        const grad = ctx.createLinearGradient(x, 0, x, 300);
+        grad.addColorStop(0, 'rgba(255,200,100,0.3)');
+        grad.addColorStop(1, 'rgba(255,200,100,0)');
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(x - 30, 0, 60, 300);
+      }
+
+      ctx.restore();
+    }
     function drawOfficeBackground() {
       const ctx = officeCtx;
       const colors = officeColors;
-      
-      // Scale factor to fit screen
-      const scaleX = officeCanvas.width / 240;
-      const scaleY = officeCanvas.height / 180;
-      ctx.save();
-      ctx.scale(scaleX, scaleY);
-      
-      // Clear and draw floor
+
+      // Clear and draw base floor
       ctx.fillStyle = colors.floor;
-      ctx.fillRect(0, 0, 240, 180);
-      
-      // Draw floor tiles with shading
-      for (let y = 0; y < 180; y += 8) {
-        for (let x = 0; x < 240; x += 8) {
-          if ((x/8 + y/8) % 2 === 0) {
+      ctx.fillRect(0, 0, officeCanvas.width, officeCanvas.height);
+
+      // Draw floor tiles
+      const tileSize = 40;
+      for (let y = 0; y < officeCanvas.height; y += tileSize) {
+        for (let x = 0; x < officeCanvas.width; x += tileSize) {
+          if ((Math.floor(x / tileSize) + Math.floor(y / tileSize)) % 2 === 0) {
             ctx.fillStyle = colors.floorDark;
-            ctx.fillRect(x, y, 8, 8);
           } else {
             ctx.fillStyle = colors.floor;
-            ctx.fillRect(x, y, 8, 8);
           }
-          ctx.fillStyle = colors.floorHighlight;
-          ctx.fillRect(x + 1, y + 1, 3, 1);
-          ctx.fillRect(x + 1, y + 1, 1, 3);
-          ctx.fillStyle = colors.floorDark;
-          ctx.fillRect(x, y, 8, 1);
-          ctx.fillRect(x, y, 1, 8);
+          ctx.fillRect(x, y, tileSize, tileSize);
+
+          ctx.strokeStyle = colors.floorDark;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x, y, tileSize, tileSize);
         }
       }
-      
-      // Draw carpet
-      const aisleWidth = 48;
-      const aisleX = (240 - aisleWidth) / 2;
-      
+
+      // Ambient shadow gradient
+      const shadowGrad = ctx.createRadialGradient(
+        officeCanvas.width / 2, officeCanvas.height / 2, 100,
+        officeCanvas.width / 2, officeCanvas.height / 2, 600
+      );
+      shadowGrad.addColorStop(0, 'rgba(0,0,0,0)');
+      shadowGrad.addColorStop(1, 'rgba(0,0,0,0.4)');
+      ctx.fillStyle = shadowGrad;
+      ctx.fillRect(0, 0, officeCanvas.width, officeCanvas.height);
+
+      // Draw carpet in center
+      const aisleWidth = 200;
+      const aisleX = (officeCanvas.width - aisleWidth) / 2;
+
       ctx.fillStyle = colors.carpet;
-      ctx.fillRect(aisleX, 0, aisleWidth, 180);
-      
-      ctx.fillStyle = colors.carpetMid;
-      for (let i = 0; i < 8; i++) {
-        ctx.fillRect(aisleX + 4 + i * 2, 0, 1, 180);
-      }
-      
+      ctx.fillRect(aisleX, 0, aisleWidth, officeCanvas.height);
+
       ctx.fillStyle = colors.goldDark;
-      ctx.fillRect(aisleX, 0, 2, 180);
-      ctx.fillRect(aisleX + aisleWidth - 2, 0, 2, 180);
-      ctx.fillStyle = colors.goldMid;
-      ctx.fillRect(aisleX + 2, 0, 1, 180);
-      ctx.fillRect(aisleX + aisleWidth - 3, 0, 1, 180);
-      
-      // Draw furniture (simplified for brevity - you can add the full furniture drawing functions)
-      // For now, just draw some basic shapes to show it works
-      
-      // Draw some desks
-      ctx.fillStyle = colors.desk;
-      ctx.fillRect(16, 130, 30, 18);
-      ctx.fillRect(194, 130, 30, 18);
-      ctx.fillRect(16, 28, 30, 18);
-      ctx.fillRect(194, 28, 30, 18);
-      
-      // Draw animated plants
-      const sway = plantSway[officeAnimFrame % plantSway.length];
-      
-      // Left plant
-      drawPlant(20, 60, sway);
-      // Right plant
-      drawPlant(206, 60, sway);
-      
-      ctx.restore();
+      ctx.fillRect(aisleX, 0, 8, officeCanvas.height);
+      ctx.fillRect(aisleX + aisleWidth - 8, 0, 8, officeCanvas.height);
+
+      // Carpet pattern
+      for (let y = 40; y < officeCanvas.height; y += 80) {
+        ctx.fillStyle = colors.carpetDark;
+        for (let i = 0; i < 4; i++) {
+          ctx.fillRect(aisleX + 80 + i * 4, y + i * 2, 40 - i * 8, 2);
+          ctx.fillRect(aisleX + 80 + i * 4, y + 16 - i * 2, 40 - i * 8, 2);
+        }
+        ctx.fillStyle = colors.goldDark;
+        ctx.fillRect(aisleX + 20, y + 4, 8, 8);
+        ctx.fillRect(aisleX + aisleWidth - 28, y + 4, 8, 8);
+      }
+
+      const sway = plantSway[officeAnimFrame % plantSway.length] * 2;
+
+      // Draw plants
+      drawSimplePlant(100, officeCanvas.height / 2 - 100, sway);
+      drawSimplePlant(officeCanvas.width - 140, officeCanvas.height / 2 - 100, -sway);
+      drawSimplePlant(100, officeCanvas.height / 2 + 150, -sway);
+      drawSimplePlant(officeCanvas.width - 140, officeCanvas.height / 2 + 150, sway);
+
+      // Desks
+      const deskColor = colors.desk;
+      const deskDark = colors.deskDark;
+
+      ctx.fillStyle = deskColor;
+      ctx.fillRect(60, 200, 120, 80);
+      ctx.fillRect(60, officeCanvas.height - 280, 120, 80);
+      ctx.fillStyle = deskDark;
+      ctx.fillRect(60, 270, 120, 10);
+      ctx.fillRect(60, officeCanvas.height - 210, 120, 10);
+
+      ctx.fillStyle = deskColor;
+      ctx.fillRect(officeCanvas.width - 180, 200, 120, 80);
+      ctx.fillRect(officeCanvas.width - 180, officeCanvas.height - 280, 120, 80);
+      ctx.fillStyle = deskDark;
+      ctx.fillRect(officeCanvas.width - 180, 270, 120, 10);
+      ctx.fillRect(officeCanvas.width - 180, officeCanvas.height - 210, 120, 10);
+
+      // Lamp glows on desks
+      drawLampGlow(ctx, 100, 220);
+      drawLampGlow(ctx, 100, officeCanvas.height - 260);
+      drawLampGlow(ctx, officeCanvas.width - 140, 220);
+      drawLampGlow(ctx, officeCanvas.width - 140, officeCanvas.height - 260);
+
+      // Floating dust particles
+      updateAndDrawParticles(ctx);
+
+      // Light rays from top
+      drawLightRays(ctx);
+
+      // Scales of justice
+      const scalesX = officeCanvas.width / 2 - 40;
+      const scalesY = 60;
+
+      ctx.fillStyle = colors.wallLight;
+      ctx.fillRect(scalesX + 16, scalesY + 64, 48, 12);
+      ctx.fillRect(scalesX + 24, scalesY + 56, 32, 8);
+
+      ctx.fillStyle = colors.gold;
+      ctx.fillRect(scalesX + 36, scalesY, 8, 52);
+      ctx.fillRect(scalesX, scalesY + 16, 80, 8);
+
+      ctx.fillStyle = colors.goldDark;
+      ctx.fillRect(scalesX + 8, scalesY + 24, 4, 16);
+      ctx.fillRect(scalesX + 68, scalesY + 24, 4, 16);
+
+      ctx.fillStyle = colors.gold;
+      ctx.fillRect(scalesX, scalesY + 40, 24, 4);
+      ctx.fillRect(scalesX + 56, scalesY + 40, 24, 4);
+      ctx.fillRect(scalesX + 4, scalesY + 44, 16, 4);
+      ctx.fillRect(scalesX + 60, scalesY + 44, 16, 4);
+
+      // Vignette
+      const vignette = ctx.createRadialGradient(
+        officeCanvas.width / 2, officeCanvas.height / 2, 200,
+        officeCanvas.width / 2, officeCanvas.height / 2, 700
+      );
+      vignette.addColorStop(0, 'rgba(0,0,0,0)');
+      vignette.addColorStop(1, 'rgba(0,0,0,0.6)');
+      ctx.fillStyle = vignette;
+      ctx.fillRect(0, 0, officeCanvas.width, officeCanvas.height);
+
       officeAnimFrame++;
     }
-    
-    function drawPlant(x, y, sway) {
-      const ctx = officeCtx;
-      const colors = officeColors;
-      
-      // Pot
-      ctx.fillStyle = '#8B4513';
-      ctx.fillRect(x + 2, y + 10, 10, 10);
-      ctx.fillStyle = '#A0522D';
-      ctx.fillRect(x + 1, y + 10, 12, 2);
-      
-      // Soil
-      ctx.fillStyle = colors.woodDark;
-      ctx.fillRect(x + 3, y + 11, 8, 2);
-      
-      // Stems with animation
-      ctx.fillStyle = colors.plantDark;
-      ctx.fillRect(x + 6 + sway, y + 6, 2, 5);
-      ctx.fillRect(x + 4 + Math.floor(sway * 0.7), y + 8, 2, 3);
-      
-      // Leaves with animation
-      ctx.fillStyle = colors.plant;
-      ctx.fillRect(x + 2 + Math.floor(sway * 0.8), y + 6, 3, 3);
-      ctx.fillRect(x + 5 + sway, y + 3, 4, 4);
-      ctx.fillRect(x + 9 + Math.floor(sway * 0.5), y + 5, 3, 3);
-      
-      // Highlights
-      ctx.fillStyle = colors.plantLight;
-      ctx.fillRect(x + 3 + Math.floor(sway * 0.8), y + 7, 1, 1);
-      ctx.fillRect(x + 6 + sway, y + 4, 1, 1);
-    }
-
     function gameLoop() {
-      drawOfficeBackground(); // Draw animated background first
+      // Draw office background during gameplay, but not during start menu
+      if (gameMode !== 'startMenu') {
+        drawOfficeBackground();
+      } else {
+        // Black background for start menu
+        officeCtx.fillStyle = '#000';
+        officeCtx.fillRect(0, 0, officeCanvas.width, officeCanvas.height);
+      }
+
       update();
       draw();
       requestAnimationFrame(gameLoop);
     }
-
     // INITIALIZE GAME
     initializeEvidence();
     createKeyboard();
