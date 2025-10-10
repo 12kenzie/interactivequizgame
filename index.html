@@ -1431,6 +1431,9 @@
     canvas.height = window.innerHeight;
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
+    const quizMasterImg = new Image();
+    quizMasterImg.src = 'ron.png';
+    
     // Enhanced color palette for office background
     const officeColors = {
       floor: '#5A4A3A',
@@ -3274,17 +3277,28 @@ Press Z or ENTER to return`;
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (gameMode === 'walking' || gameMode === 'dialogue') {
-        ctx.fillStyle = npc.color; ctx.fillRect(npc.x - npc.size / 2, npc.y - npc.size / 2, npc.size, npc.size);
-        ctx.fillStyle = '#fff'; ctx.font = '10px "Press Start 2P"'; ctx.textAlign = 'center';
-        ctx.fillText('QUIZ MASTER', npc.x, npc.y - npc.size - 5);
-        ctx.fillStyle = player.color; ctx.fillRect(player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
-        if (canInteract && gameMode === 'walking') {
-          ctx.fillStyle = '#ff8c00'; ctx.font = '8px "Press Start 2P"';
-          ctx.fillText(isMobile ? 'Press Z Button' : 'Press Z', player.x, player.y - 30);
+        // Draw Quiz Master image instead of square
+        if (quizMasterImg.complete) {
+          ctx.drawImage(
+            quizMasterImg, 
+            npc.x - npc.size / 2, 
+            npc.y - npc.size / 2, 
+            npc.size, 
+            npc.size
+          );
+        } else {
+          // Fallback to square if image hasn't loaded yet
+          ctx.fillStyle = npc.color; 
+          ctx.fillRect(npc.x - npc.size / 2, npc.y - npc.size / 2, npc.size, npc.size);
         }
+        
+        ctx.fillStyle = '#fff'; 
+        ctx.font = '10px "Press Start 2P"'; 
+        ctx.textAlign = 'center';
+        ctx.fillText('Attorney Galleon', npc.x, npc.y - npc.size - 5);
       }
     }
-
+    
     function drawDesk(ctx, x, y, scale) {
       const s = scale;
 
