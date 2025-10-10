@@ -1538,29 +1538,40 @@
         dialogueBox.style.top = '50%';
         dialogueBox.style.transform = 'translate(-50%, -50%)';
         
+        function showCredits() {
+      sounds.menuSelect();
+      hideStartMenu(() => {
+        const dialogueBox = document.getElementById('dialogue-box');
+        
+        // Center the dialogue box for credits
+        dialogueBox.style.bottom = 'auto';
+        dialogueBox.style.top = '50%';
+        dialogueBox.style.transform = 'translate(-50%, -50%)';
+        
         const creditsText = `★ VERDICT//ZERO ★
-  
+
 A Legal Thriller Adventure Game
 
-    CREATED BY:
+CREATED BY:
+12-REVERIE GROUP 4
 
-    12-REVERIE GROUP 4
+SPRITES:
+ARCE, MIGUEL PHILIP
 
-    SPRITES:
-    ARCE, MIGUEL PHILIP
+CONTENTS AND DIALOGUES:
+GUINTO, YOHAN
+NOLASCO, TERENCE DOMINIC D.
+AMOR, ROZEAH
+ADEVA, ALLIANA YSABELLE
 
-    CONTENTS AND DIALOGUES:
-    GUINTO, YOHAN
-    NOLASCO, TERENCE DOMINIC D.
-    AMOR, ROZEAH
-    ADEVA, ALLIANA YSABELLE
+PROGRAMMING:
+RIGUER, MACKENZIE C.
 
-    PROGRAMMING:
-    RIGUER, MACKENZIE C.
-    
-    SPECIAL THANKS:
-    To all advocates fighting
-    gender-based violence`;
+SPECIAL THANKS:
+To all advocates fighting
+gender-based violence
+
+Press Z or ENTER to return`;
 
         dialogueBox.classList.add('active');
         gsap.fromTo('#dialogue-box',
