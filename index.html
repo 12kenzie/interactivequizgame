@@ -211,6 +211,14 @@
       }
     }
 
+    @media (max-width: 768px) {
+
+      .dialogue-box.active~.mobile-controls,
+      .evidence-panel.active~.mobile-controls {
+        display: none !important;
+      }
+    }
+
     .name-input-screen {
       position: absolute;
       top: 0;
@@ -1006,17 +1014,65 @@
     }
 
     @media (max-width: 768px) {
+      .start-menu-content {
+        padding: 20px;
+        max-width: 90%;
+      }
+
       .game-title {
-        font-size: 32px;
+        font-size: 24px;
+        margin-bottom: 15px;
+        text-shadow: 3px 3px #000, 4px 4px #ff0000;
+        line-height: 1.4;
+        word-wrap: break-word;
       }
 
       .game-subtitle {
-        font-size: 10px;
+        font-size: 8px;
+        margin-bottom: 40px;
+        letter-spacing: 1px;
+        line-height: 1.6;
+      }
+
+      .start-menu-buttons {
+        gap: 15px;
+        margin-bottom: 30px;
       }
 
       .start-menu-btn {
-        padding: 15px 30px;
-        font-size: 11px;
+        padding: 12px 20px;
+        font-size: 9px;
+        border: 3px solid #ff8c00;
+      }
+
+      .start-menu-btn::before {
+        left: 10px;
+        font-size: 8px;
+      }
+
+      .start-hint {
+        font-size: 8px;
+        line-height: 1.6;
+      }
+    }
+
+    /* Extra small screens */
+    @media (max-width: 480px) {
+      .game-title {
+        font-size: 20px;
+      }
+
+      .game-subtitle {
+        font-size: 7px;
+      }
+
+      .start-menu-btn {
+        padding: 10px 15px;
+        font-size: 8px;
+      }
+
+      .start-hint {
+        font-size: 7px;
       }
     }
 
@@ -1322,6 +1378,7 @@
           <button class="mobile-btn right" id="mobile-right">▶</button>
         </div>
         <button class="mobile-action" id="mobile-action">Z</button>
+        <button class="mobile-action" id="mobile-evidence" style="display:none;">📋</button>
       </div>
 
       <div id="enemy-sprite">⚖️</div>
@@ -1431,9 +1488,6 @@
     canvas.height = window.innerHeight;
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
-    const quizMasterImg = new Image();
-    quizMasterImg.src = 'ron.png';
-    
     // Enhanced color palette for office background
     const officeColors = {
       floor: '#5A4A3A',
@@ -1487,12 +1541,12 @@
 
     // Background music tracks for different game states
     const bgmTracks = {
-      menu: 'https://your-cdn.com/menu_music.mp3',
-      library: 'https://your-cdn.com/library_ambient.mp3',
-      courtroom: 'https://your-cdn.com/courtroom_theme.mp3',
-      battle: 'https://your-cdn.com/battle_intense.mp3',
-      victory: 'https://your-cdn.com/victory_fanfare.mp3',
-      gameover: 'https://your-cdn.com/gameover_sad.mp3'
+      menu: '/music/start-menu.mp3',           // Your menu music file
+      walking: '/musicwalking.mp3',     // Your library music file
+      courtroom: 'music/courtroom.mp3', // Your courtroom music file
+      battle: 'music/battle.mp3',       // Your battle music file
+      victory: 'music/victory.mp3',     // Your victory music file
+      gameover: 'music/gameover.mp3'    // Your gameover music file
     };
 
     let currentTrack = null;
@@ -1538,6 +1592,16 @@
       }
     }
 
+    // Play short sound effects (like objections)
+    function playSoundEffect(effectName) {
+      if (!soundEnabled || !bgmTracks[effectName]) return;
+
+      const sfx = new Audio(bgmTracks[effectName]);
+      sfx.volume = 0.5;
+      sfx.play().catch(e => console.log('SFX play failed:', e));
+      document.getElementById('done-btn').onclick
+    }
+
     function playBeep(freq = 440, dur = 0.1, type = 'square') {
       if (!soundEnabled) return;
       const osc = audioContext.createOscillator(), gain = audioContext.createGain();
@@ -1578,11 +1642,89 @@
         btn.addEventListener('touchend', (e) => { e.preventDefault(); mobileKeys[dir] = false; });
       });
       document.getElementById('mobile-action').addEventListener('touchstart', (e) => {
-        e.preventDefault(); sounds.menuSelect();
-        if (gameMode === 'walking' && canInteract) startDialogue();
-        else if (gameMode === 'dialogue' && !isTyping) showNextDialogue();
-        else if (gameMode === 'dialogue' && isTyping) { isTyping = false; document.getElementById('dialogue-text').textContent = targetText; }
+        e.preventDefault();
+        sounds.menuSelect();
+
+        // Handle question dialogues
+        if (inQuestionDialogue) {
+          if (isTyping) {
+            isTyping = false;
+            document.getElementById('dialogue-text').textContent = targetText;
+          } else {
+            showNextQuestionDialogue();
+          }
+          return;
+        }
+
+        // Handle question confirm prompts
+        if (waitingForQuestionConfirm) {
+          if (isTyping) {
+            isTyping = false;
+            document.getElementById('dialogue-text').textContent = targetText;
+          } else {
+            waitingForQuestionConfirm = false;
+            const dialogueBox = document.getElementById('dialogue-box');
+            const battleBox = document.getElementById('battle-box');
+            gsap.to('#dialogue-box', {
+              opacity: 0, duration: 0.3, onComplete: () => {
+                dialogueBox.classList.remove('active');
+                if (battleBox) {
+                  battleBox.classList.add('active');
+                  gsap.fromTo('#battle-box', { opacity: 0 }, { opacity: 1, duration: 0.3 });
+                }
+                if (questionConfirmCallback) {
+                  const cb = questionConfirmCallback;
+                  questionConfirmCallback = null;
+                  cb();
+                }
+              }
+            });
+          }
+          return;
+        }
+
+        // Regular dialogue handling
+        if (gameMode === 'walking' && canInteract) {
+          startDialogue();
+        } else if (gameMode === 'dialogue' && !isTyping) {
+          showNextDialogue();
+        } else if (gameMode === 'dialogue' && isTyping) {
+          isTyping = false;
+          document.getElementById('dialogue-text').textContent = targetText;
+        }
       });
+      // Mobile evidence button handler
+      const mobileEvidenceBtn = document.getElementById('mobile-evidence');
+      if (mobileEvidenceBtn) {
+        mobileEvidenceBtn.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          sounds.menuSelect();
+          if (evidenceAnswerMode) {
+            submitEvidenceAnswer();
+          } else {
+            const evidencePanel = document.getElementById('evidence-panel');
+            if (evidencePanel.classList.contains('active')) {
+              closeEvidencePanel();
+            } else if (gameMode === 'quiz') {
+              openEvidencePanel();
+            }
+          }
+        });
+      }
+
+      // Function to update mobile controls visibility
+      function updateMobileControls() {
+        const mobileControls = document.getElementById('mobile-controls');
+        const mobileEvidence = document.getElementById('mobile-evidence');
+
+        if (gameMode === 'quiz' && mobileEvidence) {
+          mobileEvidence.style.display = 'flex';
+          mobileControls.classList.add('quiz-mode');
+        } else if (mobileEvidence) {
+          mobileEvidence.style.display = 'none';
+          mobileControls.classList.remove('quiz-mode');
+        }
+      }
     }
 
     let gameMode = 'startMenu', playerName = '', currentName = '';
@@ -1596,6 +1738,7 @@
     function showStartMenu() {
       gameMode = 'startMenu';
       document.getElementById('start-menu').classList.remove('hidden');
+      changeBackgroundMusic('menu');
       gsap.fromTo('#start-menu',
         { opacity: 0 },
         { opacity: 1, duration: 1 }
@@ -2125,7 +2268,7 @@ Press Z or ENTER to return`;
         sounds.menuSelect();
         playerName = currentName;
         document.getElementById('player-name').textContent = playerName;
-        playBackgroundMusic();
+        changeBackgroundMusic('walking');
         gsap.to('#name-screen', {
           opacity: 0, duration: 0.5, onComplete: () => {
             document.getElementById('name-screen').classList.add('hidden');
@@ -2220,6 +2363,10 @@ Press Z or ENTER to return`;
           </div>
         `;
         card.onclick = () => selectEvidence(index);
+        card.ontouchstart = (e) => {
+          e.preventDefault();
+          selectEvidence(index);
+        };
         evidenceList.appendChild(card);
       });
 
@@ -2698,6 +2845,7 @@ Press Z or ENTER to return`;
       gsap.to('#enemy-sprite', { y: '-=20', duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
       gsap.fromTo('#battle-box', { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 });
       loadQuestion(currentQuestionIndex);
+      if (isMobile) updateMobileControls();
     }
 
     function loadQuestion(index) {
@@ -3277,28 +3425,17 @@ Press Z or ENTER to return`;
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (gameMode === 'walking' || gameMode === 'dialogue') {
-        // Draw Quiz Master image instead of square
-        if (quizMasterImg.complete) {
-          ctx.drawImage(
-            quizMasterImg, 
-            npc.x - npc.size / 2, 
-            npc.y - npc.size / 2, 
-            npc.size, 
-            npc.size
-          );
-        } else {
-          // Fallback to square if image hasn't loaded yet
-          ctx.fillStyle = npc.color; 
-          ctx.fillRect(npc.x - npc.size / 2, npc.y - npc.size / 2, npc.size, npc.size);
+        ctx.fillStyle = npc.color; ctx.fillRect(npc.x - npc.size / 2, npc.y - npc.size / 2, npc.size, npc.size);
+        ctx.fillStyle = '#fff'; ctx.font = '10px "Press Start 2P"'; ctx.textAlign = 'center';
+        ctx.fillText('QUIZ MASTER', npc.x, npc.y - npc.size - 5);
+        ctx.fillStyle = player.color; ctx.fillRect(player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
+        if (canInteract && gameMode === 'walking') {
+          ctx.fillStyle = '#ff8c00'; ctx.font = '8px "Press Start 2P"';
+          ctx.fillText(isMobile ? 'Press Z Button' : 'Press Z', player.x, player.y - 30);
         }
-        
-        ctx.fillStyle = '#fff'; 
-        ctx.font = '10px "Press Start 2P"'; 
-        ctx.textAlign = 'center';
-        ctx.fillText('Attorney Galleon', npc.x, npc.y - npc.size - 5);
       }
     }
-    
+
     function drawDesk(ctx, x, y, scale) {
       const s = scale;
 
