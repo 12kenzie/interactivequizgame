@@ -1532,11 +1532,16 @@
       sounds.menuSelect();
       hideStartMenu(() => {
         const dialogueBox = document.getElementById('dialogue-box');
+        const dialogueText = document.getElementById('dialogue-text');
         
         // Center the dialogue box for credits
         dialogueBox.style.bottom = 'auto';
         dialogueBox.style.top = '50%';
         dialogueBox.style.transform = 'translate(-50%, -50%)';
+        
+        // Center-align text and preserve line breaks
+        dialogueText.style.textAlign = 'center';
+        dialogueText.style.whiteSpace = 'pre-line';
         
         const creditsText = `★ VERDICT//ZERO ★
 
@@ -1569,7 +1574,7 @@ Press Z or ENTER to return`;
           { opacity: 1, scale: 1, duration: 0.5 }
         );
 
-        typeText(creditsText, document.getElementById('dialogue-text'), () => {
+        typeText(creditsText, dialogueText, () => {
           // Wait for player input to return
           const returnHandler = (e) => {
             if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter') {
@@ -1580,10 +1585,12 @@ Press Z or ENTER to return`;
                 opacity: 0, scale: 0.9, duration: 0.3,
                 onComplete: () => {
                   dialogueBox.classList.remove('active');
-                  // Reset dialogue box position
+                  // Reset dialogue box position and text alignment
                   dialogueBox.style.bottom = '20px';
                   dialogueBox.style.top = 'auto';
                   dialogueBox.style.transform = 'translateX(-50%)';
+                  dialogueText.style.textAlign = 'left';
+                  dialogueText.style.whiteSpace = 'normal';
                   showStartMenu();
                 }
               });
@@ -1601,10 +1608,12 @@ Press Z or ENTER to return`;
               opacity: 0, scale: 0.9, duration: 0.3,
               onComplete: () => {
                 dialogueBox.classList.remove('active');
-                // Reset dialogue box position
+                // Reset dialogue box position and text alignment
                 dialogueBox.style.bottom = '20px';
                 dialogueBox.style.top = 'auto';
                 dialogueBox.style.transform = 'translateX(-50%)';
+                dialogueText.style.textAlign = 'left';
+                dialogueText.style.whiteSpace = 'normal';
                 showStartMenu();
               }
             });
