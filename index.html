@@ -1286,6 +1286,28 @@
       border-color: #ff8c00;
     }
 
+    .evidence-submit-btn {
+      background-color: #000;
+      color: #0f0;
+      border: 3px solid #0f0;
+      padding: 12px 30px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 15px;
+      display: none;
+    }
+    
+    .evidence-submit-btn:hover {
+      background-color: #0f0;
+      color: #000;
+      border-color: #0f0;
+    }
+    
+    .evidence-submit-btn.active {
+      display: inline-block;
+    }
+
     @media (max-width: 768px) {
       .evidence-display {
         flex-direction: column;
@@ -1492,6 +1514,7 @@
 
           <div class="evidence-footer">
             <p>EVIDENCE COUNT: <span id="evidence-count">0</span> / <span id="evidence-total">10</span></p>
+            <button class="evidence-submit-btn" id="evidence-submit-btn">★ SUBMIT EVIDENCE ★</button>
             <button class="evidence-close-btn" id="evidence-close-btn">Close Evidence Panel</button>
           </div>
         </div>
@@ -2435,6 +2458,15 @@ Press Z or ENTER to return`;
     function openEvidencePanel() {
       sounds.menuSelect();
       const panel = document.getElementById('evidence-panel');
+      const submitBtn = document.getElementById('evidence-submit-btn');
+      
+      // Show submit button only in evidence answer mode
+      if (evidenceAnswerMode) {
+        submitBtn.classList.add('active');
+      } else {
+        submitBtn.classList.remove('active');
+      }
+      
       panel.classList.add('active');
       gsap.fromTo('#evidence-panel',
         { opacity: 0 },
@@ -2579,6 +2611,14 @@ Press Z or ENTER to return`;
     document.getElementById('evidence-close-btn').onclick = () => {
       // Allow closing in evidence answer mode - user can review question
       closeEvidencePanel();
+    };
+
+    // Evidence submit button handler
+    document.getElementById('evidence-submit-btn').onclick = () => {
+      if (evidenceAnswerMode) {
+        sounds.menuSelect();
+        submitEvidenceAnswer();
+      }
     };
 
     // Evidence panel navigation with arrow keys
