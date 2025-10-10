@@ -3448,13 +3448,36 @@ Press Z or ENTER to return`;
       }
     }
 
+    const playerImg = new Image();
+    playerImg.src = './sprites/player.png'; // Your player image path
+    
+    const npcImg = new Image();
+    npcImg.src = 'ron.png'; // Your quiz master image path
+    
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (gameMode === 'walking' || gameMode === 'dialogue') {
-        ctx.fillStyle = npc.color; ctx.fillRect(npc.x - npc.size / 2, npc.y - npc.size / 2, npc.size, npc.size);
+        // Draw NPC (Quiz Master)
+        if (npcImg.complete) {
+          ctx.drawImage(npcImg, npc.x - npc.size / 2, npc.y - npc.size / 2, npc.size, npc.size);
+        } else {
+          // Fallback to colored square if image not loaded
+          ctx.fillStyle = npc.color; 
+          ctx.fillRect(npc.x - npc.size / 2, npc.y - npc.size / 2, npc.size, npc.size);
+        }
+        
         ctx.fillStyle = '#fff'; ctx.font = '10px "Press Start 2P"'; ctx.textAlign = 'center';
-        ctx.fillText('QUIZ MASTER', npc.x, npc.y - npc.size - 5);
-        ctx.fillStyle = player.color; ctx.fillRect(player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
+        ctx.fillText('ATTORNEY GALLEON', npc.x, npc.y - npc.size - 5);
+        
+        // Draw Player
+        if (playerImg.complete) {
+          ctx.drawImage(playerImg, player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
+        } else {
+          // Fallback to colored square if image not loaded
+          ctx.fillStyle = player.color; 
+          ctx.fillRect(player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
+        }
+        
         if (canInteract && gameMode === 'walking') {
           ctx.fillStyle = '#ff8c00'; ctx.font = '8px "Press Start 2P"';
           ctx.fillText(isMobile ? 'Press Z Button' : 'Press Z', player.x, player.y - 30);
