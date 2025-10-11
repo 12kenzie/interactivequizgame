@@ -3782,14 +3782,170 @@ Press Z or ENTER to return`;
 
       ctx.restore();
     }
+
+    
+    function drawCourtroomBackground() {
+      const ctx = officeCtx;
+      const w = officeCanvas.width;
+      const h = officeCanvas.height;
+
+      // Back wall - deep blue
+      ctx.fillStyle = '#1a1a4a';
+      ctx.fillRect(0, 0, w, h * 0.6);
+
+      // Floor - dark wood
+      ctx.fillStyle = '#2a1810';
+      ctx.fillRect(0, h * 0.6, w, h * 0.4);
+
+      // Floor planks
+      ctx.fillStyle = '#3a2820';
+      for (let y = h * 0.6; y < h; y += 40) {
+        ctx.fillRect(0, y, w, 4);
+      }
+
+      // Judge's bench - center elevated
+      const benchW = Math.min(400, w * 0.6);
+      const benchX = (w - benchW) / 2;
+      const benchY = h * 0.3;
+
+      // Bench shadow
+      ctx.fillStyle = '#000';
+      ctx.fillRect(benchX + 10, benchY + 90, benchW, 10);
+
+      // Bench base
+      ctx.fillStyle = '#5c3317';
+      ctx.fillRect(benchX, benchY + 40, benchW, 60);
+
+      // Bench top
+      ctx.fillStyle = '#8b4513';
+      ctx.fillRect(benchX - 20, benchY + 30, benchW + 40, 15);
+
+      // Bench details
+      ctx.fillStyle = '#6b3313';
+      ctx.fillRect(benchX, benchY + 50, benchW, 8);
+      ctx.fillRect(benchX + 10, benchY + 70, benchW - 20, 8);
+
+      // Gold trim
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(benchX - 20, benchY + 30, benchW + 40, 3);
+      ctx.fillRect(benchX - 20, benchY + 42, benchW + 40, 2);
+
+      // Scales of justice on bench
+      const scaleX = w / 2 - 30;
+      const scaleY = benchY - 20;
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(scaleX + 26, scaleY, 8, 40);
+      ctx.fillRect(scaleX, scaleY + 10, 60, 6);
+      ctx.fillRect(scaleX + 5, scaleY + 16, 6, 12);
+      ctx.fillRect(scaleX + 49, scaleY + 16, 6, 12);
+      ctx.fillRect(scaleX, scaleY + 28, 16, 3);
+      ctx.fillRect(scaleX + 44, scaleY + 28, 16, 3);
+
+      // Left witness stand
+      const witnessL = w * 0.15;
+      ctx.fillStyle = '#5c3317';
+      ctx.fillRect(witnessL, h * 0.5, 120, 80);
+      ctx.fillStyle = '#8b4513';
+      ctx.fillRect(witnessL - 10, h * 0.5 - 5, 140, 10);
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(witnessL - 10, h * 0.5 - 5, 140, 2);
+
+      // Right witness stand
+      const witnessR = w * 0.85 - 120;
+      ctx.fillStyle = '#5c3317';
+      ctx.fillRect(witnessR, h * 0.5, 120, 80);
+      ctx.fillStyle = '#8b4513';
+      ctx.fillRect(witnessR - 10, h * 0.5 - 5, 140, 10);
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(witnessR - 10, h * 0.5 - 5, 140, 2);
+
+      // Pillars
+      const pillarW = 60;
+      const pillarH = h * 0.5;
+
+      // Left pillar
+      ctx.fillStyle = '#e8e8e8';
+      ctx.fillRect(50, h * 0.1, pillarW, pillarH);
+      ctx.fillStyle = '#d0d0d0';
+      ctx.fillRect(50, h * 0.1, 8, pillarH);
+      ctx.fillRect(102, h * 0.1, 8, pillarH);
+      // Pillar capital
+      ctx.fillStyle = '#f5f5f5';
+      ctx.fillRect(40, h * 0.1 - 20, pillarW + 20, 20);
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(40, h * 0.1 - 20, pillarW + 20, 4);
+
+      // Right pillar
+      ctx.fillStyle = '#e8e8e8';
+      ctx.fillRect(w - 110, h * 0.1, pillarW, pillarH);
+      ctx.fillStyle = '#d0d0d0';
+      ctx.fillRect(w - 110, h * 0.1, 8, pillarH);
+      ctx.fillRect(w - 58, h * 0.1, 8, pillarH);
+      // Pillar capital
+      ctx.fillStyle = '#f5f5f5';
+      ctx.fillRect(w - 120, h * 0.1 - 20, pillarW + 20, 20);
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(w - 120, h * 0.1 - 20, pillarW + 20, 4);
+
+      // Philippine flag on back wall
+      const flagX = w / 2 - 80;
+      const flagY = h * 0.15;
+      // Blue field
+      ctx.fillStyle = '#0038A8';
+      ctx.fillRect(flagX, flagY, 160, 100);
+      // Red field
+      ctx.fillStyle = '#CE1126';
+      ctx.fillRect(flagX, flagY + 50, 160, 50);
+      // White triangle
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.moveTo(flagX, flagY);
+      ctx.lineTo(flagX + 80, flagY + 50);
+      ctx.lineTo(flagX, flagY + 100);
+      ctx.closePath();
+      ctx.fill();
+      // Gold sun (simplified)
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(flagX + 30, flagY + 40, 20, 20);
+
+      // Gallery benches in background
+      for (let i = 0; i < 3; i++) {
+        const benchY = h * 0.55 + i * 35;
+        ctx.fillStyle = '#4a3020';
+        ctx.fillRect(w * 0.1, benchY, w * 0.35, 25);
+        ctx.fillRect(w * 0.55, benchY, w * 0.35, 25);
+        ctx.fillStyle = '#3a2010';
+        ctx.fillRect(w * 0.1, benchY + 20, w * 0.35, 5);
+        ctx.fillRect(w * 0.55, benchY + 20, w * 0.35, 5);
+      }
+
+      // Vignette
+      const vignette = ctx.createRadialGradient(
+        w / 2, h / 2, 200,
+        w / 2, h / 2, 700
+      );
+      vignette.addColorStop(0, 'rgba(0,0,0,0)');
+      vignette.addColorStop(1, 'rgba(0,0,0,0.5)');
+      ctx.fillStyle = vignette;
+      ctx.fillRect(0, 0, w, h);
+    }
     function drawOfficeBackground() {
       const ctx = officeCtx;
       const colors = officeColors;
-
-      // Clear and draw base floor
+    
+      // Check if we're in courtroom mode
+      const courtroomScene = document.getElementById('courtroom-scene');
+      const isCourtroom = !courtroomScene.classList.contains('hidden');
+    
+      if (isCourtroom) {
+        drawCourtroomBackground();
+        return;
+      }
+    
+      // Clear and draw base floor (for office)
       ctx.fillStyle = colors.floor;
       ctx.fillRect(0, 0, officeCanvas.width, officeCanvas.height);
-
+    
       // Draw floor tiles
       const tileSize = 40;
       for (let y = 0; y < officeCanvas.height; y += tileSize) {
@@ -3800,13 +3956,13 @@ Press Z or ENTER to return`;
             ctx.fillStyle = colors.floor;
           }
           ctx.fillRect(x, y, tileSize, tileSize);
-
+    
           ctx.strokeStyle = colors.floorDark;
           ctx.lineWidth = 1;
           ctx.strokeRect(x, y, tileSize, tileSize);
         }
       }
-
+    
       // Ambient shadow gradient
       const shadowGrad = ctx.createRadialGradient(
         officeCanvas.width / 2, officeCanvas.height / 2, 100,
@@ -3816,26 +3972,26 @@ Press Z or ENTER to return`;
       shadowGrad.addColorStop(1, 'rgba(0,0,0,0.4)');
       ctx.fillStyle = shadowGrad;
       ctx.fillRect(0, 0, officeCanvas.width, officeCanvas.height);
-
+    
       // Responsive desk and aisle positioning
       const isMobileView = officeCanvas.width < 768;
       const aisleWidth = isMobileView ? Math.min(150, officeCanvas.width * 0.4) : 200;
       const aisleX = (officeCanvas.width - aisleWidth) / 2;
-
+    
       // Calculate desk positions - ensure they stay outside the aisle
       const deskWidth = isMobileView ? 80 : 120;
       const deskHeight = isMobileView ? 60 : 80;
       const leftDeskX = Math.max(10, aisleX - deskWidth - 20);
       const rightDeskX = Math.min(officeCanvas.width - deskWidth - 10, aisleX + aisleWidth + 20);
-
+    
       // Draw carpet in center (drawn before desks so desks appear on top)
       ctx.fillStyle = colors.carpet;
       ctx.fillRect(aisleX, 0, aisleWidth, officeCanvas.height);
-
+    
       ctx.fillStyle = colors.goldDark;
       ctx.fillRect(aisleX, 0, 8, officeCanvas.height);
       ctx.fillRect(aisleX + aisleWidth - 8, 0, 8, officeCanvas.height);
-
+    
       // Carpet pattern
       for (let y = 40; y < officeCanvas.height; y += 80) {
         ctx.fillStyle = colors.carpetDark;
@@ -3848,24 +4004,24 @@ Press Z or ENTER to return`;
         ctx.fillRect(aisleX + 20, y + 4, 8, 8);
         ctx.fillRect(aisleX + aisleWidth - 28, y + 4, 8, 8);
       }
-
+    
       const sway = plantSway[officeAnimFrame % plantSway.length] * 2;
-
+    
       // Draw plants at appropriate positions
       const plantX = isMobileView ? 15 : 100;
       const plantRightX = isMobileView ? officeCanvas.width - 55 : officeCanvas.width - 140;
-
+    
       drawSimplePlant(plantX, officeCanvas.height / 2 - 100, sway);
       drawSimplePlant(plantRightX, officeCanvas.height / 2 - 100, -sway);
       drawSimplePlant(plantX, officeCanvas.height / 2 + 150, -sway);
       drawSimplePlant(plantRightX, officeCanvas.height / 2 + 150, sway);
-
+    
       // Desks - now positioned outside the carpet aisle
       const deskColor = colors.desk;
       const deskDark = colors.deskDark;
       const topDeskY = 200;
       const bottomDeskY = officeCanvas.height - (isMobileView ? 340 : 280);
-
+    
       // Left desks
       ctx.fillStyle = deskColor;
       ctx.fillRect(leftDeskX, topDeskY, deskWidth, deskHeight);
@@ -3873,7 +4029,7 @@ Press Z or ENTER to return`;
       ctx.fillStyle = deskDark;
       ctx.fillRect(leftDeskX, topDeskY + deskHeight - 10, deskWidth, 10);
       ctx.fillRect(leftDeskX, bottomDeskY + deskHeight - 10, deskWidth, 10);
-
+    
       // Right desks
       ctx.fillStyle = deskColor;
       ctx.fillRect(rightDeskX, topDeskY, deskWidth, deskHeight);
@@ -3881,41 +4037,41 @@ Press Z or ENTER to return`;
       ctx.fillStyle = deskDark;
       ctx.fillRect(rightDeskX, topDeskY + deskHeight - 10, deskWidth, 10);
       ctx.fillRect(rightDeskX, bottomDeskY + deskHeight - 10, deskWidth, 10);
-
+    
       // Lamp glows on desks
       drawLampGlow(ctx, leftDeskX + deskWidth / 2 - 20, topDeskY + 20);
       drawLampGlow(ctx, leftDeskX + deskWidth / 2 - 20, bottomDeskY + 20);
       drawLampGlow(ctx, rightDeskX + deskWidth / 2 - 20, topDeskY + 20);
       drawLampGlow(ctx, rightDeskX + deskWidth / 2 - 20, bottomDeskY + 20);
-
+    
       // Floating dust particles
       updateAndDrawParticles(ctx);
-
+    
       // Light rays from top
       drawLightRays(ctx);
-
+    
       // Scales of justice
       const scalesX = officeCanvas.width / 2 - 40;
       const scalesY = 60;
-
+    
       ctx.fillStyle = colors.wallLight;
       ctx.fillRect(scalesX + 16, scalesY + 64, 48, 12);
       ctx.fillRect(scalesX + 24, scalesY + 56, 32, 8);
-
+    
       ctx.fillStyle = colors.gold;
       ctx.fillRect(scalesX + 36, scalesY, 8, 52);
       ctx.fillRect(scalesX, scalesY + 16, 80, 8);
-
+    
       ctx.fillStyle = colors.goldDark;
       ctx.fillRect(scalesX + 8, scalesY + 24, 4, 16);
       ctx.fillRect(scalesX + 68, scalesY + 24, 4, 16);
-
+    
       ctx.fillStyle = colors.gold;
       ctx.fillRect(scalesX, scalesY + 40, 24, 4);
       ctx.fillRect(scalesX + 56, scalesY + 40, 24, 4);
       ctx.fillRect(scalesX + 4, scalesY + 44, 16, 4);
       ctx.fillRect(scalesX + 60, scalesY + 44, 16, 4);
-
+    
       // Vignette
       const vignette = ctx.createRadialGradient(
         officeCanvas.width / 2, officeCanvas.height / 2, 200,
@@ -3925,7 +4081,7 @@ Press Z or ENTER to return`;
       vignette.addColorStop(1, 'rgba(0,0,0,0.6)');
       ctx.fillStyle = vignette;
       ctx.fillRect(0, 0, officeCanvas.width, officeCanvas.height);
-
+    
       officeAnimFrame++;
     }
     function gameLoop() {
