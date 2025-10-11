@@ -92,6 +92,54 @@
       text-shadow: 2px 2px #000;
       z-index: 500;
     }
+    
+    /* START MENU STYLES */
+    .start-menu {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a0000 0%, #000000 25%, #1a1a00 50%, #000000 75%, #001a1a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      overflow: hidden;
+    }
+
+    .start-menu::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255, 140, 0, 0.03) 50px, rgba(255, 140, 0, 0.03) 51px),
+        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 140, 0, 0.03) 50px, rgba(255, 140, 0, 0.03) 51px);
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(50px, 50px);
+      }
+    }
+
+    .start-menu.hidden {
+      display: none;
+    }
+
+    .start-menu-content {
+      text-align: center;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
 
     .controls-hint {
       position: absolute;
