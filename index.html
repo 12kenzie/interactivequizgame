@@ -2534,7 +2534,8 @@ Press Z or ENTER to return`;
       if (index < 0 || index >= collectedEvidence.length) return;
 
       const evidence = collectedEvidence[index];
-      document.getElementById('evidence-image').textContent = evidence.icon;
+      const imageEl = document.getElementById('evidence-image');
+      imageEl.innerHTML = `<img src="${evidence.icon}" style="width:100%;height:100%;object-fit:contain;">`;
       document.getElementById('evidence-title').textContent = evidence.title;
       document.getElementById('evidence-type').textContent = evidence.type;
       document.getElementById('evidence-description').textContent = evidence.description;
