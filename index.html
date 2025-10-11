@@ -957,6 +957,18 @@
       z-index: 999;
     }
 
+    .flash-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 2500;
+    }
+
     .rank-display {
       color: #ff8c00;
       font-size: 16px;
@@ -1404,6 +1416,7 @@
 
 <body>
   <div id="game-container">
+    <div class="flash-overlay" id="flash-overlay"></div>
     <div class="scene-background scene-library hidden" id="library-scene">
       <div class="scene-decoration" style="top: 10%; left: 10%;">📚</div>
       <div class="scene-decoration" style="top: 15%; right: 15%;">📖</div>
@@ -1848,10 +1861,29 @@
     }
 
     function hideStartMenu(callback) {
-      sounds.menuSelect();
+      // Play start sound effect
+      playBeep(800, 0.15);
+      setTimeout(() => playBeep(1000, 0.2), 100);
+      
+      // White flash effect
+      const flashOverlay = document.getElementById('flash-overlay');
+      gsap.to(flashOverlay, {
+        opacity: 1,
+        duration: 0.1,
+        onComplete: () => {
+          gsap.to(flashOverlay, {
+            opacity: 0,
+            duration: 0.4,
+            ease: "power2.out"
+          });
+        }
+      });
+      
+      // Hide start menu
       gsap.to('#start-menu', {
         opacity: 0,
         duration: 0.5,
+        delay: 0.1,
         onComplete: () => {
           document.getElementById('start-menu').classList.add('hidden');
           if (callback) callback();
